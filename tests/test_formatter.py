@@ -2,7 +2,29 @@ from unittest import TestCase
 from draft.formatter import Formatter
 import os
 
-class TestFormatter(TestCase):
+
+class TestCleanSpaces(TestCase):
+
+    def tearDown(self):
+        file = open('testfile.txt')
+        file.close()
+        os.remove(file.name)
+        pass
+
+    def test_clean_spaces(self):
+        fp = open('testfile.txt','w+')
+        fp.write("\"It's the end of the world as  we know it.\" \"And I    feel fine.\"")
+        fp.close()
+        Formatter.clean_duplicate_spaces(fp.name)
+
+        fp = open('testfile.txt','r')
+
+        lines = fp.readlines()
+
+        self.assertEqual(lines[0],"\"It's the end of the world as we know it.\" \"And I feel fine.\"")
+
+
+class TestSplitSentences(TestCase):
 
     def tearDown(self):
         file = open('testfile.txt')

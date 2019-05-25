@@ -3,18 +3,27 @@ import re
 
 class Formatter():
 
-    def split_sentences(f):
+    def clean_duplicate_spaces(file):
+
+        pattern = ' {2,}'
+
+        with open(file, 'r+') as file:
+            text = file.read()
+            text = re.sub(pattern, ' ', text)
+
+            file.truncate(0)
+            file.seek(0)
+            file.write(text)
+
+    def split_sentences(file):
 
         pattern = '(\"?[A-Z][^\.!?]*[\.!?]\"?) '
-
         abbreviations = ['etc.', 'Mrs.', 'Mr.', 'Dr.']
 
-        with open(f, 'r+') as file:
+        with open(file, 'r+') as file:
 
             text = file.read()
-
             lines = re.split(pattern, text)
-
             lines = [line.strip() for line in lines if line not in ['',' ']]
 
             skip = False
