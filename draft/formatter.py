@@ -33,11 +33,22 @@ class Formatter():
                     skip = False
                     kill_index.append(index)
                     continue
+
                 for abbreviation in abbreviations:
                     if line.endswith(abbreviation):
                         line = line + ' ' + lines[index + 1]
                         lines[index] = line
                         skip = True
+                        break
+
+                try:
+                    if lines[index + 1][0].islower():
+                        line = line + ' ' + lines[index + 1]
+                        lines[index] = line
+                        skip = True
+                except IndexError:
+                    pass
+
 
             lines = [line for index, line in enumerate(lines) if index not in kill_index]
 
