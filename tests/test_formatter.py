@@ -15,7 +15,7 @@ class TestCleanSpaces(TestCase):
         fp = open('testfile.txt','w+')
         fp.write("\"It's the end of the world as  we know it.\" \"And I    feel fine.\"")
         fp.close()
-        Formatter.clean_duplicate_spaces(fp.name)
+        Formatter.remove_duplicate_spaces(fp.name)
 
         fp = open('testfile.txt','r')
 
