@@ -1,6 +1,9 @@
 # Mac idiosyncracies
 .DS_Store
 
+# Project idiosyncracies
+test.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
