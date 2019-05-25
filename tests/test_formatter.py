@@ -5,7 +5,9 @@ import os
 class TestFormatter(TestCase):
 
     def tearDown(self):
-        os.remove('testfile.txt')
+        file = open('testfile.txt')
+        file.close()
+        os.remove(file.name)
         pass
 
     def test_split_sentences_on_quotes(self):
@@ -24,6 +26,7 @@ class TestFormatter(TestCase):
         self.assertEqual(lines[1],"\"And I feel fine.\"\n")
         self.assertEqual(lines[2],"\"You are nice,\" she said.")
         self.assertEqual(len(lines), 3)
+
 
     def test_split_sentences_on_period(self):
 
