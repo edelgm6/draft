@@ -1,0 +1,73 @@
+from unittest import TestCase
+from draft.formatter import Formatter
+import os
+
+class TestFormatter(TestCase):
+
+    def tearDown(self):
+        os.remove('testfile.txt')
+        pass
+
+    def test_split_sentences_on_quotes(self):
+
+        fp = open('testfile.txt','w+')
+        fp.write("\"It's the end of the world as we know it.\" \"And I feel fine.\"")
+        fp.write(" \"You are nice,\" she said.")
+        fp.close()
+        Formatter.split_sentences(fp.name)
+
+        fp = open('testfile.txt','r')
+
+        lines = fp.readlines()
+
+        self.assertEqual(lines[0],"\"It's the end of the world as we know it.\"\n")
+        self.assertEqual(lines[1],"\"And I feel fine.\"\n")
+        self.assertEqual(lines[2],"\"You are nice,\" she said.")
+        self.assertEqual(len(lines), 3)
+
+    def test_split_sentences_on_period(self):
+
+        fp = open('testfile.txt','w+')
+        fp.write("It's the end of the world as we know it. And I feel fine.")
+        fp.close()
+        Formatter.split_sentences(fp.name)
+
+        fp = open('testfile.txt','r')
+
+        lines = fp.readlines()
+
+        self.assertEqual(lines[0],"It's the end of the world as we know it.\n")
+        self.assertEqual(lines[1],"And I feel fine.")
+        self.assertEqual(len(lines), 2)
+
+    def test_split_sentences_on_question_mark(self):
+
+        fp = open('testfile.txt','w+')
+        fp.write("It's the end of the world as we know it? And I feel fine.")
+        fp.close()
+        Formatter.split_sentences(fp.name)
+
+        fp = open('testfile.txt','r')
+
+        lines = fp.readlines()
+
+        self.assertEqual(lines[0],"It's the end of the world as we know it?\n")
+        self.assertEqual(lines[1],"And I feel fine.")
+        self.assertEqual(len(lines), 2)
+
+
+    def test_split_sentences_on_abbreviations(self):
+
+        fp = open('testfile.txt','w+')
+        fp.write("It's the end of the world as we know it, etc.? And I feel fine Mrs. Miller, seriously. I.e., don't do anything stupid.")
+        fp.close()
+        Formatter.split_sentences(fp.name)
+
+        fp = open('testfile.txt','r')
+
+        lines = fp.readlines()
+
+        self.assertEqual(lines[0],"It's the end of the world as we know it, etc.?\n")
+        self.assertEqual(lines[1],"And I feel fine Mrs. Miller, seriously.\n")
+        self.assertEqual(lines[2],"I.e., don't do anything stupid.")
+        self.assertEqual(len(lines), 3)
