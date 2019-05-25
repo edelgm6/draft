@@ -17,7 +17,7 @@ class Formatter():
 
     def split_sentences(file):
 
-        pattern = '(\"?[A-Z][^\.!?]*[\.!?]\"?) '
+        pattern = '([\"\“]?[A-Z][^\.!?]*[\.!?][\"\”]?) '
         abbreviations = ['etc.', 'Mrs.', 'Mr.', 'Dr.']
 
         with open(file, 'r+') as file:
