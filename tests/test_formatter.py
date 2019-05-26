@@ -42,6 +42,7 @@ class TestSplitSentences(TestCase):
         fp = open('testfile.txt','r')
 
         lines = fp.readlines()
+        fp.close()
 
         self.assertEqual(lines[0],"\"It's the end of the world as we know it.\"\n")
         self.assertEqual(lines[1],"\"And I feel fine.\"\n")
@@ -58,8 +59,8 @@ class TestSplitSentences(TestCase):
         Formatter.split_sentences(fp.name)
 
         fp = open('testfile.txt','r')
-
         lines = fp.readlines()
+        fp.close()
 
         self.assertEqual(lines[0],"\"It's the end of the world as we know it.\"\n")
         self.assertEqual(lines[1],"\"And I feel fine.\"\n")
@@ -75,8 +76,8 @@ class TestSplitSentences(TestCase):
         Formatter.split_sentences(fp.name)
 
         fp = open('testfile.txt','r')
-
         lines = fp.readlines()
+        fp.close()
 
         self.assertEqual(lines[0],"It's the end of the world as we know it.\n")
         self.assertEqual(lines[1],"And I feel fine.")
@@ -90,8 +91,8 @@ class TestSplitSentences(TestCase):
         Formatter.split_sentences(fp.name)
 
         fp = open('testfile.txt','r')
-
         lines = fp.readlines()
+        fp.close()
 
         self.assertEqual(lines[0],"It's the end of the world as we know it?\n")
         self.assertEqual(lines[1],"And I feel fine.")
@@ -106,8 +107,8 @@ class TestSplitSentences(TestCase):
         Formatter.split_sentences(fp.name)
 
         fp = open('testfile.txt','r')
-
         lines = fp.readlines()
+        fp.close()
 
         self.assertEqual(lines[0],"It's the end of the world as we know it, etc.?\n")
         self.assertEqual(lines[1],"And I feel fine Mrs. Miller, seriously.\n")

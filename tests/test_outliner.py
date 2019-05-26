@@ -1,7 +1,22 @@
 from unittest import TestCase
 from draft.outliner import Outliner
+from draft.generator import Generator
 import os
 from shutil import rmtree
+
+class TestUpdateOutline(TestCase):
+
+    def tearDown(self):
+        rmtree('project/')
+        rmtree('legacy-project/')
+        os.remove('outline.md')
+
+    def test_update_outline(self):
+        generator = Generator()
+        generator.generate_project('Gatsby')
+
+        outliner = Outliner()
+        outliner.update_outline()
 
 class TestFileTree(TestCase):
 

@@ -1,7 +1,63 @@
 import re
 import os
+import mistune
 
 class Outliner():
+
+    def update_outline(self):
+        title = os.listdir('project')
+
+        assert len(title) == 1, "Project folder has more than one directory."
+
+        outline = []
+        for path, subdirs, files in os.walk('project/' + title[0]):
+            for dir in subdirs:
+                outline.append(os.path.join(path, dir))
+            for name in files:
+                outline.append(os.path.join(path, name))
+
+        outline.sort()
+
+        clean_outline = []
+        for entry in outline:
+            entry = entry.split('/')
+            clean_outline.append(entry[2:])
+
+        section = ''
+        chapter = ''
+        sub_chapter = ''
+        scene = ''
+
+        outline_tag = '(?<=======\\n).*(?=\\n======)'
+
+        markdown = mistune.Markdown()
+        page = ''
+
+        for entry in clean_outline:
+            if len(entry) == 1:
+                section = entry[0]
+                page = markdown("# " + section + "\n\n")
+
+            elif len(entry) == 2:
+                chapter = entry[-1]
+                page = page + markdown("## " + chapter + "\n\n")
+
+            elif len(entry) == 3:
+                sub_chapter = entry[-1]
+                page = page + markdown("### " + sub_chapter + "\n\n")
+
+            elif len(entry) == 4:
+                dir = 'project/' + os.listdir('project')[0] + '/' + '/'.join(entry)
+                scene = entry[-1]
+                page = page + markdown("#### " + scene + "\n\n")
+
+                with open(dir, 'r') as sc:
+                    text = sc.read()
+                    scene_detail = re.search(outline_tag, text)
+                    page = page + markdown(scene_detail.group(0))
+
+        with open('outline.md', 'w') as outline:
+            outline.write(page)
 
     def generate_file_tree(self, file, title):
         intervals = self._get_header_intervals(file)
@@ -20,9 +76,9 @@ class Outliner():
         sub_chapter = "^#{3} "
         scene = "^#{4} "
 
-        current_section = ''
-        current_chapter = ''
-        current_sub_chapter = ''
+        current_section = ""
+        current_chapter = ""
+        current_sub_chapter = ""
 
         section_count = '01'
         chapter_count = '01'
