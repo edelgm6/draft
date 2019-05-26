@@ -30,7 +30,6 @@ class TestSplitSentences(TestCase):
         file = open('testfile.txt')
         file.close()
         os.remove(file.name)
-        pass
 
     def test_split_sentences_on_quotes_within_a_sentence(self):
 

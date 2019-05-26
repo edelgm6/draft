@@ -1,6 +1,7 @@
 from unittest import TestCase
 from draft.outliner import Outliner
 import os
+from shutil import rmtree
 
 class TestFileTree(TestCase):
 
@@ -8,8 +9,9 @@ class TestFileTree(TestCase):
         file = open('testfile.md')
         file.close()
         os.remove(file.name)
+        rmtree('Gatsby/')
 
-    def test_clean_spaces(self):
+    def test_generate_file_tree(self):
         fp = open('testfile.md','w+')
         fp.write("# Part 1: The Reckoning\n")
         fp.write("\n")
@@ -22,6 +24,29 @@ class TestFileTree(TestCase):
         fp.write("#### The Bar\n")
         fp.write("\n")
         fp.write("It was a fall day.\n")
+        fp.write("It was cold.\n")
+        fp.write("# Part 3: Tomorrow\n")
+        fp.write("\n")
+        fp.write("#### The Next Day\n")
+        fp.write("Now it's tomorrow.\n")
+        fp.write("It's still cold.\n")
         fp.close()
 
-        Outliner.generate_file_tree(fp.name)
+        outliner = Outliner()
+        outliner.generate_file_tree(fp.name, 'Gatsby')
+
+        self.assertEqual(len(os.listdir('Gatsby/')),3)
+
+
+        self.assertTrue(os.path.isdir('Gatsby/01-Part 1: The Reckoning'))
+        self.assertTrue(os.path.isdir('Gatsby/01-Part 1: The Reckoning/01-Chapter 1: The Promise'))
+        self.assertTrue(os.path.isdir('Gatsby/01-Part 1: The Reckoning/01-Chapter 1: The Promise/01-New York, 1942'))
+        self.assertTrue(os.path.isdir('Gatsby/02-Part 2: The Whatever'))
+        self.assertTrue(os.path.isdir('Gatsby/03-Part 3: Tomorrow'))
+        self.assertTrue(os.path.isfile('Gatsby/02-Part 2: The Whatever/01-The Bar.md'))
+
+        with open('Gatsby/02-Part 2: The Whatever/01-The Bar.md', 'r') as fp:
+            lines = fp.readlines()
+            self.assertEqual(lines[0],"It was a fall day.\n")
+            self.assertEqual(lines[1],"It was cold.\n")
+            self.assertEqual(len(lines), 2)
