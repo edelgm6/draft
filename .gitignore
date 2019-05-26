@@ -3,6 +3,8 @@
 
 # Project idiosyncracies
 test.txt
+test-files/
+Gatsby/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
