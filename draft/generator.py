@@ -3,12 +3,16 @@ import os
 class Generator():
 
     def generate_project(self, title):
-        os.mkdir(title)
-        os.mkdir(title + "/01-Section 1")
-        os.mkdir(title + "/01-Section 1/01-Chapter 1")
-        os.mkdir(title + "/01-Section 1/01-Chapter 1/01-Sub-Chapter 1")
+        os.mkdir('project')
+        os.mkdir('project/' + title)
+        os.mkdir('project/' + title + "/01-Section 1")
+        os.mkdir('project/' + title + "/01-Section 1/01-Chapter 1")
+        os.mkdir('project/' + title + "/01-Section 1/01-Chapter 1/01-Sub-Chapter 1")
 
-        with open(title + "/01-Section 1/01-Chapter 1/01-Sub-Chapter 1/01-Scene 1.md", "w") as file:
+        with open('project/' + title + "/01-Section 1/01-Chapter 1/01-Sub-Chapter 1/01-Scene 1.md", "w") as file:
+            file.write('======\n')
+            file.write('In this scene shit gets real.\n')
+            file.write('======\n')
             file.write('#### Scene 1\n')
             file.write('\n')
             file.write('Your genius awaits.')

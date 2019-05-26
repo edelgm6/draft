@@ -37,5 +37,13 @@ def create_project(title):
     generator = Generator
     generator.generate_project(title)
 
+@main.command()
+def update_outline():
+    """
+    Generates or updates a project outline.
+    """
+    outliner = Outliner()
+    outliner.update_outline()
+
 if __name__ == "__main__":
     main()
