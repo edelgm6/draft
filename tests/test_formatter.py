@@ -9,7 +9,6 @@ class TestCleanSpaces(TestCase):
         file = open('testfile.txt')
         file.close()
         os.remove(file.name)
-        pass
 
     def test_clean_spaces(self):
         fp = open('testfile.txt','w+')
