@@ -6,13 +6,13 @@ from shutil import rmtree
 class TestFileTree(TestCase):
 
     def tearDown(self):
-        file = open('testfile.md')
+        file = open('testfile.txt')
         file.close()
         os.remove(file.name)
         rmtree('Gatsby/')
 
     def test_generate_file_tree(self):
-        fp = open('testfile.md','w+')
+        fp = open('testfile.txt','w+')
         fp.write("# Part 1: The Reckoning\n")
         fp.write("\n")
         fp.write("## Chapter 1: The Promise\n")
