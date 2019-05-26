@@ -17,8 +17,8 @@ class TestCleanSpaces(TestCase):
         Formatter.remove_duplicate_spaces(fp.name)
 
         fp = open('testfile.txt','r')
-
         lines = fp.readlines()
+        fp.close()
 
         self.assertEqual(lines[0],"\"It's the end of the world as we know it.\" \"And I feel fine.\"")
 

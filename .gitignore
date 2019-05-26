@@ -5,6 +5,7 @@
 test.txt
 test-files/
 Gatsby/
+legacy-project/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

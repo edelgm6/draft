@@ -77,10 +77,10 @@ class Outliner():
                 except IndexError:
                     end_scene = None
 
-                fp = open(file, 'r')
-                text = fp.read()
-                scene_text = text[start_scene:end_scene]
+                with open(file, 'r') as fp:
+                    text = fp.read()
 
+                scene_text = text[start_scene:end_scene]
                 try:
                     with open(current_path, 'w') as scene_file:
                         scene_file.write(scene_text)
