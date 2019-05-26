@@ -3,7 +3,7 @@ import re
 
 class Formatter():
 
-    def clean_duplicate_spaces(file):
+    def remove_duplicate_spaces(file):
 
         pattern = ' {2,}'
 
