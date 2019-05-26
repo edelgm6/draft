@@ -6,6 +6,7 @@ test.txt
 test-files/
 project/
 legacy-project/
+outline.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

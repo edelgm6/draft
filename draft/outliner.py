@@ -49,12 +49,13 @@ class Outliner():
             elif len(entry) == 4:
                 dir = 'project/' + os.listdir('project')[0] + '/' + '/'.join(entry)
                 scene = entry[-1]
-                page = page + markdown("#### " + scene + "\n\n")
+                scene_entry = scene
 
                 with open(dir, 'r') as sc:
-                    text = sc.read()
+                    text = sc.read().strip()
                     scene_detail = re.search(outline_tag, text)
-                    page = page + markdown(scene_detail.group(0))
+                    scene_entry = scene_entry + ": " + scene_detail.group(0)
+                    page = page + markdown(scene_entry)
 
         with open('outline.md', 'w') as outline:
             outline.write(page)

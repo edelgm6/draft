@@ -1,6 +1,7 @@
 import click
 from draft.formatter import Formatter
 from draft.generator import Generator
+from draft.outliner import Outliner
 
 @click.group()
 def main():
@@ -27,14 +28,14 @@ def remove_duplicate_spaces(filename):
     Formatter.remove_duplicate_spaces(filename)
 
 @main.command()
-@click.argument('title' type=click.STRING))
+@click.argument('title', type=click.STRING)
 def create_project(title):
     """
     Generates a project structure.
 
     Takes a TITLE as the argument.
     """
-    generator = Generator
+    generator = Generator()
     generator.generate_project(title)
 
 @main.command()
