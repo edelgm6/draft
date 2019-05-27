@@ -46,5 +46,7 @@ def update_outline():
     outliner = Outliner()
     outliner.update_outline()
 
+"""
 if __name__ == "__main__":
     main()
+"""

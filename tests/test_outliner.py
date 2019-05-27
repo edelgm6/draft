@@ -9,7 +9,7 @@ class TestUpdateOutline(TestCase):
     def tearDown(self):
         rmtree('project/')
         rmtree('legacy-project/')
-        #os.remove('outline.md')
+        os.remove('outline.md')
 
     def test_update_outline(self):
         generator = Generator()
