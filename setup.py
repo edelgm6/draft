@@ -10,6 +10,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        draft=draft.cli:main
+        draft=cli:main
     ''',
 )

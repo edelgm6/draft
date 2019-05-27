@@ -12,7 +12,8 @@ def generate_file_tree():
     """
     Generates a project tree based on the file in legacy-project.
     """
-    Outliner.generate_file_tree()
+    outliner = Outliner()
+    outliner.generate_file_tree()
 
 @main.command()
 @click.argument('filename', type=click.Path(exists=True))
