@@ -23,12 +23,7 @@ class TestFileTree(TestCase):
         generator = Generator()
         generator.generate_project('Gatsby')
 
-        self.assertEqual(len(os.listdir('project/Gatsby/')),1)
-
-        self.assertTrue(os.path.isdir('project/Gatsby/01-Section 1'))
-        self.assertTrue(os.path.isdir('project/Gatsby/01-Section 1/01-Chapter 1'))
-        self.assertTrue(os.path.isdir('project/Gatsby/01-Section 1/01-Chapter 1/01-Sub-Chapter 1'))
-        self.assertTrue(os.path.isfile('project/Gatsby/01-Section 1/01-Chapter 1/01-Sub-Chapter 1/01-Scene 1.md'))
+        self.assertTrue(os.path.isdir('project/Gatsby/'))
 
         self.assertTrue(os.path.isdir('archive'))
         self.assertTrue(os.path.isdir('archive/project'))

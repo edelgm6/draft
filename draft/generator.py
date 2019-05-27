@@ -37,27 +37,21 @@ class Generator():
 
         os.mkdir('project')
         os.mkdir('project/' + title)
-        os.mkdir('project/' + title + "/01-Section 1")
-        os.mkdir('project/' + title + "/01-Section 1/01-Chapter 1")
-        os.mkdir('project/' + title + "/01-Section 1/01-Chapter 1/01-Sub-Chapter 1")
-
-        with open('project/' + title + "/01-Section 1/01-Chapter 1/01-Sub-Chapter 1/01-Scene 1.md", "w") as file:
-            file.write('======\n')
-            file.write('In this scene shit gets real.\n')
-            file.write('======\n')
-            file.write('#### Scene 1\n')
-            file.write('\n')
-            file.write('Your genius awaits.')
 
         os.mkdir("legacy-project")
         with open("legacy-project/legacy.txt", "w") as file:
+            file.write("# Legacy-Project\n")
+            file.write("## Explanation\n")
+            file.write("#### Detail\n")
             file.write("If applicable, your legacy project goes here as a .txt file.")
             file.write('\n')
             file.write(
-                "Separate out into Sections (e.g., # Section), Chapters \n"
-                "(e.g., ## Chapter), Sub-chapters (e.g., ### Sub-chapter), and \n"
-                "Scenes (e.g., ####) to take advantage of the Outliner \n"
+                "Separate out into Sections, Chapters, Sub-chapters, and \n"
+                "Scenes to via Markdown take advantage of the Outliner \n"
                 "functionality.")
+
+            file.write("Try running `draft generate-file-tree` to see how you can \n"
+                "turn a Markdown formatted doc into a directory.")
 
         os.mkdir('archive')
         os.mkdir('archive/project')
