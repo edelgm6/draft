@@ -60,15 +60,28 @@ class Outliner():
         with open('outline.md', 'w') as outline:
             outline.write(page)
 
-    def generate_file_tree(self, file, title):
-        intervals = self._get_header_intervals(file)
-        self._generate_folders(intervals, title, file)
+    def generate_file_tree(self):
 
-    def _generate_folders(self, intervals, title, file):
+        project = os.listdir('project')
+        assert len(project) == 1, "Must have one file in top-level project/ directory."
+        project = project[0]
+
+        legacy_project = os.listdir('legacy-project')
+        assert len(legacy_project) == 1, "Must have one file in top-level legacy-project/ directory."
+        legacy_project = legacy_project[0]
+        legacy_file, extension = os.path.splitext('legacy-project/' + legacy_project)
+        assert extension == ".txt", "Legacy project must be a .txt file."
+
+        file = 'legacy-project/' + legacy_project
+        intervals = self._get_header_intervals(file)
+        self._generate_folders(intervals, file, project)
+
+    def _generate_folders(self, intervals, file, title):
         headers = list(intervals)
+        base_path = 'project/' + title
 
         try:
-            os.mkdir(title)
+            os.mkdir('project/' + title)
         except FileExistsError:
             pass
 
@@ -92,7 +105,7 @@ class Outliner():
             if re.match(section, header.group(0)):
                 name = name.strip('#')
                 name = name.strip()
-                current_path = title + "/" + section_count + "-" + name + "/"
+                current_path = base_path + "/" + section_count + "-" + name + "/"
 
                 try:
                     os.mkdir(current_path)

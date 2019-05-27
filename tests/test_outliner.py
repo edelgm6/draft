@@ -21,13 +21,18 @@ class TestUpdateOutline(TestCase):
 class TestFileTree(TestCase):
 
     def tearDown(self):
-        file = open('testfile.txt')
+        file = open('legacy-project/legacy.txt')
         file.close()
         os.remove(file.name)
-        rmtree('Gatsby/')
+        rmtree('project/')
+        rmtree('legacy-project/')
 
     def test_generate_file_tree(self):
-        fp = open('testfile.txt','w+')
+        generator = Generator()
+        generator.generate_project('Gatsby')
+        rmtree('project/Gatsby/01-Section 1')
+
+        fp = open('legacy-project/legacy.txt','w+')
         fp.write("# Part 1: The Reckoning\n")
         fp.write("\n")
         fp.write("## Chapter 1: The Promise\n")
@@ -48,19 +53,19 @@ class TestFileTree(TestCase):
         fp.close()
 
         outliner = Outliner()
-        outliner.generate_file_tree(fp.name, 'Gatsby')
+        outliner.generate_file_tree()
 
-        self.assertEqual(len(os.listdir('Gatsby/')),3)
+        self.assertEqual(len(os.listdir('project/Gatsby/')),3)
 
 
-        self.assertTrue(os.path.isdir('Gatsby/01-Part 1: The Reckoning'))
-        self.assertTrue(os.path.isdir('Gatsby/01-Part 1: The Reckoning/01-Chapter 1: The Promise'))
-        self.assertTrue(os.path.isdir('Gatsby/01-Part 1: The Reckoning/01-Chapter 1: The Promise/01-New York, 1942'))
-        self.assertTrue(os.path.isdir('Gatsby/02-Part 2: The Whatever'))
-        self.assertTrue(os.path.isdir('Gatsby/03-Part 3: Tomorrow'))
-        self.assertTrue(os.path.isfile('Gatsby/02-Part 2: The Whatever/01-The Bar.md'))
+        self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1: The Reckoning'))
+        self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1: The Reckoning/01-Chapter 1: The Promise'))
+        self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1: The Reckoning/01-Chapter 1: The Promise/01-New York, 1942'))
+        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2: The Whatever'))
+        self.assertTrue(os.path.isdir('project/Gatsby/03-Part 3: Tomorrow'))
+        self.assertTrue(os.path.isfile('project/Gatsby/02-Part 2: The Whatever/01-The Bar.md'))
 
-        with open('Gatsby/02-Part 2: The Whatever/01-The Bar.md', 'r') as fp:
+        with open('project/Gatsby/02-Part 2: The Whatever/01-The Bar.md', 'r') as fp:
             lines = fp.readlines()
             self.assertEqual(lines[0],"It was a fall day.\n")
             self.assertEqual(lines[1],"It was cold.\n")
