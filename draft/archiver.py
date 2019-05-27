@@ -9,17 +9,13 @@ class Archiver():
         generator = Generator()
         generator.confirm_project_layout()
 
-    def archive_directory(self, type):
-        options = ['project', 'legacy-project']
-        if type not in options:
-            raise ValueError("Type must be project or legacy-project.")
-
+    def archive_directory(self):
         time_utc = datetime.datetime.utcnow()
 
         destination = time_utc.replace(microsecond=0)
-        destination = 'archive/' + type + "/" + str(destination)
+        destination = 'archive/' + str(destination)
 
-        self._copytree(type, destination)
+        self._copytree('project/', destination)
 
         return destination
 

@@ -64,25 +64,23 @@ class Outliner():
         with open('outline.md', 'w') as outline:
             outline.write(page)
 
-    def generate_file_tree(self):
+    def generate_file_tree(self, filepath):
 
         archiver = Archiver()
-        archiver.archive_directory('project')
+        archiver.archive_directory()
 
         project = os.listdir('project')
         project = project[0]
 
-        legacy_project = os.listdir('legacy-project')
-        if len(legacy_project) != 1:
-            raise StructureError("Must have one file in top-level legacy-project/ directory.")
-        legacy_project = legacy_project[0]
-        legacy_file, extension = os.path.splitext('legacy-project/' + legacy_project)
-        if extension != ".txt":
-            raise StructureError("File in legacy-project must be .txt.")
+        if not os.path.isfile(filepath):
+            raise ValueError(filepath + " does not exist.")
 
-        file = 'legacy-project/' + legacy_project
-        intervals = self._get_header_intervals(file)
-        self._generate_folders(intervals, file, project)
+        source_file, extension = os.path.splitext(filepath)
+        if extension not in ['.txt','.md']:
+            raise Exception('File must be .txt or .md, got ' + extension + '.')
+
+        intervals = self._get_header_intervals(filepath)
+        self._generate_folders(intervals, filepath, project)
 
     def _generate_folders(self, intervals, file, title):
         headers = list(intervals)

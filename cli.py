@@ -8,9 +8,12 @@ def main():
     pass
 
 @main.command()
-def generate_file_tree():
+def generate_file_tree(filename):
     """
-    Generates a project tree based on the file in legacy-project.
+    Generates a project tree based on a Markdown formatted .md or .txt file.
+
+    Useful for generating project trees based on legacy projects or an 
+    outline file.
     """
     outliner = Outliner()
     outliner.generate_file_tree()
