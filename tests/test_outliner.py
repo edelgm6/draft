@@ -32,7 +32,6 @@ class TestFileTree(TestCase):
     def test_generate_file_tree(self):
         generator = Generator()
         generator.generate_project('Gatsby')
-        rmtree('project/Gatsby/01-Section 1')
 
         fp = open('legacy-project/legacy.txt','w+')
         fp.write("# Part 1: The Reckoning\n")
