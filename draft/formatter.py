@@ -1,13 +1,21 @@
 import os
 import re
+from draft.archiver import Archiver
+from draft.generator import Generator
 
 class Formatter():
 
-    def remove_duplicate_spaces(file):
+    def __init__(self):
+        generator = Generator()
+        generator.confirm_project_layout()
 
+    def remove_duplicate_spaces(self, file):
         pattern = ' {2,}'
 
         with open(file, 'r+') as file:
+            archiver = Archiver()
+            archiver.archive_directory('project')
+
             text = file.read()
             text = re.sub(pattern, ' ', text)
 
@@ -21,6 +29,8 @@ class Formatter():
         abbreviations = ['etc.', 'Mrs.', 'Mr.', 'Dr.']
 
         with open(file, 'r+') as file:
+            archiver = Archiver()
+            archiver.archive_directory('project')
 
             text = file.read()
             lines = re.split(pattern, text)

@@ -1,13 +1,17 @@
 import re
 import os
 import mistune
+from draft.archiver import Archiver
+from draft.generator import Generator
 
 class Outliner():
 
+    def __init__(self):
+        generator = Generator()
+        generator.confirm_project_layout()
+
     def update_outline(self):
         title = os.listdir('project')
-
-        assert len(title) == 1, "Project folder has more than one directory."
 
         outline = []
         for path, subdirs, files in os.walk('project/' + title[0]):
@@ -62,15 +66,19 @@ class Outliner():
 
     def generate_file_tree(self):
 
+        archiver = Archiver()
+        archiver.archive_directory('project')
+
         project = os.listdir('project')
-        assert len(project) == 1, "Must have one file in top-level project/ directory."
         project = project[0]
 
         legacy_project = os.listdir('legacy-project')
-        assert len(legacy_project) == 1, "Must have one file in top-level legacy-project/ directory."
+        if len(legacy_project) != 1:
+            raise StructureError("Must have one file in top-level legacy-project/ directory.")
         legacy_project = legacy_project[0]
         legacy_file, extension = os.path.splitext('legacy-project/' + legacy_project)
-        assert extension == ".txt", "Legacy project must be a .txt file."
+        if extension != ".txt":
+            raise StructureError("File in legacy-project must be .txt.")
 
         file = 'legacy-project/' + legacy_project
         intervals = self._get_header_intervals(file)

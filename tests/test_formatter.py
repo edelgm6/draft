@@ -1,20 +1,30 @@
 from unittest import TestCase
 from draft.formatter import Formatter
+from draft.generator import Generator
 import os
+from shutil import rmtree
 
 
 class TestCleanSpaces(TestCase):
+
+    def setUp(self):
+        generator = Generator()
+        generator.generate_project('Gatsby')
 
     def tearDown(self):
         file = open('testfile.txt')
         file.close()
         os.remove(file.name)
+        rmtree('legacy-project')
+        rmtree('project')
+        rmtree('archive')
 
     def test_clean_spaces(self):
         fp = open('testfile.txt','w+')
         fp.write("\"It's the end of the world as  we know it.\" \"And I    feel fine.\"")
         fp.close()
-        Formatter.remove_duplicate_spaces(fp.name)
+        formatter = Formatter()
+        formatter.remove_duplicate_spaces(fp.name)
 
         fp = open('testfile.txt','r')
         lines = fp.readlines()
@@ -22,14 +32,20 @@ class TestCleanSpaces(TestCase):
 
         self.assertEqual(lines[0],"\"It's the end of the world as we know it.\" \"And I feel fine.\"")
 
-
-
 class TestSplitSentences(TestCase):
+
+    def setUp(self):
+        generator = Generator()
+        generator.generate_project('Gatsby')
 
     def tearDown(self):
         file = open('testfile.txt')
         file.close()
         os.remove(file.name)
+        rmtree('legacy-project')
+        rmtree('project')
+        rmtree('archive')
+
 
     def test_split_sentences_on_quotes_within_a_sentence(self):
 

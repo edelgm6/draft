@@ -9,6 +9,7 @@ class TestUpdateOutline(TestCase):
     def tearDown(self):
         rmtree('project/')
         rmtree('legacy-project/')
+        rmtree('archive')
         os.remove('outline.md')
 
     def test_update_outline(self):
@@ -26,6 +27,7 @@ class TestFileTree(TestCase):
         os.remove(file.name)
         rmtree('project/')
         rmtree('legacy-project/')
+        rmtree('archive')
 
     def test_generate_file_tree(self):
         generator = Generator()
