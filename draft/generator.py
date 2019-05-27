@@ -3,6 +3,7 @@ import os
 class Generator():
 
     def generate_project(self, title):
+
         os.mkdir('project')
         os.mkdir('project/' + title)
         os.mkdir('project/' + title + "/01-Section 1")
