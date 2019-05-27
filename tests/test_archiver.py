@@ -8,20 +8,18 @@ from shutil import rmtree
 class TestArchiveDirectory(TestCase):
 
     def tearDown(self):
-        rmtree('legacy-project')
         rmtree('project')
         rmtree('archive')
+        os.remove('legacy.txt')
 
     def test_copies_files(self):
         generator = Generator()
         generator.generate_project('Gatsby')
 
         archiver = Archiver()
-        destination = archiver.archive_directory('project')
+        destination = archiver.archive_directory()
 
         for dir in ['project', destination]:
             self.assertTrue(os.path.isdir(dir + '/Gatsby/'))
 
         self.assertTrue(os.path.isdir('archive'))
-        self.assertTrue(os.path.isdir('archive/project'))
-        self.assertTrue(os.path.isdir('archive/legacy-project'))

@@ -14,7 +14,7 @@ class TestProjectLayout(TestCase):
 class TestFileTree(TestCase):
 
     def tearDown(self):
-        rmtree('legacy-project')
+        os.remove('legacy.txt')
         rmtree('project')
         rmtree('archive')
 
@@ -26,5 +26,3 @@ class TestFileTree(TestCase):
         self.assertTrue(os.path.isdir('project/Gatsby/'))
 
         self.assertTrue(os.path.isdir('archive'))
-        self.assertTrue(os.path.isdir('archive/project'))
-        self.assertTrue(os.path.isdir('archive/legacy-project'))

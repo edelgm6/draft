@@ -8,9 +8,10 @@ class TestUpdateOutline(TestCase):
 
     def tearDown(self):
         rmtree('project/')
-        rmtree('legacy-project/')
         rmtree('archive')
         os.remove('outline.md')
+        os.remove('legacy.txt')
+
 
     def test_update_outline(self):
         generator = Generator()
@@ -22,18 +23,15 @@ class TestUpdateOutline(TestCase):
 class TestFileTree(TestCase):
 
     def tearDown(self):
-        file = open('legacy-project/legacy.txt')
-        file.close()
-        os.remove(file.name)
         rmtree('project/')
-        rmtree('legacy-project/')
         rmtree('archive')
+        os.remove('legacy.txt')
 
     def test_generate_file_tree(self):
         generator = Generator()
         generator.generate_project('Gatsby')
 
-        fp = open('legacy-project/legacy.txt','w+')
+        fp = open('legacy.txt','w+')
         fp.write("# Part 1: The Reckoning\n")
         fp.write("\n")
         fp.write("## Chapter 1: The Promise\n")
@@ -49,15 +47,15 @@ class TestFileTree(TestCase):
         fp.write("# Part 3: Tomorrow\n")
         fp.write("\n")
         fp.write("#### The Next Day\n")
+        fp.write("\n")
         fp.write("Now it's tomorrow.\n")
         fp.write("It's still cold.\n")
         fp.close()
 
         outliner = Outliner()
-        outliner.generate_file_tree()
+        outliner.generate_file_tree('legacy.txt')
 
         self.assertEqual(len(os.listdir('project/Gatsby/')),3)
-
 
         self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1: The Reckoning'))
         self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1: The Reckoning/01-Chapter 1: The Promise'))

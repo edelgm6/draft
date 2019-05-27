@@ -38,8 +38,7 @@ class Generator():
         os.mkdir('project')
         os.mkdir('project/' + title)
 
-        os.mkdir("legacy-project")
-        with open("legacy-project/legacy.txt", "w") as file:
+        with open("legacy.txt", "w") as file:
             file.write("# Legacy-Project\n")
             file.write("## Explanation\n")
             file.write("#### Detail\n")
@@ -54,5 +53,3 @@ class Generator():
                 "turn a Markdown formatted doc into a directory.")
 
         os.mkdir('archive')
-        os.mkdir('archive/project')
-        os.mkdir('archive/legacy-project')

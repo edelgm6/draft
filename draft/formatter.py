@@ -14,7 +14,7 @@ class Formatter():
 
         with open(file, 'r+') as file:
             archiver = Archiver()
-            archiver.archive_directory('project')
+            archiver.archive_directory()
 
             text = file.read()
             text = re.sub(pattern, ' ', text)
@@ -30,7 +30,7 @@ class Formatter():
 
         with open(file, 'r+') as file:
             archiver = Archiver()
-            archiver.archive_directory('project')
+            archiver.archive_directory()
 
             text = file.read()
             lines = re.split(pattern, text)

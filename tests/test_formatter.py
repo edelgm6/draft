@@ -15,7 +15,6 @@ class TestCleanSpaces(TestCase):
         file = open('testfile.txt')
         file.close()
         os.remove(file.name)
-        rmtree('legacy-project')
         rmtree('project')
         rmtree('archive')
 
@@ -42,7 +41,6 @@ class TestSplitSentences(TestCase):
         file = open('testfile.txt')
         file.close()
         os.remove(file.name)
-        rmtree('legacy-project')
         rmtree('project')
         rmtree('archive')
 
