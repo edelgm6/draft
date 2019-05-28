@@ -41,15 +41,15 @@ class Outliner():
         for entry in clean_outline:
             if len(entry) == 1:
                 section = entry[0]
-                page = markdown("# " + section + "\n\n")
+                page = markdown("## " + section + "\n\n")
 
             elif len(entry) == 2:
                 chapter = entry[-1]
-                page = page + markdown("## " + chapter + "\n\n")
+                page = page + markdown("### " + chapter + "\n\n")
 
             elif len(entry) == 3:
                 sub_chapter = entry[-1]
-                page = page + markdown("### " + sub_chapter + "\n\n")
+                page = page + markdown("#### " + sub_chapter + "\n\n")
 
             elif len(entry) == 4:
                 dir = 'project/' + os.listdir('project')[0] + '/' + '/'.join(entry)
@@ -81,29 +81,40 @@ class Outliner():
             raise Exception('File must be .txt or .md, got ' + extension + '.')
 
         intervals = self._get_header_intervals(filepath)
-        self._generate_folders(intervals, filepath, project)
+        self._generate_folders(intervals, filepath)
 
-    def _generate_folders(self, intervals, file, title):
+    def _generate_folders(self, intervals, file):
         headers = list(intervals)
-        base_path = 'project/' + title
+        current_path = 'project'
 
         shutil.rmtree('project/')
         os.mkdir('project/')
-        os.mkdir('project/' + title)
 
-        section = "^#{1} "
-        chapter = "^#{2} "
-        sub_chapter = "^#{3} "
-        scene = "^#{4} "
-
-        current_section = ""
-        current_chapter = ""
-        current_sub_chapter = ""
+        title = "^#{1} "
+        section = "^#{2} "
+        chapter = "^#{3} "
+        sub_chapter = "^#{4} "
+        scene = "^#{5} "
 
         section_count = '01'
         chapter_count = '01'
         sub_chapter_count = '01'
         scene_count = '01'
+
+        title_path = ''
+        for header in headers:
+            if re.match(title, header.group(0)):
+                title = header.group(0)
+                title = title.strip('#')
+                title = title.strip()
+                title_path = current_path + "/" + title
+
+        if not title_path:
+            raise StructureError("Must be a title (e.g., # The Great Gatsby) in the source file.")
+        try:
+            os.mkdir(title_path)
+        except FileExistsError:
+            pass
 
         for index, header in enumerate(headers):
             name = header.group(0)
@@ -111,10 +122,11 @@ class Outliner():
             if re.match(section, header.group(0)):
                 name = name.strip('#')
                 name = name.strip()
-                current_path = base_path + "/" + section_count + "-" + name + "/"
-
+                section_path = title_path + "/" + section_count + "-" + name + "/"
+                chapter_path, sub_chapter_path, scene_path = section_path, section_path, section_path
+                print(section_path)
                 try:
-                    os.mkdir(current_path)
+                    os.mkdir(section_path)
                 except FileExistsError:
                     pass
 
@@ -123,9 +135,11 @@ class Outliner():
             elif re.match(chapter, header.group(0)):
                 name = name.strip('#')
                 name = name.strip()
-                current_path = current_path + chapter_count + "-" + name + "/"
+                chapter_path = section_path + chapter_count + "-" + name + "/"
+                sub_chapter_path, scene_path = chapter_path, chapter_path
+                print(chapter_path)
                 try:
-                    os.mkdir(current_path)
+                    os.mkdir(chapter_path)
                 except FileExistsError:
                     pass
 
@@ -134,9 +148,11 @@ class Outliner():
             elif re.match(sub_chapter, header.group(0)):
                 name = name.strip('#')
                 name = name.strip()
-                current_path = current_path + sub_chapter_count + "-" + name + "/"
+                sub_chapter_path = chapter_path + sub_chapter_count + "-" + name + "/"
+                scene_path = sub_chapter_path
+                print(sub_chapter_path)
                 try:
-                    os.mkdir(current_path)
+                    os.mkdir(sub_chapter_path)
                 except FileExistsError:
                     pass
 
@@ -145,7 +161,8 @@ class Outliner():
             elif re.match(scene, header.group(0)):
                 name = name.strip('#')
                 name = name.strip()
-                current_path = current_path + scene_count + "-" + name + ".md"
+                scene_path = sub_chapter_path + scene_count + "-" + name + ".md"
+                print(scene_path)
 
                 start_scene = header.end(0) + 1
                 try:
@@ -158,7 +175,7 @@ class Outliner():
 
                 scene_text = text[start_scene:end_scene]
                 try:
-                    with open(current_path, 'w') as scene_file:
+                    with open(scene_path, 'w') as scene_file:
                         scene_file.write(scene_text)
                 except FileExistsError:
                     pass
@@ -168,7 +185,7 @@ class Outliner():
 
     def _get_header_intervals(self, file):
 
-        section = "((?<=[\\n\s])|^)#{1,4} .*?\\n"
+        section = "((?<=[\\n\s])|^)#{1,5} .*?\\n"
 
         with open(file, 'r') as file:
             text = file.read()

@@ -41,9 +41,11 @@ class Generator():
         with open("legacy.txt", "w") as file:
             file.write("# Legacy-Project\n")
             file.write('\n')
-            file.write("## Explanation\n")
+            file.write("## Section1\n")
             file.write('\n')
-            file.write("#### Detail\n")
+            file.write("### Explanation\n")
+            file.write('\n')
+            file.write("##### Detail\n")
             file.write('\n')
             file.write("If applicable, your legacy project goes here as a .txt file.")
             file.write('\n')
