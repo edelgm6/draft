@@ -88,10 +88,7 @@ class Outliner():
         base_path = 'project/' + title
 
         shutil.rmtree('project/')
-<<<<<<< HEAD
         os.mkdir('project/')
-=======
->>>>>>> c6dd1997ea0ca022d2c185c91e90340cfeb93655
         os.mkdir('project/' + title)
 
         section = "^#{1} "
