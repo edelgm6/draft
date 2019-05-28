@@ -36,12 +36,12 @@ class Outliner():
         outline_tag = '(?<=======\\n).*(?=\\n======)'
 
         markdown = mistune.Markdown()
-        page = ''
+        page = markdown("# " + title[0] + "\n\n")
 
         for entry in clean_outline:
             if len(entry) == 1:
                 section = entry[0]
-                page = markdown("## " + section + "\n\n")
+                page = page + markdown("## " + section + "\n\n")
 
             elif len(entry) == 2:
                 chapter = entry[-1]
@@ -53,7 +53,8 @@ class Outliner():
 
             elif len(entry) == 4:
                 dir = 'project/' + os.listdir('project')[0] + '/' + '/'.join(entry)
-                scene = entry[-1]
+                #scene = entry[-1]
+                scene = os.path.splitext(dir)[0]
                 scene_entry = scene
 
                 with open(dir, 'r') as sc:
@@ -124,7 +125,6 @@ class Outliner():
                 name = name.strip()
                 section_path = title_path + "/" + section_count + "-" + name + "/"
                 chapter_path, sub_chapter_path, scene_path = section_path, section_path, section_path
-                print(section_path)
                 try:
                     os.mkdir(section_path)
                 except FileExistsError:
@@ -137,7 +137,6 @@ class Outliner():
                 name = name.strip()
                 chapter_path = section_path + chapter_count + "-" + name + "/"
                 sub_chapter_path, scene_path = chapter_path, chapter_path
-                print(chapter_path)
                 try:
                     os.mkdir(chapter_path)
                 except FileExistsError:
@@ -150,7 +149,6 @@ class Outliner():
                 name = name.strip()
                 sub_chapter_path = chapter_path + sub_chapter_count + "-" + name + "/"
                 scene_path = sub_chapter_path
-                print(sub_chapter_path)
                 try:
                     os.mkdir(sub_chapter_path)
                 except FileExistsError:
@@ -162,7 +160,6 @@ class Outliner():
                 name = name.strip('#')
                 name = name.strip()
                 scene_path = sub_chapter_path + scene_count + "-" + name + ".md"
-                print(scene_path)
 
                 start_scene = header.end(0) + 1
                 try:
