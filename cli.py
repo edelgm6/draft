@@ -8,15 +8,16 @@ def main():
     pass
 
 @main.command()
-def generate_file_tree(filename):
+@click.argument('filepath', type=click.Path(exists=True, dir_okay=False))
+def generate_file_tree(filepath):
     """
     Generates a project tree based on a Markdown formatted .md or .txt file.
 
-    Useful for generating project trees based on legacy projects or an 
+    Useful for generating project trees based on legacy projects or an
     outline file.
     """
     outliner = Outliner()
-    outliner.generate_file_tree()
+    outliner.generate_file_tree(filepath)
 
 @main.command()
 @click.argument('filename', type=click.Path(exists=True))

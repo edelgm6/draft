@@ -1,6 +1,7 @@
 import re
 import os
 import mistune
+import shutil
 from draft.archiver import Archiver
 from draft.generator import Generator
 
@@ -86,10 +87,8 @@ class Outliner():
         headers = list(intervals)
         base_path = 'project/' + title
 
-        try:
-            os.mkdir('project/' + title)
-        except FileExistsError:
-            pass
+        shutil.rmtree('project/')
+        os.mkdir('project/' + title)
 
         section = "^#{1} "
         chapter = "^#{2} "

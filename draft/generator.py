@@ -40,16 +40,19 @@ class Generator():
 
         with open("legacy.txt", "w") as file:
             file.write("# Legacy-Project\n")
+            file.write('\n')
             file.write("## Explanation\n")
+            file.write('\n')
             file.write("#### Detail\n")
+            file.write('\n')
             file.write("If applicable, your legacy project goes here as a .txt file.")
             file.write('\n')
             file.write(
-                "Separate out into Sections, Chapters, Sub-chapters, and \n"
-                "Scenes to via Markdown take advantage of the Outliner \n"
-                "functionality.")
+                "Separate out into Sections, Chapters, Sub-chapters, and "
+                "Scenes to via Markdown take advantage of the Outliner "
+                "functionality.\n")
 
-            file.write("Try running `draft generate-file-tree` to see how you can \n"
-                "turn a Markdown formatted doc into a directory.")
+            file.write("Try running `draft generate-file-tree` to see how you can "
+                "turn a Markdown formatted doc into a directory.\n")
 
         os.mkdir('archive')
