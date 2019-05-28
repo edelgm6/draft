@@ -43,6 +43,7 @@ class TestSplitSentences(TestCase):
         os.remove(file.name)
         rmtree('project')
         rmtree('archive')
+        os.remove('legacy.txt')
 
 
     def test_split_sentences_on_quotes_within_a_sentence(self):
