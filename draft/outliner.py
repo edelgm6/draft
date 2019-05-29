@@ -56,17 +56,20 @@ class Outliner():
             level_list.sort()
             outline += level_list
 
-        for item in outline:
-            print(item)
-
         for branch in outline:
+            if os.path.isfile(branch):
+                continue
             if len(os.listdir(branch)) == 0:
                 continue
 
             no_duplicates = False
             while not no_duplicates:
                 no_duplicates = True
-                files = os.listdir(branch)
+                try:
+                    files = os.listdir(branch)
+                except NotADirectoryError:
+                    files = []
+                    break
                 files.sort()
 
                 # Find if there are any duplicates

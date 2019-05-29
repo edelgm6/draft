@@ -27,6 +27,12 @@ class TestUpdateSequence(TestCase):
         os.mkdir('project/Gatsby/04-Part 6')
         os.mkdir('project/Gatsby/05-Part 7')
 
+        base = 'project/Gatsby/01-Part 2/01-Chapter 1/'
+        for file in ['01-Scene 1.md','01-Scene 2.md','01-Scene 3.md','01-Scene 4.md']:
+            fp = open(base + file, 'w')
+            fp.close()
+
+
     def test_sequence_is_reset(self):
 
         """
