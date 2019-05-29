@@ -5,10 +5,6 @@ from draft.generator import Generator
 
 class Archiver():
 
-    def __init__(self):
-        generator = Generator()
-        generator.confirm_project_layout()
-
     def archive_directory(self):
         time_utc = datetime.datetime.utcnow()
 
@@ -31,6 +27,10 @@ class Archiver():
             s = os.path.join(src, item)
             d = os.path.join(dst, item)
             if os.path.isdir(s):
-                shutil.copytree(s, d, symlinks, ignore)
+                try:
+                    shutil.copytree(s, d, symlinks, ignore)
+                except FileExistsError:
+                    d = os.path.join(dst + '-02', item)
+                    shutil.copytree(s, d, symlinks, ignore)
             else:
                 shutil.copy2(s, d)

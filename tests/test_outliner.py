@@ -4,6 +4,53 @@ from draft.generator import Generator
 import os
 from shutil import rmtree
 
+class TestUpdateSequence(TestCase):
+
+    def tearDown(self):
+        rmtree('project')
+        rmtree('archive')
+        os.remove('legacy.txt')
+
+    def setUp(self):
+        generator = Generator()
+        generator.generate_project('Gatsby')
+
+        os.mkdir('project/Gatsby/01-Part 1')
+        os.mkdir('project/Gatsby/01-Part 2')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 1')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 2')
+        os.mkdir('project/Gatsby/01-Part 2/05-Chapter 3')
+        os.mkdir('project/Gatsby/01-Part 2/05-Chapter 4')
+        os.mkdir('project/Gatsby/03-Part 3')
+        os.mkdir('project/Gatsby/04-Part 4')
+        os.mkdir('project/Gatsby/04-Part 5')
+        os.mkdir('project/Gatsby/04-Part 6')
+        os.mkdir('project/Gatsby/05-Part 7')
+
+        base = 'project/Gatsby/01-Part 2/01-Chapter 1/'
+        for file in ['01-Scene 1.md','01-Scene 2.md','01-Scene 3.md','01-Scene 4.md']:
+            fp = open(base + file, 'w')
+            fp.close()
+
+
+    def test_sequence_is_reset(self):
+
+        """
+        TODO: Test with markdown files
+        """
+
+        outliner = Outliner()
+        outliner.update_file_sequence()
+
+        tree = outliner._get_file_tree()
+
+        for branch in tree:
+            print(branch)
+
+        """
+        TODO: Add assertions
+        """
+
 class TestUpdateOutline(TestCase):
 
     def tearDown(self):

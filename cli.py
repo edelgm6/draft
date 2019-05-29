@@ -5,7 +5,18 @@ from draft.outliner import Outliner
 
 @click.group()
 def main():
+    generator = Generator()
+    generator.confirm_project_layout()
     pass
+
+@main.command()
+def resequence_project(filepath):
+    """
+    Resets indices in folders and files and resolves duplicates.
+    """
+
+    outliner = Outliner()
+    outliner.update_file_sequence()
 
 @main.command()
 @click.argument('filepath', type=click.Path(exists=True, dir_okay=False))
@@ -16,6 +27,7 @@ def generate_file_tree(filepath):
     Useful for generating project trees based on legacy projects or an
     outline file.
     """
+
     outliner = Outliner()
     outliner.generate_file_tree(filepath)
 
@@ -27,6 +39,7 @@ def split_sentences(filename):
 
     Takes a FILENAME as the argument. File must be in the to-process folder.
     """
+
     Formatter.split_sentences(filename)
 
 @main.command()
