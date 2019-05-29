@@ -2,16 +2,13 @@ import re
 import os
 import mistune
 import shutil
+import click
 from draft.archiver import Archiver
 from draft.generator import Generator
 
 class Outliner():
 
-    def __init__(self):
-        generator = Generator()
-        generator.confirm_project_layout()
-
-    def update_outline(self):
+    def _get_file_tree(self):
         title = os.listdir('project')
 
         outline = []
@@ -22,16 +19,61 @@ class Outliner():
                 outline.append(os.path.join(path, name))
 
         outline.sort()
+        return outline
+
+    def update_file_sequence(self):
+        """
+        TODO: Add in something that checks that all files
+        are named correctly.
+        """
+
+        archiver = Archiver()
+        archiver.archive_directory()
+
+        outline = self._get_file_tree()
+
+        for item in outline:
+            print(item)
+
+        title = os.listdir('project')[0]
+        base_dir = 'project/' + title + '/'
+        files = os.listdir(base_dir)
+        files.sort()
+
+        previous_file = files[0]
+        sequence = previous_file[:2]
+        duplicates = [(previous_file, base_dir + previous_file)]
+        for file in files[1:]:
+            if file[:2] == sequence:
+                duplicates.append((file, base_dir + file))
+            else:
+                break
+
+        click.echo("There are " + str(len(duplicates)) + " files with the " + sequence + " sequence:")
+        for duplicate in duplicates:
+            click.echo(duplicate[0])
+        click.echo("\n")
+
+        """
+        TODO: Validate the input here
+        """
+        for duplicate in duplicates:
+            value = click.prompt("What sequence should " + duplicate[0] + " have? \nMust be a two digit number (e.g., 01, 02, 10, 11, etc.)")
+            print(value)
+            directory_split = duplicate[1].split('/')
+            new_file_name = value + duplicate[0][2:]
+            directory_split[-1] = new_file_name
+            new_directory = "/".join(directory_split)
+            os.rename(duplicate[1], new_directory)
+
+    def update_outline(self):
+        title = os.listdir('project')
+        outline = self._get_file_tree()
 
         clean_outline = []
         for entry in outline:
             entry = entry.split('/')
             clean_outline.append(entry[2:])
-
-        section = ''
-        chapter = ''
-        sub_chapter = ''
-        scene = ''
 
         outline_tag = '(?<=======\\n).*(?=\\n======)'
 

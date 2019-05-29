@@ -17,6 +17,7 @@ class StructureError(Error):
 class Generator():
 
     def confirm_project_layout(self):
+
         try:
             project_files = os.listdir('project')
         except FileNotFoundError:

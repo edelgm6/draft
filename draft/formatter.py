@@ -5,10 +5,6 @@ from draft.generator import Generator
 
 class Formatter():
 
-    def __init__(self):
-        generator = Generator()
-        generator.confirm_project_layout()
-
     def remove_duplicate_spaces(self, file):
         pattern = ' {2,}'
 

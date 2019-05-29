@@ -5,6 +5,8 @@ from draft.outliner import Outliner
 
 @click.group()
 def main():
+    generator = Generator()
+    generator.confirm_project_layout()
     pass
 
 @main.command()
@@ -16,6 +18,7 @@ def generate_file_tree(filepath):
     Useful for generating project trees based on legacy projects or an
     outline file.
     """
+
     outliner = Outliner()
     outliner.generate_file_tree(filepath)
 
@@ -27,6 +30,7 @@ def split_sentences(filename):
 
     Takes a FILENAME as the argument. File must be in the to-process folder.
     """
+
     Formatter.split_sentences(filename)
 
 @main.command()
