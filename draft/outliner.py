@@ -9,10 +9,9 @@ from draft.generator import Generator
 class Outliner():
 
     def _get_file_tree(self):
-        title = os.listdir('project')
 
         outline = []
-        for path, subdirs, files in os.walk('project/' + title[0]):
+        for path, subdirs, files in os.walk('project/'):
             for dir in subdirs:
                 outline.append(os.path.join(path, dir))
             for name in files:
@@ -27,6 +26,8 @@ class Outliner():
         are named correctly.
         TODO: Add in something that checks to make sure there are not
         more than 99 files
+        TODO: Add a method to more cleanly change the name of a directory (gets repeated a lot)
+        TODO: Test with markdown files
         """
 
         archiver = Archiver()
@@ -39,49 +40,72 @@ class Outliner():
         title = os.listdir('project')[0]
         base_dir = 'project/' + title + '/'
 
-        no_duplicates = False
-        while not no_duplicates:
-            no_duplicates = True
-            files = os.listdir(base_dir)
-            files.sort()
+        leveled_branches = []
+        for branch in outline:
+            leveled_branch = branch.split('/')
+            leveled_branches.append((len(leveled_branch), branch))
 
-            # Find if there are any duplicates
-            first_file = files[0]
-            sequence = first_file[:2]
-            for file in files[1:]:
-                if file[:2] == sequence:
-                    no_duplicates = False
+        leveled_branches.sort(reverse=True)
+
+        levels = list(set([branch[0] for branch in leveled_branches]))
+        levels.sort(reverse=True)
+
+        outline = []
+        for level in levels:
+            level_list = [branch[1] for branch in leveled_branches if branch[0] == level]
+            level_list.sort()
+            outline += level_list
+
+        for item in outline:
+            print(item)
+
+        for branch in outline:
+            if len(os.listdir(branch)) == 0:
+                continue
+
+            no_duplicates = False
+            while not no_duplicates:
+                no_duplicates = True
+                files = os.listdir(branch)
+                files.sort()
+
+                # Find if there are any duplicates
+                first_file = files[0]
+                sequence = first_file[:2]
+                for file in files[1:]:
+                    if file[:2] == sequence:
+                        no_duplicates = False
+                        break
+                    else:
+                        sequence = file[:2]
+                if no_duplicates:
                     break
-                else:
-                    sequence = file[:2]
-            if no_duplicates:
-                break
 
-            # If there are duplicates, find all of the duplicates
-            duplicates = []
+                # If there are duplicates, find all of the duplicates
+                duplicates = []
+                for file in files:
+                    if file[:2] == sequence:
+                        duplicates.append((file, branch + "/" + file))
+
+                for file in files:
+                    if int(file[:2]) > int(sequence):
+                        rank = str(int(file[:2]) + len(duplicates)).zfill(len(sequence))
+                        new_file_name = rank + file[2:]
+                        os.rename(branch + "/" + file, branch + "/" + new_file_name)
+
+
+                self._resolve_duplicates(duplicates, sequence)
+
+            sequence = '01'
             for file in files:
-                if file[:2] == sequence:
-                    duplicates.append((file, base_dir + file))
-
-            for file in files:
-                if int(file[:2]) > int(sequence):
-                    rank = str(int(file[:2]) + len(duplicates)).zfill(len(sequence))
-                    new_file_name = rank + file[2:]
-                    os.rename(base_dir + file, base_dir + new_file_name)
-
-
-            self._resolve_duplicates(duplicates, sequence)
-
-        sequence = '01'
-        for file in files:
-            if file[:2] != sequence:
-                new_file_name = sequence + file[2:]
-                os.rename(base_dir + file, base_dir + new_file_name)
-            sequence = str(int(sequence) + 1).zfill(len(sequence))
+                if file[:2] != sequence:
+                    new_file_name = sequence + file[2:]
+                    os.rename(branch + "/" + file, branch + "/" + new_file_name)
+                sequence = str(int(sequence) + 1).zfill(len(sequence))
 
     def _resolve_duplicates(self, duplicates, sequence):
         counter = 1
-        click.echo("There are " + str(len(duplicates)) + " files with the " + sequence + " sequence:")
+        click.echo("There are " + str(len(duplicates)) + " files with a duplicate sequence:")
         for duplicate in duplicates:
             click.echo(str(counter) + ") " + duplicate[0][3:])
             counter += 1

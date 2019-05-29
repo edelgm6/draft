@@ -17,6 +17,10 @@ class TestUpdateSequence(TestCase):
 
         os.mkdir('project/Gatsby/01-Part 1')
         os.mkdir('project/Gatsby/01-Part 2')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 1')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 2')
+        os.mkdir('project/Gatsby/01-Part 2/05-Chapter 3')
+        os.mkdir('project/Gatsby/01-Part 2/05-Chapter 4')
         os.mkdir('project/Gatsby/03-Part 3')
         os.mkdir('project/Gatsby/04-Part 4')
         os.mkdir('project/Gatsby/04-Part 5')
@@ -24,7 +28,10 @@ class TestUpdateSequence(TestCase):
         os.mkdir('project/Gatsby/05-Part 7')
 
     def test_sequence_is_reset(self):
-        #os.rename('project/Gatsby/02-Part 2: The Whatever', 'project/Gatsby/01-Part 2: The Whatever')
+
+        """
+        TODO: Test with markdown files
+        """
 
         outliner = Outliner()
         outliner.update_file_sequence()
@@ -34,8 +41,9 @@ class TestUpdateSequence(TestCase):
         for branch in tree:
             print(branch)
 
-
-
+        """
+        TODO: Add assertions
+        """
 
 class TestUpdateOutline(TestCase):
 
