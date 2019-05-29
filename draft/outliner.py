@@ -27,44 +27,66 @@ class Outliner():
         are named correctly.
         """
 
-        archiver = Archiver()
-        archiver.archive_directory()
+        #archiver = Archiver()
+        #archiver.archive_directory()
 
+        # Get outline of all files in tree
         outline = self._get_file_tree()
 
-        for item in outline:
-            print(item)
-
+        # Build up base of all files in first level directory
         title = os.listdir('project')[0]
         base_dir = 'project/' + title + '/'
-        files = os.listdir(base_dir)
-        files.sort()
 
-        previous_file = files[0]
-        sequence = previous_file[:2]
-        duplicates = [(previous_file, base_dir + previous_file)]
-        for file in files[1:]:
-            if file[:2] == sequence:
-                duplicates.append((file, base_dir + file))
-            else:
+        no_duplicates = False
+        while not no_duplicates:
+            no_duplicates = True
+            files = os.listdir(base_dir)
+            files.sort()
+
+            # Find if there are any duplicates
+            first_file = files[0]
+            sequence = first_file[:2]
+            for file in files[1:]:
+                if file[:2] == sequence:
+                    no_duplicates = False
+                    break
+                else:
+                    sequence = file[:2]
+            if no_duplicates:
                 break
 
-        click.echo("There are " + str(len(duplicates)) + " files with the " + sequence + " sequence:")
-        for duplicate in duplicates:
-            click.echo(duplicate[0])
-        click.echo("\n")
+            # If there are duplicates, find all of the duplicates
+            duplicates = []
+            for file in files:
+                if file[:2] == sequence:
+                    duplicates.append((file, base_dir + file))
 
-        """
-        TODO: Validate the input here
-        """
-        for duplicate in duplicates:
-            value = click.prompt("What sequence should " + duplicate[0] + " have? \nMust be a two digit number (e.g., 01, 02, 10, 11, etc.)")
-            print(value)
-            directory_split = duplicate[1].split('/')
-            new_file_name = value + duplicate[0][2:]
-            directory_split[-1] = new_file_name
-            new_directory = "/".join(directory_split)
-            os.rename(duplicate[1], new_directory)
+            counter = 1
+            click.echo("There are " + str(len(duplicates)) + " files with the " + sequence + " sequence:")
+            for duplicate in duplicates:
+                click.echo(str(counter) + ") " + duplicate[0])
+                counter += 1
+            click.echo("\n")
+
+            """
+            TODO: Validate the input here
+            """
+            choices = list(range(1,len(duplicates) + 1))
+            for duplicate in duplicates:
+                if len(choices) == 1:
+                    value = choices[0]
+                else:
+                    click.echo("Of the " + str(len(duplicates)) + " duplicates, choose the order for " + duplicate[0])
+                    value = click.prompt("Select any of " + str(choices), type=int)
+
+                rank = str(int(sequence) + value - 1).zfill(len(sequence))
+
+                directory_split = duplicate[1].split('/')
+                new_file_name = rank + duplicate[0][2:]
+                directory_split[-1] = new_file_name
+                new_directory = "/".join(directory_split)
+                os.rename(duplicate[1], new_directory)
+                choices.remove(value)
 
     def update_outline(self):
         title = os.listdir('project')

@@ -15,44 +15,26 @@ class TestUpdateSequence(TestCase):
         generator = Generator()
         generator.generate_project('Gatsby')
 
-        fp = open('legacy.txt','w+')
-        fp.write("# Gatsby\n")
-        fp.write("\n")
-        fp.write("## Part 1: The Reckoning\n")
-        fp.write("\n")
-        fp.write("### Chapter 1: The Promise\n")
-        fp.write("\n")
-        fp.write("#### New York, 1942\n")
-        fp.write("\n")
-        fp.write("## Part 2: The Whatever\n")
-        fp.write("\n")
-
-        fp.write("##### The Bar\n")
-        fp.write("\n")
-        fp.write("It was a fall day.\n")
-        fp.write("It was cold.\n")
-        fp.write("## Part 3: Tomorrow\n")
-        fp.write("\n")
-        fp.write("##### The Next Day\n")
-        fp.write("\n")
-        fp.write("Now it's tomorrow.\n")
-        fp.write("It's still cold.\n")
-
-        fp.close()
-
-        outliner = Outliner()
-        outliner.generate_file_tree('legacy.txt')
+        os.mkdir('project/Gatsby/01-Part 1')
+        os.mkdir('project/Gatsby/01-Part 2')
+        os.mkdir('project/Gatsby/03-Part 3')
+        os.mkdir('project/Gatsby/04-Part 4')
+        os.mkdir('project/Gatsby/04-Part 5')
+        os.mkdir('project/Gatsby/06-Part 6')
+        os.mkdir('project/Gatsby/07-Part 7')
 
     def test_sequence_is_reset(self):
-        os.rename('project/Gatsby/01-Part 1: The Reckoning', 'project/Gatsby/02-Part 1: The Reckoning')
+        #os.rename('project/Gatsby/02-Part 2: The Whatever', 'project/Gatsby/01-Part 2: The Whatever')
 
         outliner = Outliner()
         outliner.update_file_sequence()
 
-        outliner._get_file_tree()
+        tree = outliner._get_file_tree()
 
-        self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1: The Reckoning'))
-        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2: The Whatever'))
+        for branch in tree:
+            print(branch)
+
+
 
 
 class TestUpdateOutline(TestCase):
