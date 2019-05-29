@@ -10,6 +10,15 @@ def main():
     pass
 
 @main.command()
+def resequence_project(filepath):
+    """
+    Resets indices in folders and files and resolves duplicates.
+    """
+
+    outliner = Outliner()
+    outliner.update_file_sequence()
+
+@main.command()
 @click.argument('filepath', type=click.Path(exists=True, dir_okay=False))
 def generate_file_tree(filepath):
     """
