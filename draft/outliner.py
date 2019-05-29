@@ -25,10 +25,12 @@ class Outliner():
         """
         TODO: Add in something that checks that all files
         are named correctly.
+        TODO: Add in something that checks to make sure there are not
+        more than 99 files
         """
 
-        #archiver = Archiver()
-        #archiver.archive_directory()
+        archiver = Archiver()
+        archiver.archive_directory()
 
         # Get outline of all files in tree
         outline = self._get_file_tree()
@@ -61,32 +63,49 @@ class Outliner():
                 if file[:2] == sequence:
                     duplicates.append((file, base_dir + file))
 
-            counter = 1
-            click.echo("There are " + str(len(duplicates)) + " files with the " + sequence + " sequence:")
-            for duplicate in duplicates:
-                click.echo(str(counter) + ") " + duplicate[0])
-                counter += 1
-            click.echo("\n")
+            for file in files:
+                if int(file[:2]) > int(sequence):
+                    rank = str(int(file[:2]) + len(duplicates)).zfill(len(sequence))
+                    new_file_name = rank + file[2:]
+                    os.rename(base_dir + file, base_dir + new_file_name)
 
-            """
-            TODO: Validate the input here
-            """
-            choices = list(range(1,len(duplicates) + 1))
-            for duplicate in duplicates:
-                if len(choices) == 1:
-                    value = choices[0]
-                else:
-                    click.echo("Of the " + str(len(duplicates)) + " duplicates, choose the order for " + duplicate[0])
-                    value = click.prompt("Select any of " + str(choices), type=int)
 
-                rank = str(int(sequence) + value - 1).zfill(len(sequence))
+            self._resolve_duplicates(duplicates, sequence)
 
-                directory_split = duplicate[1].split('/')
-                new_file_name = rank + duplicate[0][2:]
-                directory_split[-1] = new_file_name
-                new_directory = "/".join(directory_split)
-                os.rename(duplicate[1], new_directory)
-                choices.remove(value)
+        sequence = '01'
+        for file in files:
+            if file[:2] != sequence:
+                new_file_name = sequence + file[2:]
+                os.rename(base_dir + file, base_dir + new_file_name)
+            sequence = str(int(sequence) + 1).zfill(len(sequence))
+
+    def _resolve_duplicates(self, duplicates, sequence):
+        counter = 1
+        click.echo("There are " + str(len(duplicates)) + " files with the " + sequence + " sequence:")
+        for duplicate in duplicates:
+            click.echo(str(counter) + ") " + duplicate[0][3:])
+            counter += 1
+        click.echo("\n")
+
+        """
+        TODO: Validate the input here
+        """
+        choices = list(range(1,len(duplicates) + 1))
+        for duplicate in duplicates:
+            if len(choices) == 1:
+                value = choices[0]
+            else:
+                click.echo("Of the " + str(len(duplicates)) + " duplicates, choose the order for " + duplicate[0][3:])
+                value = click.prompt("Select any of " + str(choices), type=int)
+
+            rank = str(int(sequence) + value - 1).zfill(len(sequence))
+
+            directory_split = duplicate[1].split('/')
+            new_file_name = rank + duplicate[0][2:]
+            directory_split[-1] = new_file_name
+            new_directory = "/".join(directory_split)
+            os.rename(duplicate[1], new_directory)
+            choices.remove(value)
 
     def update_outline(self):
         title = os.listdir('project')

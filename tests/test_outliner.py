@@ -20,8 +20,8 @@ class TestUpdateSequence(TestCase):
         os.mkdir('project/Gatsby/03-Part 3')
         os.mkdir('project/Gatsby/04-Part 4')
         os.mkdir('project/Gatsby/04-Part 5')
-        os.mkdir('project/Gatsby/06-Part 6')
-        os.mkdir('project/Gatsby/07-Part 7')
+        os.mkdir('project/Gatsby/04-Part 6')
+        os.mkdir('project/Gatsby/05-Part 7')
 
     def test_sequence_is_reset(self):
         #os.rename('project/Gatsby/02-Part 2: The Whatever', 'project/Gatsby/01-Part 2: The Whatever')
