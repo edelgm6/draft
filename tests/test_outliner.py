@@ -47,7 +47,7 @@ class TestCompileProject(TestCase):
         gatsby = open('Gatsby.md', 'r')
         text = gatsby.read()
         gatsby.close()
-        #os.remove('Gatsby.md')
+        os.remove('Gatsby.md')
 
         self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n**01-Scene 2.md**: the _world_ beckons!\n\n### Chapter 2\n\n')
 
