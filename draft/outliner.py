@@ -1,6 +1,5 @@
 import re
 import os
-import mistune
 import shutil
 import click
 from draft.archiver import Archiver
@@ -19,6 +18,54 @@ class Outliner():
 
         outline.sort()
         return outline
+
+    def compile_project(self, draft=False):
+        title = os.listdir('project')[0]
+        outline_tag = '(?<=\*{3}\n).*(?=\n\*{3})'
+        outline = self._get_file_tree()
+
+        page = ""
+        for branch in outline:
+            if os.path.isfile(branch):
+                with open(branch, 'r') as sc:
+                    text = sc.read().strip()
+                    scene_detail = re.search(outline_tag, text)
+                    if scene_detail:
+                        outline_span = scene_detail.span()
+                        outline = scene_detail.group(0)
+                        text = text[outline_span[1] + 4:]
+                    if draft:
+                        page = page + text + "\n\n"
+                    else:
+                        split_branch = branch.split("/")
+                        branch_end = split_branch[-1]
+                        extension_index = branch_end.rindex(".")
+                        scene_name = "**" + branch_end[3:extension_index] + "**"
+
+                        page = page + scene_name + ": " + outline + "\n\n"
+
+            elif os.path.isdir(branch):
+                split_branch = branch.split("/")
+                branch_end = split_branch[-1]
+                if len(split_branch) == 2:
+                    section = branch_end
+                    page = page + "# " + section + "\n\n"
+
+                elif len(split_branch) == 3:
+                    chapter = branch_end[3:]
+                    page = page + "## " + chapter + "\n\n"
+
+                elif len(split_branch) == 4:
+                    sub_chapter = branch_end[3:]
+                    page = page + "### " + sub_chapter + "\n\n"
+
+        if draft:
+            file_name = title + '.md'
+        else:
+            file_name = 'outline.md'
+        with open(file_name, 'w') as fp:
+            fp.write(page)
+
 
     def update_file_sequence(self):
         """
@@ -133,48 +180,6 @@ class Outliner():
             new_directory = "/".join(directory_split)
             os.rename(duplicate[1], new_directory)
             choices.remove(value)
-
-    def update_outline(self):
-        title = os.listdir('project')
-        outline = self._get_file_tree()
-
-        clean_outline = []
-        for entry in outline:
-            entry = entry.split('/')
-            clean_outline.append(entry[2:])
-
-        outline_tag = '(?<=======\\n).*(?=\\n======)'
-
-        markdown = mistune.Markdown()
-        page = markdown("# " + title[0] + "\n\n")
-
-        for entry in clean_outline:
-            if len(entry) == 1:
-                section = entry[0]
-                page = page + markdown("## " + section + "\n\n")
-
-            elif len(entry) == 2:
-                chapter = entry[-1]
-                page = page + markdown("### " + chapter + "\n\n")
-
-            elif len(entry) == 3:
-                sub_chapter = entry[-1]
-                page = page + markdown("#### " + sub_chapter + "\n\n")
-
-            elif len(entry) == 4:
-                dir = 'project/' + os.listdir('project')[0] + '/' + '/'.join(entry)
-                #scene = entry[-1]
-                scene = os.path.splitext(dir)[0]
-                scene_entry = scene
-
-                with open(dir, 'r') as sc:
-                    text = sc.read().strip()
-                    scene_detail = re.search(outline_tag, text)
-                    scene_entry = scene_entry + ": " + scene_detail.group(0)
-                    page = page + markdown(scene_entry)
-
-        with open('outline.md', 'w') as outline:
-            outline.write(page)
 
     def generate_file_tree(self, filepath):
 
