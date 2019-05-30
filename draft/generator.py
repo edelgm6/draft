@@ -23,16 +23,15 @@ class Generator():
         except FileNotFoundError:
             raise StructureError("project/ folder missing. Try running generate-project to create a layout.")
 
-        if len(project_files) != 1:
-            raise StructureError("project/ folder has more than one directory.")
-
         try:
             archive_folder = os.listdir('archive')
         except FileNotFoundError:
             raise StructureError("archive/ folder missing. Try running generate-project to create a layout.")
 
-        if len(project_files) != 1:
-            raise StructureError("project/ folder has more than one directory.")
+        if '.DS_Store' in project_files:
+            project_files.remove('.DS_Store')
+        if len(project_files) > 1:
+            raise StructureError("project/ folder has more than one directory:" + project_files)
 
     def generate_project(self, title):
 

@@ -33,11 +33,12 @@ class TestCompileProject(TestCase):
         outliner = Outliner()
         outliner.compile_project(draft=False)
 
-        gatsby = open('Gatsby.md', 'r')
+        gatsby = open('outline.md', 'r')
         text = gatsby.read()
         gatsby.close()
+        os.remove('outline.md')
 
-        self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n\n**01-Scene 1.md**: the _world_ beckons!\n\n\n**01-Scene 2.md**: the _world_ beckons!\n\n### Chapter 2\n\n')
+        self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**: This is an outline\n\n### Chapter 2\n\n')
 
     def test_creates_project(self):
         outliner = Outliner()
@@ -46,8 +47,9 @@ class TestCompileProject(TestCase):
         gatsby = open('Gatsby.md', 'r')
         text = gatsby.read()
         gatsby.close()
+        #os.remove('Gatsby.md')
 
-        self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n\n**01-Scene 1.md**: the _world_ beckons!\n\n\n**01-Scene 2.md**: the _world_ beckons!\n\n### Chapter 2\n\n')
+        self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n**01-Scene 2.md**: the _world_ beckons!\n\n### Chapter 2\n\n')
 
 class TestUpdateSequence(TestCase):
 
