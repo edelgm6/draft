@@ -4,6 +4,40 @@ from draft.generator import Generator
 import os
 from shutil import rmtree
 
+class TestStatistics(TestCase):
+    def tearDown(self):
+        rmtree('project')
+        rmtree('archive')
+        os.remove('legacy.txt')
+
+    def setUp(self):
+        generator = Generator()
+        generator.generate_project('Gatsby')
+
+        os.mkdir('project/Gatsby/01-Part 1')
+        os.mkdir('project/Gatsby/01-Part 2')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 1')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 2')
+
+        base = 'project/Gatsby/01-Part 2/01-Chapter 1/'
+        for file in ['01-Scene 1.md','01-Scene 2.md']:
+            fp = open(base + file, 'w')
+            fp.write("***\n")
+            fp.write("This is an outline\n")
+            fp.write("***\n")
+            fp.write("**" + file + "**: the _world_ beckons!")
+            fp.close()
+
+    def test_get_statistics(self):
+        outliner = Outliner()
+        word_count, scene_count, sub_chapter_count, chapter_count, section_count = outliner.get_statistics()
+
+        self.assertEqual(word_count, 10)
+        self.assertEqual(scene_count, 2)
+        self.assertEqual(sub_chapter_count, 0)
+        self.assertEqual(chapter_count, 2)
+        self.assertEqual(section_count, 2)
+
 class TestCompileProject(TestCase):
 
     def tearDown(self):
