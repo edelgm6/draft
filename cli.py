@@ -69,7 +69,15 @@ def update_outline():
     Generates or updates a project outline.
     """
     outliner = Outliner()
-    outliner.update_outline()
+    outliner.compile_project()
+
+@main.command()
+def compile_project():
+    """
+    Generates or updates a project outline.
+    """
+    outliner = Outliner()
+    outliner.compile_project(draft=True)
 
 """
 if __name__ == "__main__":
