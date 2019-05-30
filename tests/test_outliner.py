@@ -125,9 +125,6 @@ class TestUpdateSequence(TestCase):
 
         tree = outliner._get_file_tree()
 
-        for branch in tree:
-            print(branch)
-
         """
         TODO: Add assertions
         """

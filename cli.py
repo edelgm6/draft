@@ -18,11 +18,11 @@ def stats():
     outliner = Outliner()
     word_count, scene_count, sub_chapter_count, chapter_count, section_count = outliner.get_statistics()
 
-    click.echo("Word count: " + word_count)
-    click.echo("Scene count: " + word_count)
-    click.echo("Sub-Chapter count: " + word_count)
-    click.echo("Chapter count: " + word_count)
-    click.echo("Section count: " + word_count)
+    click.echo("Word count: " + str(word_count))
+    click.echo("Scene count: " + str(word_count))
+    click.echo("Sub-Chapter count: " + str(word_count))
+    click.echo("Chapter count: " + str(word_count))
+    click.echo("Section count: " + str(word_count))
 
 @main.command()
 def resequence_project(filepath):

@@ -37,8 +37,6 @@ class Outliner():
 
         for dir in dirs:
             split_branch = dir.split("/")
-            print(split_branch)
-            print(len(split_branch))
             levels = len(split_branch)
             if levels == 3:
                 section_count += 1
