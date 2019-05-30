@@ -35,14 +35,14 @@ class Outliner():
                         outline = scene_detail.group(0)
                         text = text[outline_span[1] + 4:]
                     if draft:
-                        page = page + text + "\n\n"
+                        page = page + text.strip() + "\n\n"
                     else:
                         split_branch = branch.split("/")
                         branch_end = split_branch[-1]
                         extension_index = branch_end.rindex(".")
                         scene_name = "**" + branch_end[3:extension_index] + "**"
 
-                        page = page + scene_name + ": " + outline + "\n\n"
+                        page = page + scene_name + ": " + outline.strip() + "\n\n"
 
             elif os.path.isdir(branch):
                 split_branch = branch.split("/")
@@ -185,9 +185,6 @@ class Outliner():
 
         archiver = Archiver()
         archiver.archive_directory()
-
-        project = os.listdir('project')
-        project = project[0]
 
         if not os.path.isfile(filepath):
             raise ValueError(filepath + " does not exist.")
