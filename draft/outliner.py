@@ -19,6 +19,59 @@ class Outliner():
         outline.sort()
         return outline
 
+    def get_statistics(self):
+
+        outline = self._get_file_tree()
+        files = []
+        dirs = []
+
+        for branch in outline:
+            if os.path.isfile(branch) and branch[-3:] == ".md":
+                files.append(branch)
+            elif os.path.isdir(branch):
+                dirs.append(branch)
+
+        section_count = 0
+        chapter_count = 0
+        sub_chapter_count = 0
+
+        for dir in dirs:
+            split_branch = dir.split("/")
+            print(split_branch)
+            print(len(split_branch))
+            levels = len(split_branch)
+            if levels == 3:
+                section_count += 1
+            elif levels == 4:
+                chapter_count += 1
+            elif levels == 5:
+                sub_chapter_count += 1
+
+        scene_count = len(files)
+        word_count = 0
+        for file in files:
+            with open(file, 'r') as fp:
+                content = fp.read()
+                text = self._get_text_element(content, draft=True)
+                word_count += len(text.split())
+
+        return word_count, scene_count, sub_chapter_count, chapter_count, section_count
+
+    # Get the text in a file that is after the outline
+    def _get_text_element(self, text, draft=False):
+        outline_tag = '(?<=\*{3}\n).*(?=\n\*{3})'
+        text = text.strip()
+        scene_detail = re.search(outline_tag, text)
+        if scene_detail:
+            outline = scene_detail.group(0)
+            outline_span = scene_detail.span()
+            text = text[outline_span[1] + 4:]
+
+        if draft:
+            return text.strip()
+        else:
+            return outline.strip()
+
     def compile_project(self, draft=False):
         title = os.listdir('project')[0]
         outline_tag = '(?<=\*{3}\n).*(?=\n\*{3})'
@@ -29,11 +82,7 @@ class Outliner():
             if os.path.isfile(branch):
                 with open(branch, 'r') as sc:
                     text = sc.read().strip()
-                    scene_detail = re.search(outline_tag, text)
-                    if scene_detail:
-                        outline_span = scene_detail.span()
-                        outline = scene_detail.group(0)
-                        text = text[outline_span[1] + 4:]
+                    text = self._get_text_element(text, draft)
                     if draft:
                         page = page + text.strip() + "\n\n"
                     else:
@@ -42,7 +91,7 @@ class Outliner():
                         extension_index = branch_end.rindex(".")
                         scene_name = "**" + branch_end[3:extension_index] + "**"
 
-                        page = page + scene_name + ": " + outline.strip() + "\n\n"
+                        page = page + scene_name + ": " + text + "\n\n"
 
             elif os.path.isdir(branch):
                 split_branch = branch.split("/")

@@ -10,6 +10,21 @@ def main():
     pass
 
 @main.command()
+def stats():
+    """
+    Gets statistics from the project (e.g., word count, etc.)
+    """
+
+    outliner = Outliner()
+    word_count, scene_count, sub_chapter_count, chapter_count, section_count = outliner.get_statistics()
+
+    click.echo("Word count: " + word_count)
+    click.echo("Scene count: " + word_count)
+    click.echo("Sub-Chapter count: " + word_count)
+    click.echo("Chapter count: " + word_count)
+    click.echo("Section count: " + word_count)
+
+@main.command()
 def resequence_project(filepath):
     """
     Resets indices in folders and files and resolves duplicates.
