@@ -35,10 +35,11 @@ class Generator():
 
     def generate_project(self, title):
 
-        os.mkdir('project')
-        os.mkdir('project/' + title)
+        os.mkdir(title)
+        os.mkdir(title + '/project')
+        os.mkdir(title + '/project/' + title)
 
-        with open("legacy.txt", "w") as file:
+        with open(title + "/tryme.txt", "w") as file:
             file.write("# Legacy-Project\n")
             file.write('\n')
             file.write("## Section1\n")
@@ -54,7 +55,7 @@ class Generator():
                 "Scenes to via Markdown take advantage of the Outliner "
                 "functionality.\n")
 
-            file.write("Try running `draft generate-file-tree` to see how you can "
-                "turn a Markdown formatted doc into a directory.\n")
+            file.write("Try running `draft generate-file-tree tryme.txt` to see how you can "
+                "turn a Markdown or Textfile doc into a directory.\n")
 
-        os.mkdir('archive')
+        os.mkdir(title + '/archive')

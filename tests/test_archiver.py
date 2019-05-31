@@ -7,15 +7,16 @@ from shutil import rmtree
 
 class TestArchiveDirectory(TestCase):
 
+    def setUp(self):
+        os.mkdir('project')
+        os.mkdir('project/Gatsby')
+        os.mkdir('archive')
+
     def tearDown(self):
         rmtree('project')
         rmtree('archive')
-        os.remove('legacy.txt')
 
     def test_copies_files(self):
-        generator = Generator()
-        generator.generate_project('Gatsby')
-
         archiver = Archiver()
         destination = archiver.archive_directory()
 

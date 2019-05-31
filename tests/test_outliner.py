@@ -8,11 +8,11 @@ class TestStatistics(TestCase):
     def tearDown(self):
         rmtree('project')
         rmtree('archive')
-        os.remove('legacy.txt')
 
     def setUp(self):
-        generator = Generator()
-        generator.generate_project('Gatsby')
+        os.mkdir('project')
+        os.mkdir('project/Gatsby')
+        os.mkdir('archive')
 
         os.mkdir('project/Gatsby/01-Part 1')
         os.mkdir('project/Gatsby/01-Part 2')
@@ -42,12 +42,10 @@ class TestCompileProject(TestCase):
 
     def tearDown(self):
         rmtree('project')
-        rmtree('archive')
-        os.remove('legacy.txt')
 
     def setUp(self):
-        generator = Generator()
-        generator.generate_project('Gatsby')
+        os.mkdir('project')
+        os.mkdir('project/Gatsby')
 
         os.mkdir('project/Gatsby/01-Part 1')
         os.mkdir('project/Gatsby/01-Part 2')
@@ -131,21 +129,29 @@ class TestUpdateSequence(TestCase):
 
 class TestUpdateOutline(TestCase):
 
+    def setUp(self):
+        os.mkdir('project')
+        os.mkdir('project/Gatsby')
+        os.mkdir('archive')
+
     def tearDown(self):
         rmtree('project/')
         rmtree('archive')
         os.remove('outline.md')
-        os.remove('legacy.txt')
 
-
+    """
+    This needs to be updated to have actual assertions
+    """
     def test_update_outline(self):
-        generator = Generator()
-        generator.generate_project('Gatsby')
-
         outliner = Outliner()
         outliner.compile_project(draft=False)
 
 class TestFileTree(TestCase):
+
+    def setUp(self):
+        os.mkdir('project')
+        os.mkdir('project/Gatsby')
+        os.mkdir('archive')
 
     def tearDown(self):
         rmtree('project/')
@@ -153,8 +159,6 @@ class TestFileTree(TestCase):
         os.remove('legacy.txt')
 
     def test_generate_file_tree(self):
-        generator = Generator()
-        generator.generate_project('Gatsby')
 
         fp = open('legacy.txt','w+')
         fp.write("# Gatsby\n")
