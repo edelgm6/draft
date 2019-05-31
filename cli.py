@@ -5,8 +5,6 @@ from draft.outliner import Outliner
 
 @click.group()
 def main():
-    generator = Generator()
-    generator.confirm_project_layout()
     pass
 
 @main.command()
@@ -14,6 +12,8 @@ def stats():
     """
     Gets statistics from the project (e.g., word count, etc.)
     """
+    generator = Generator()
+    generator.confirm_project_layout()
 
     outliner = Outliner()
     word_count, scene_count, sub_chapter_count, chapter_count, section_count = outliner.get_statistics()
@@ -29,6 +29,8 @@ def resequence_project(filepath):
     """
     Resets indices in folders and files and resolves duplicates.
     """
+    generator = Generator()
+    generator.confirm_project_layout()
 
     outliner = Outliner()
     outliner.update_file_sequence()
@@ -42,6 +44,8 @@ def generate_file_tree(filepath):
     Useful for generating project trees based on legacy projects or an
     outline file.
     """
+    generator = Generator()
+    generator.confirm_project_layout()
 
     outliner = Outliner()
     outliner.generate_file_tree(filepath)
@@ -54,6 +58,8 @@ def split_sentences(filename):
 
     Takes a FILENAME as the argument. File must be in the to-process folder.
     """
+    generator = Generator()
+    generator.confirm_project_layout()
 
     Formatter.split_sentences(filename)
 
@@ -65,6 +71,9 @@ def remove_duplicate_spaces(filename):
 
     Takes a FILENAME as the argument. File must be in the to-process folder.
     """
+    generator = Generator()
+    generator.confirm_project_layout()
+
     Formatter.remove_duplicate_spaces(filename)
 
 @main.command()
@@ -83,6 +92,9 @@ def update_outline():
     """
     Generates or updates a project outline.
     """
+    generator = Generator()
+    generator.confirm_project_layout()
+
     outliner = Outliner()
     outliner.compile_project()
 
@@ -91,10 +103,8 @@ def compile_project():
     """
     Generates or updates a project outline.
     """
+    generator = Generator()
+    generator.confirm_project_layout()
+
     outliner = Outliner()
     outliner.compile_project(draft=True)
-
-"""
-if __name__ == "__main__":
-    main()
-"""
