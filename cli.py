@@ -56,11 +56,8 @@ def split_sentences(filename):
     """
     Splits multi-line sentences into separate lines.
 
-    Takes a FILENAME as the argument. File must be in the to-process folder.
+    Takes a FILENAME as the argument.
     """
-    generator = Generator()
-    generator.confirm_project_layout()
-
     Formatter.split_sentences(filename)
 
 @main.command()

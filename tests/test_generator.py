@@ -14,15 +14,13 @@ class TestProjectLayout(TestCase):
 class TestFileTree(TestCase):
 
     def tearDown(self):
-        os.remove('legacy.txt')
-        rmtree('project')
-        rmtree('archive')
+        rmtree('Gatsby')
 
     def test_generate_file_tree(self):
 
         generator = Generator()
         generator.generate_project('Gatsby')
 
-        self.assertTrue(os.path.isdir('project/Gatsby/'))
+        self.assertTrue(os.path.isdir('Gatsby/project/Gatsby/'))
 
-        self.assertTrue(os.path.isdir('archive'))
+        self.assertTrue(os.path.isdir('Gatsby/archive'))

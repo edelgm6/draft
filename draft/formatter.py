@@ -21,16 +21,20 @@ class Formatter():
 
     def split_sentences(file):
 
-        pattern = '([\"\“]?[A-Z][^\.!?]*[\.!?][\"\”]?) '
+        pattern = '([\"\“]?[A-Z][^\.!?]*[\.!?][\"\”]?) {1,2}'
         abbreviations = ['etc.', 'Mrs.', 'Mr.', 'Dr.']
 
-        with open(file, 'r+') as file:
+        path = file.split('/')
+        if 'project' in path:
             archiver = Archiver()
             archiver.archive_directory()
 
+        with open(file, 'r+') as file:
             text = file.read()
+
+            text = text.replace('\n', '\n\n')
             lines = re.split(pattern, text)
-            lines = [line.strip() for line in lines if line not in ['',' ']]
+            lines = [line for line in lines if line]
 
             skip = False
             kill_index = []
@@ -55,10 +59,10 @@ class Formatter():
                 except IndexError:
                     pass
 
-
             lines = [line for index, line in enumerate(lines) if index not in kill_index]
-
             text = "\n".join(lines)
+            text = text.replace('\n\n\n', '\n\n')
+            text = text.replace(' \n','\n')
 
             file.truncate(0)
             file.seek(0)

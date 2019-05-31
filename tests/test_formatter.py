@@ -4,12 +4,12 @@ from draft.generator import Generator
 import os
 from shutil import rmtree
 
-
 class TestCleanSpaces(TestCase):
 
     def setUp(self):
-        generator = Generator()
-        generator.generate_project('Gatsby')
+        os.mkdir('project')
+        os.mkdir('project/Gatsby')
+        os.mkdir('archive')
 
     def tearDown(self):
         file = open('testfile.txt')
@@ -34,8 +34,9 @@ class TestCleanSpaces(TestCase):
 class TestSplitSentences(TestCase):
 
     def setUp(self):
-        generator = Generator()
-        generator.generate_project('Gatsby')
+        os.mkdir('project')
+        os.mkdir('project/Gatsby')
+        os.mkdir('archive')
 
     def tearDown(self):
         file = open('testfile.txt')
@@ -43,7 +44,6 @@ class TestSplitSentences(TestCase):
         os.remove(file.name)
         rmtree('project')
         rmtree('archive')
-        os.remove('legacy.txt')
 
 
     def test_split_sentences_on_quotes_within_a_sentence(self):
