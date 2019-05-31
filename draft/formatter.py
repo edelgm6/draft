@@ -32,6 +32,7 @@ class Formatter():
         with open(file, 'r+') as file:
             text = file.read()
 
+            text = text.replace('\t', '')
             text = text.replace('\n', '\n\n')
             lines = re.split(pattern, text)
             lines = [line for line in lines if line]
