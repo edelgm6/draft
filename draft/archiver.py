@@ -22,6 +22,8 @@ class Archiver():
     """
     def _copytree(self, src, dst, symlinks=False, ignore=shutil.ignore_patterns('*.DS_Store')):
         for item in os.listdir(src):
+            #if item == '.DS_Store':
+            #    continue
             s = os.path.join(src, item)
             d = os.path.join(dst, item)
             if os.path.isdir(s):
