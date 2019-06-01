@@ -2,7 +2,7 @@ import os
 from click.testing import CliRunner
 from shutil import rmtree
 from unittest import TestCase
-from cli import stats, sequence, make_tree, split_sentences, dupe_spaces, create_project, outline, compile
+from draft.cli import stats, sequence, make_tree, split_sentences, dupe_spaces, create_project, outline, compile
 
 class TestOutliners(TestCase):
 
