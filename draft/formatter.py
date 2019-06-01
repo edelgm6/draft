@@ -5,10 +5,13 @@ from draft.generator import Generator
 
 class Formatter():
 
-    def remove_duplicate_spaces(self, file):
+    def __init__(self, filename):
+        self.filename = filename
+
+    def remove_duplicate_spaces(self):
         pattern = ' {2,}'
 
-        with open(file, 'r+') as file:
+        with open(self.filename, 'r+') as file:
             archiver = Archiver()
             archiver.archive_directory()
 
@@ -19,17 +22,17 @@ class Formatter():
             file.seek(0)
             file.write(text)
 
-    def split_sentences(file):
+    def split_sentences(self):
 
         pattern = '([\"\“]?[A-Z][^\.!?]*[\.!?][\"\”]?) {1,2}'
         abbreviations = ['etc.', 'Mrs.', 'Mr.', 'Dr.']
 
-        path = file.split('/')
+        path = self.filename.split('/')
         if 'project' in path:
             archiver = Archiver()
             archiver.archive_directory()
 
-        with open(file, 'r+') as file:
+        with open(self.filename, 'r+') as file:
             text = file.read()
 
             text = text.replace('\t', '')
