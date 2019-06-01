@@ -5,7 +5,7 @@ from draft.outliner import Outliner
 
 @click.group()
 def main():
-    pass
+    pass # pragma: no cover
 
 @main.command()
 def stats():
@@ -25,7 +25,7 @@ def stats():
     click.echo("Sections: " + str(section_count))
 
 @main.command()
-def resequence_project(filepath):
+def sequence():
     """
     Resets indices in folders and files and resolves duplicates.
     """
@@ -37,7 +37,7 @@ def resequence_project(filepath):
 
 @main.command()
 @click.argument('filepath', type=click.Path(exists=True, dir_okay=False))
-def generate_file_tree(filepath):
+def make_tree(filepath):
     """
     Generates a project tree based on a Markdown formatted .md or .txt file.
 
@@ -58,11 +58,12 @@ def split_sentences(filename):
 
     Takes a FILENAME as the argument.
     """
-    Formatter.split_sentences(filename)
+    formatter = Formatter(filename)
+    formatter.split_sentences()
 
 @main.command()
 @click.argument('filename', type=click.Path(exists=True))
-def remove_duplicate_spaces(filename):
+def dupe_spaces(filename):
     """
     Removes all duplicate spaces from text file.
 
@@ -71,7 +72,8 @@ def remove_duplicate_spaces(filename):
     generator = Generator()
     generator.confirm_project_layout()
 
-    Formatter.remove_duplicate_spaces(filename)
+    formatter = Formatter(filename)
+    formatter.remove_duplicate_spaces()
 
 @main.command()
 @click.argument('title', type=click.STRING)
@@ -85,7 +87,7 @@ def create_project(title):
     generator.generate_project(title)
 
 @main.command()
-def update_outline():
+def outline():
     """
     Generates or updates a project outline.
     """
@@ -96,7 +98,7 @@ def update_outline():
     outliner.compile_project()
 
 @main.command()
-def compile_project():
+def compile():
     """
     Generates or updates a project outline.
     """
