@@ -1,15 +1,16 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='draft',
     version='0.1',
-    py_modules=['cli'],
+    packages=find_packages(),
+    include_package_data=True,
     install_requires=[
         'Click',
         'mistune'
     ],
     entry_points='''
         [console_scripts]
-        draft=cli:main
+        draft=draft.cli:main
     ''',
 )
