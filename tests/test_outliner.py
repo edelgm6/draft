@@ -1,6 +1,6 @@
 from unittest import TestCase, skip
 from draft.outliner import Outliner
-from draft.generator import Generator
+from draft.generator import Generator, StructureError
 import os
 from shutil import rmtree
 
@@ -18,6 +18,7 @@ class TestStatistics(TestCase):
         os.mkdir('project/Gatsby/01-Part 2')
         os.mkdir('project/Gatsby/01-Part 2/01-Chapter 1')
         os.mkdir('project/Gatsby/01-Part 2/01-Chapter 2')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 2/01-Sub-Chapter3')
 
         base = 'project/Gatsby/01-Part 2/01-Chapter 1/'
         for file in ['01-Scene 1.md','01-Scene 2.md']:
@@ -34,7 +35,7 @@ class TestStatistics(TestCase):
 
         self.assertEqual(word_count, 10)
         self.assertEqual(scene_count, 2)
-        self.assertEqual(sub_chapter_count, 0)
+        self.assertEqual(sub_chapter_count, 1)
         self.assertEqual(chapter_count, 2)
         self.assertEqual(section_count, 2)
 
@@ -72,7 +73,7 @@ class TestCompileProject(TestCase):
 
         self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**: This is an outline\n\n### Chapter 2\n\n')
 
-    def test_creates_project(self):
+    def test_compiles_project(self):
         outliner = Outliner()
         outliner.compile_project(draft=True)
 
@@ -82,69 +83,6 @@ class TestCompileProject(TestCase):
         os.remove('Gatsby.md')
 
         self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n**01-Scene 2.md**: the _world_ beckons!\n\n### Chapter 2\n\n')
-
-class TestUpdateSequence(TestCase):
-
-    def tearDown(self):
-        rmtree('project')
-        rmtree('archive')
-        os.remove('legacy.txt')
-
-    def setUp(self):
-        generator = Generator()
-        generator.generate_project('Gatsby')
-
-        os.mkdir('project/Gatsby/01-Part 1')
-        os.mkdir('project/Gatsby/01-Part 2')
-        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 1')
-        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 2')
-        os.mkdir('project/Gatsby/01-Part 2/05-Chapter 3')
-        os.mkdir('project/Gatsby/01-Part 2/05-Chapter 4')
-        os.mkdir('project/Gatsby/03-Part 3')
-        os.mkdir('project/Gatsby/04-Part 4')
-        os.mkdir('project/Gatsby/04-Part 5')
-        os.mkdir('project/Gatsby/04-Part 6')
-        os.mkdir('project/Gatsby/05-Part 7')
-
-        base = 'project/Gatsby/01-Part 2/01-Chapter 1/'
-        for file in ['01-Scene 1.md','01-Scene 2.md','01-Scene 3.md','01-Scene 4.md']:
-            fp = open(base + file, 'w')
-            fp.close()
-
-    @skip("skipping until implement prompt simulation")
-    def test_sequence_is_reset(self):
-
-        """
-        TODO: Test with markdown files
-        """
-
-        outliner = Outliner()
-        outliner.update_file_sequence()
-
-        tree = outliner._get_file_tree()
-
-        """
-        TODO: Add assertions
-        """
-
-class TestUpdateOutline(TestCase):
-
-    def setUp(self):
-        os.mkdir('project')
-        os.mkdir('project/Gatsby')
-        os.mkdir('archive')
-
-    def tearDown(self):
-        rmtree('project/')
-        rmtree('archive')
-        os.remove('outline.md')
-
-    """
-    This needs to be updated to have actual assertions
-    """
-    def test_update_outline(self):
-        outliner = Outliner()
-        outliner.compile_project(draft=False)
 
 class TestFileTree(TestCase):
 
@@ -156,7 +94,33 @@ class TestFileTree(TestCase):
     def tearDown(self):
         rmtree('project/')
         rmtree('archive')
-        os.remove('legacy.txt')
+        try:
+            os.remove('legacy.txt')
+        except FileNotFoundError:
+            pass
+
+    def test_non_mdtxt_raises_error(self):
+        outliner = Outliner()
+        with self.assertRaises(Exception):
+            outliner.generate_file_tree('legacy.doc')
+
+    def test_returns_error_if_no_title(self):
+
+        fp = open('legacy.txt','w+')
+        fp.write("## Part 1: The Reckoning\n")
+        fp.write("\n")
+        fp.write("### Chapter 1: The Promise\n")
+        fp.write("\n")
+        fp.write("#### New York, 1942\n")
+        fp.write("\n")
+        fp.write("## Part 2: The Whatever\n")
+        fp.write("\n")
+
+        fp.close()
+
+        outliner = Outliner()
+        with self.assertRaises(StructureError):
+            outliner.generate_file_tree('legacy.txt')
 
     def test_generate_file_tree(self):
 

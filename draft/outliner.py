@@ -3,7 +3,7 @@ import os
 import shutil
 import click
 from draft.archiver import Archiver
-from draft.generator import Generator
+from draft.generator import Generator, StructureError
 
 class Outliner():
 
@@ -159,11 +159,7 @@ class Outliner():
             no_duplicates = False
             while not no_duplicates:
                 no_duplicates = True
-                try:
-                    files = os.listdir(branch)
-                except NotADirectoryError:
-                    files = []
-                    break
+                files = os.listdir(branch)
                 files.sort()
 
                 # Find if there are any duplicates
@@ -233,9 +229,6 @@ class Outliner():
         archiver = Archiver()
         archiver.archive_directory()
 
-        if not os.path.isfile(filepath):
-            raise ValueError(filepath + " does not exist.")
-
         source_file, extension = os.path.splitext(filepath)
         if extension not in ['.txt','.md']:
             raise Exception('File must be .txt or .md, got ' + extension + '.')
@@ -271,10 +264,7 @@ class Outliner():
 
         if not title_path:
             raise StructureError("Must be a title (e.g., # The Great Gatsby) in the source file.")
-        try:
-            os.mkdir(title_path)
-        except FileExistsError:
-            pass
+        os.mkdir(title_path)
 
         for index, header in enumerate(headers):
             name = header.group(0)
@@ -284,10 +274,8 @@ class Outliner():
                 name = name.strip()
                 section_path = title_path + "/" + section_count + "-" + name + "/"
                 chapter_path, sub_chapter_path, scene_path = section_path, section_path, section_path
-                try:
-                    os.mkdir(section_path)
-                except FileExistsError:
-                    pass
+
+                os.mkdir(section_path)
 
                 section_count = str(int(section_count) + 1).zfill(len(section_count))
 
@@ -296,10 +284,7 @@ class Outliner():
                 name = name.strip()
                 chapter_path = section_path + chapter_count + "-" + name + "/"
                 sub_chapter_path, scene_path = chapter_path, chapter_path
-                try:
-                    os.mkdir(chapter_path)
-                except FileExistsError:
-                    pass
+                os.mkdir(chapter_path)
 
                 chapter_count = str(int(chapter_count) + 1).zfill(len(chapter_count))
 
@@ -308,10 +293,7 @@ class Outliner():
                 name = name.strip()
                 sub_chapter_path = chapter_path + sub_chapter_count + "-" + name + "/"
                 scene_path = sub_chapter_path
-                try:
-                    os.mkdir(sub_chapter_path)
-                except FileExistsError:
-                    pass
+                os.mkdir(sub_chapter_path)
 
                 sub_chapter_count = str(int(sub_chapter_count) + 1).zfill(len(sub_chapter_count))
 
@@ -330,11 +312,8 @@ class Outliner():
                     text = fp.read()
 
                 scene_text = text[start_scene:end_scene]
-                try:
-                    with open(scene_path, 'w') as scene_file:
-                        scene_file.write(scene_text)
-                except FileExistsError:
-                    pass
+                with open(scene_path, 'w') as scene_file:
+                    scene_file.write(scene_text)
 
                 scene_count = str(int(scene_count) + 1).zfill(len(scene_count))
 

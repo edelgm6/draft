@@ -31,7 +31,7 @@ class Generator():
         if '.DS_Store' in project_files:
             project_files.remove('.DS_Store')
         if len(project_files) > 1:
-            raise StructureError("project/ folder has more than one directory:" + project_files)
+            raise StructureError("project/ folder has more than one directory:" + str(project_files))
 
     def generate_project(self, title):
 
