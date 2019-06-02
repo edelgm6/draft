@@ -1,3 +1,4 @@
 [run]
-omit=
-    */dr/*
+include =
+    draft/*
+    tests/*
