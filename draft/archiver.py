@@ -1,6 +1,7 @@
 import os
 import datetime
 import shutil
+import click
 from draft.generator import Generator
 
 class Archiver():
@@ -22,8 +23,6 @@ class Archiver():
     """
     def _copytree(self, src, dst, symlinks=False, ignore=shutil.ignore_patterns('*.DS_Store')):
         for item in os.listdir(src):
-            #if item == '.DS_Store':
-            #    continue
             s = os.path.join(src, item)
             d = os.path.join(dst, item)
             if os.path.isdir(s):
@@ -35,3 +34,25 @@ class Archiver():
             else:
                 if item != '.DS_Store':
                     shutil.copy2(s, d)
+
+    def restore_directory(self):
+        archives = os.listdir('archive')
+        if len(archives) == 0:
+            click.echo("You don't have any archives yet.")
+        else:
+            archives.sort()
+            for index, archive in enumerate(archives):
+                click.echo(str(len(archives) - index) + ") " + str(archive))
+
+            value = 0
+            while int(value) <= 0 or value > len(archives):
+                value = click.prompt("Choose the number of the archive to restore (1-" + str(len(archives)) + "):", type=int)
+
+            index = len(archives) - int(value)
+            print(index)
+            archive = 'archive/' + archives[index]
+
+            self.archive_directory()
+            shutil.rmtree('project')
+            os.mkdir('project')
+            self._copytree(archive, 'project/')
