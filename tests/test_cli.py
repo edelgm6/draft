@@ -2,7 +2,97 @@ import os
 from click.testing import CliRunner
 from shutil import rmtree
 from unittest import TestCase
-from draft.cli import stats, sequence, make_tree, split_sentences, dupe_spaces, create_project, outline, compile
+from draft.cli import stats, sequence, make_tree, split_sentences, dupe_spaces, create_project, outline, compile, restore
+import datetime
+from draft.archiver import Archiver
+
+class TestRestoreDirectory(TestCase):
+
+    def setUp(self):
+        os.mkdir('project')
+        os.mkdir('project/Gatsby')
+        with open('project/Gatsby/testfile.txt', 'w') as fp:
+            fp.write('whatever')
+        os.mkdir('archive')
+
+    def tearDown(self):
+        rmtree('project')
+        rmtree('archive')
+
+    def test_restore_bad_choice(self):
+
+        yesterday = datetime.datetime.utcnow() + datetime.timedelta(days=-1)
+        tomorrow = datetime.datetime.utcnow() + datetime.timedelta(days=1)
+
+        for day in [yesterday, tomorrow]:
+            os.mkdir('archive/' + str(day))
+            os.mkdir('archive/' + str(day) + '/Gatsby')
+            with open('archive/' + str(day) + '/Gatsby/testfile.txt', 'w') as fp:
+                fp.write(str(day))
+
+        runner = CliRunner()
+        result = runner.invoke(restore, input='30\n1\n')
+        self.assertEqual(result.exit_code, 0)
+
+    def test_restore_first_choice(self):
+
+        yesterday = datetime.datetime.utcnow() + datetime.timedelta(days=-1)
+        tomorrow = datetime.datetime.utcnow() + datetime.timedelta(days=1)
+
+        for day in [yesterday, tomorrow]:
+            os.mkdir('archive/' + str(day))
+            os.mkdir('archive/' + str(day) + '/Gatsby')
+            with open('archive/' + str(day) + '/Gatsby/testfile.txt', 'w') as fp:
+                fp.write(str(day))
+
+        runner = CliRunner()
+        result = runner.invoke(restore, input='1\n')
+        self.assertEqual(result.exit_code, 0)
+
+        with open('project/Gatsby/testfile.txt', 'r') as fp:
+            text = fp.read()
+            self.assertEqual(text, str(tomorrow))
+
+        latest_archive = os.listdir('archive')
+        latest_archive.sort()
+        latest_archive = latest_archive[1]
+        with open('archive/' + latest_archive + '/Gatsby/testfile.txt', 'r') as fp:
+            text = fp.read()
+            self.assertEqual(text, 'whatever')
+
+    def test_restore_second_choice(self):
+
+        yesterday = datetime.datetime.utcnow() + datetime.timedelta(days=-1)
+        tomorrow = datetime.datetime.utcnow() + datetime.timedelta(days=1)
+
+        for day in [yesterday, tomorrow]:
+            os.mkdir('archive/' + str(day))
+            os.mkdir('archive/' + str(day) + '/Gatsby')
+            with open('archive/' + str(day) + '/Gatsby/testfile.txt', 'w') as fp:
+                fp.write(str(day))
+
+        runner = CliRunner()
+        result = runner.invoke(restore, input='2\n')
+
+        with open('project/Gatsby/testfile.txt', 'r') as fp:
+            text = fp.read()
+            self.assertEqual(text, str(yesterday))
+
+        latest_archive = os.listdir('archive')
+        latest_archive.sort()
+        latest_archive = latest_archive[1]
+        with open('archive/' + latest_archive + '/Gatsby/testfile.txt', 'r') as fp:
+            text = fp.read()
+            self.assertEqual(text, 'whatever')
+
+    def test_no_archives(self):
+
+        runner = CliRunner()
+        result = runner.invoke(restore)
+
+        with open('project/Gatsby/testfile.txt', 'r') as fp:
+            text = fp.read()
+            self.assertEqual(text, 'whatever')
 
 class TestOutliners(TestCase):
 

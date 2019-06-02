@@ -1,6 +1,7 @@
 from unittest import TestCase
 from draft.archiver import Archiver
 import os
+import datetime
 from shutil import rmtree
 
 class TestArchiveDirectory(TestCase):
