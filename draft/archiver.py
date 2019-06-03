@@ -35,7 +35,11 @@ class Archiver():
                     shutil.copytree(s, d, symlinks, ignore)
             else:
                 if item != '.DS_Store':
-                    fp = open(os.path.abspath(d), 'w')
+                    try:
+                        fp = open(os.path.abspath(d), 'w')
+                    except FileNotFoundError:
+                        os.mkdir(os.path.dirname(os.path.abspath(d)))
+                        fp = open(os.path.abspath(d), 'w')
                     fp.close()
                     shutil.copy2(s, os.path.abspath(d))
 
