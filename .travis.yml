@@ -6,7 +6,7 @@ language: python
 
 # Install the codecov pip dependency
 install:
-  - pip install codecov
+  - pip install -r requirements.txt
 
 # Run the unit test
 script:
