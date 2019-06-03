@@ -21,11 +21,13 @@ class Archiver():
     https://stackoverflow.com/questions/1868714/how-do-i-copy-an-entire-
     directory-of-files-into-an-existing-directory-using-pyth/31039095
     """
+
     def _copytree(self, src, dst, symlinks=False, ignore=shutil.ignore_patterns('*.DS_Store')):
         for item in os.listdir(src):
             s = os.path.join(src, item)
             d = os.path.join(dst, item)
             if os.path.isdir(s):
+                d = os.path.abspath(d)
                 try:
                     shutil.copytree(s, d, symlinks, ignore)
                 except FileExistsError: # pragma: no cover
@@ -33,7 +35,13 @@ class Archiver():
                     shutil.copytree(s, d, symlinks, ignore)
             else:
                 if item != '.DS_Store':
-                    shutil.copy2(s, d)
+                    try:
+                        fp = open(os.path.abspath(d), 'w')
+                    except FileNotFoundError:
+                        os.mkdir(os.path.dirname(os.path.abspath(d)))
+                        fp = open(os.path.abspath(d), 'w')
+                    fp.close()
+                    shutil.copy2(s, os.path.abspath(d))
 
     def restore_directory(self):
         archives = os.listdir('archive')
@@ -49,7 +57,6 @@ class Archiver():
                 value = click.prompt("Choose the number of the archive to restore (1-" + str(len(archives)) + "):", type=int)
 
             index = len(archives) - int(value)
-            print(index)
             archive = 'archive/' + archives[index]
 
             self.archive_directory()
