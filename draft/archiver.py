@@ -35,9 +35,9 @@ class Archiver():
                     shutil.copytree(s, d, symlinks, ignore)
             else:
                 if item != '.DS_Store':
-                    fp = open(d, 'w')
+                    fp = open(os.path.abspath(d), 'w')
                     fp.close()
-                    shutil.copy2(s, d)
+                    shutil.copy2(s, os.path.abspath(d))
 
     def restore_directory(self):
         archives = os.listdir('archive')
