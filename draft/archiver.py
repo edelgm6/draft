@@ -33,6 +33,8 @@ class Archiver():
                     shutil.copytree(s, d, symlinks, ignore)
             else:
                 if item != '.DS_Store':
+                    file = open(d, 'w')
+                    file.close()
                     shutil.copy2(s, d)
 
     def restore_directory(self):
@@ -49,7 +51,6 @@ class Archiver():
                 value = click.prompt("Choose the number of the archive to restore (1-" + str(len(archives)) + "):", type=int)
 
             index = len(archives) - int(value)
-            print(index)
             archive = 'archive/' + archives[index]
 
             self.archive_directory()
