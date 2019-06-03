@@ -22,13 +22,12 @@ class Archiver():
     directory-of-files-into-an-existing-directory-using-pyth/31039095
     """
 
-
     def _copytree(self, src, dst, symlinks=False, ignore=shutil.ignore_patterns('*.DS_Store')):
         for item in os.listdir(src):
             s = os.path.join(src, item)
             d = os.path.join(dst, item)
             if os.path.isdir(s):
-                d = os.path.dirname(os.path.abspath(d))
+                d = os.path.abspath(d)
                 try:
                     shutil.copytree(s, d, symlinks, ignore)
                 except FileExistsError: # pragma: no cover
