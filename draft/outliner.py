@@ -156,6 +156,7 @@ class Outliner():
             3: '01',
             4: '01',
             5: '01',
+            'file': '01'
         }
 
         for branch in outline:
@@ -202,8 +203,11 @@ class Outliner():
 
             # Once all files are de-duped, re-base at 01 for each tree level and sequence
             for file in files:
-                split_branch = branch.split("/")
-                levels = len(split_branch)
+                if file[-3:] == '.md':
+                    levels = 'file'
+                else:
+                    split_branch = branch.split("/")
+                    levels = len(split_branch)
                 level_sequence = sequences[levels]
                 if file[:2] != level_sequence:
                     new_file_name = level_sequence + file[2:]

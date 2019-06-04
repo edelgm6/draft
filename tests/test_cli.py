@@ -296,11 +296,20 @@ class TestSequence(TestCase):
         fp = open('project/Gatsby/04-Part 4/01-Chapter 1/02-Scene 5.md', 'w')
         fp.close()
 
+        fp = open('project/Gatsby/05-Part 7/09-Scene 6.md', 'w')
+        fp.close()
+
     def test_sequence(self):
 
         runner = CliRunner()
         result = runner.invoke(sequence, input='1\n2\n3\n1\n1\n1\n1\n2')
+        #print(result.exc_info)
+        #tb = result.exc_info[2]
+        #print(traceback.print_tb(tb))
+        #print(result.output)
         self.assertEqual(result.exit_code, 0)
+
+
 
         self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1'))
         self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2'))
@@ -319,6 +328,7 @@ class TestSequence(TestCase):
         self.assertTrue(os.path.isfile('project/Gatsby/02-Part 2/01-Chapter 1/03-Scene 3.md'))
         self.assertTrue(os.path.isfile('project/Gatsby/02-Part 2/01-Chapter 1/04-Scene 4.md'))
         self.assertTrue(os.path.isfile('project/Gatsby/04-Part 4/05-Chapter 1/05-Scene 5.md'))
+        self.assertTrue(os.path.isfile('project/Gatsby/07-Part 7/06-Scene 6.md'))
 
 class TestStats(TestCase):
 
