@@ -12,8 +12,6 @@ class Formatter():
         pattern = ' {2,}'
 
         with open(self.filename, 'r+') as file:
-            archiver = Archiver()
-            archiver.archive_directory()
 
             text = file.read()
             text = re.sub(pattern, ' ', text)
@@ -28,9 +26,6 @@ class Formatter():
         abbreviations = ['etc.', 'Mrs.', 'Mr.', 'Dr.']
 
         path = self.filename.split('/')
-        if 'project' in path:
-            archiver = Archiver()
-            archiver.archive_directory()
 
         with open(self.filename, 'r+') as file:
             text = file.read()

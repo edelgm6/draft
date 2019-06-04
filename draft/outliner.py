@@ -2,7 +2,6 @@ import re
 import os
 import shutil
 import click
-from draft.archiver import Archiver
 from draft.generator import Generator, StructureError
 
 class Outliner():
@@ -124,9 +123,6 @@ class Outliner():
         TODO: Test with markdown files
         """
 
-        archiver = Archiver()
-        archiver.archive_directory()
-
         # Get outline of all files in tree
         outline = self._get_file_tree()
 
@@ -243,9 +239,6 @@ class Outliner():
             choices.remove(value)
 
     def generate_file_tree(self, filepath):
-
-        archiver = Archiver()
-        archiver.archive_directory()
 
         source_file, extension = os.path.splitext(filepath)
         if extension not in ['.txt','.md']:

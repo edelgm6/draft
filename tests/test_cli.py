@@ -33,6 +33,8 @@ class TestRestoreDirectory(TestCase):
 
         runner = CliRunner()
         result = runner.invoke(restore, input='30\n1\n')
+        #print(result.output)
+        #print(result.exc_info)
         self.assertEqual(result.exit_code, 0)
 
     def test_restore_first_choice(self):
@@ -308,8 +310,6 @@ class TestSequence(TestCase):
         #print(traceback.print_tb(tb))
         #print(result.output)
         self.assertEqual(result.exit_code, 0)
-
-
 
         self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1'))
         self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2'))

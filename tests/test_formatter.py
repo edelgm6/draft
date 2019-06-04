@@ -37,10 +37,7 @@ class TestSplitSentences(TestCase):
         os.mkdir('archive')
 
     def tearDown(self):
-        try:
-            os.remove('testfile.txt')
-        except FileNotFoundError:
-            pass
+        os.remove('testfile.txt')
         rmtree('project')
         rmtree('archive')
 
@@ -133,6 +130,7 @@ class TestSplitSentences(TestCase):
         self.assertEqual(lines[2],"I.e., don't do anything stupid.")
         self.assertEqual(len(lines), 3)
 
+    """
     def test_archive_created_if_in_project_path(self):
 
         fp = open('project/Gatsby/testfile.txt','w+')
@@ -151,3 +149,4 @@ class TestSplitSentences(TestCase):
         self.assertEqual(len(lines), 3)
         archive_record = os.listdir('archive/')[0]
         self.assertTrue(os.path.isfile('archive/' + archive_record + '/Gatsby/testfile.txt'))
+    """
