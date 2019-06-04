@@ -150,7 +150,16 @@ class Outliner():
             level_list.sort()
             outline += level_list
 
+        sequences = {
+            1: '01',
+            2: '01',
+            3: '01',
+            4: '01',
+            5: '01',
+        }
+
         for branch in outline:
+            # Do not run any of the below on files themselves
             if os.path.isfile(branch):
                 continue
             if len(os.listdir(branch)) == 0:
@@ -180,21 +189,26 @@ class Outliner():
                     if file[:2] == sequence:
                         duplicates.append((file, branch + "/" + file))
 
+                # For all of the files after the file sequence that was ID'd as a
+                # duplicate, increase the index by the number of duplicates to avoid
+                # creating even more duplicates
                 for file in files:
                     if int(file[:2]) > int(sequence):
                         rank = str(int(file[:2]) + len(duplicates)).zfill(len(sequence))
                         new_file_name = rank + file[2:]
                         os.rename(branch + "/" + file, branch + "/" + new_file_name)
 
-
                 self._resolve_duplicates(duplicates, sequence)
 
-            sequence = '01'
+            # Once all files are de-duped, re-base at 01 for each tree level and sequence
             for file in files:
-                if file[:2] != sequence:
-                    new_file_name = sequence + file[2:]
+                split_branch = branch.split("/")
+                levels = len(split_branch)
+                level_sequence = sequences[levels]
+                if file[:2] != level_sequence:
+                    new_file_name = level_sequence + file[2:]
                     os.rename(branch + "/" + file, branch + "/" + new_file_name)
-                sequence = str(int(sequence) + 1).zfill(len(sequence))
+                sequences[levels] = str(int(level_sequence) + 1).zfill(len(level_sequence))
 
     def _resolve_duplicates(self, duplicates, sequence):
         counter = 1
