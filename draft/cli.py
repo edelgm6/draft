@@ -8,6 +8,7 @@ from draft.archiver import Archiver
 def main():
     pass # pragma: no cover
 
+
 @main.command()
 def restore():
     """
