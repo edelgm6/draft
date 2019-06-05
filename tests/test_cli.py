@@ -63,7 +63,7 @@ class TestRestoreDirectory(TestCase):
                 fp.write(str(day))
 
         runner = CliRunner()
-        result = runner.invoke(restore, input='30\n1\n')
+        result = runner.invoke(restore, input='y\n30\n1\n')
         self.assertEqual(result.exit_code, 0)
 
     def test_restore_first_choice(self):
@@ -78,7 +78,7 @@ class TestRestoreDirectory(TestCase):
                 fp.write(str(day))
 
         runner = CliRunner()
-        result = runner.invoke(restore, input='1\n')
+        result = runner.invoke(restore, input='y\n1\n')
         self.assertEqual(result.exit_code, 0)
 
         with open('project/Gatsby/testfile.txt', 'r') as fp:
@@ -104,7 +104,7 @@ class TestRestoreDirectory(TestCase):
                 fp.write(str(day))
 
         runner = CliRunner()
-        result = runner.invoke(restore, input='2\n')
+        result = runner.invoke(restore, input='y\n2\n')
 
         with open('project/Gatsby/testfile.txt', 'r') as fp:
             text = fp.read()
@@ -153,7 +153,7 @@ class TestOutliners(TestCase):
 
     def test_outline(self):
         runner = CliRunner()
-        result = runner.invoke(outline)
+        result = runner.invoke(outline, input='y\n')
         self.assertEqual(result.exit_code, 0)
 
         gatsby = open('outline.md', 'r')
@@ -165,7 +165,7 @@ class TestOutliners(TestCase):
 
     def test_compile(self):
         runner = CliRunner()
-        result = runner.invoke(compile)
+        result = runner.invoke(compile, input='y\n')
         self.assertEqual(result.exit_code, 0)
 
         gatsby = open('Gatsby.md', 'r')
@@ -180,7 +180,7 @@ class TestGenerateProject(TestCase):
     def test_generate_file_tree(self):
 
         runner = CliRunner()
-        result = runner.invoke(create_project, ['Gatsby'])
+        result = runner.invoke(create_project, ['Gatsby'], input='y\n')
         self.assertEqual(result.exit_code, 0)
 
         self.assertTrue(os.path.isdir('Gatsby/project/Gatsby/'))
@@ -205,7 +205,7 @@ class TestCleanSpaces(TestCase):
         fp.close()
 
         runner = CliRunner()
-        result = runner.invoke(dupe_spaces, ['testfile.txt'])
+        result = runner.invoke(dupe_spaces, ['testfile.txt'], input='y\n')
         self.assertEqual(result.exit_code, 0)
 
         fp = open('testfile.txt','r')
@@ -223,7 +223,7 @@ class TestSplitSentences(TestCase):
         fp.close()
 
         runner = CliRunner()
-        result = runner.invoke(split_sentences, ['testfile.txt'])
+        result = runner.invoke(split_sentences, ['testfile.txt'], input='y\n')
         self.assertEqual(result.exit_code, 0)
         fp = open('testfile.txt','r')
 
@@ -277,7 +277,7 @@ class TestFileTree(TestCase):
         fp.close()
 
         runner = CliRunner()
-        result = runner.invoke(make_tree, ['legacy.txt'])
+        result = runner.invoke(make_tree, ['legacy.txt'], input='y\n')
         self.assertEqual(result.exit_code, 0)
 
         self.assertEqual(len(os.listdir('project/Gatsby/')), 3)
@@ -332,14 +332,14 @@ class TestSequence(TestCase):
 
     def test_bad_choice_keeps_going(self):
         runner = CliRunner()
-        result = runner.invoke(sequence, input='5\n1\n2\n3\n1\n1\n1\n1\n2')
+        result = runner.invoke(sequence, input='y\n5\n1\n2\n3\n1\n1\n1\n1\n2')
         self.assertEqual(result.exit_code, 0)
 
     def test_duplicate_files_aborts(self):
         os.rename('project/Gatsby/01-Part 2/01-Chapter 1/01-Scene 3.md', 'project/Gatsby/01-Part 2/01-Chapter 1/02-Scene 2.md')
 
         runner = CliRunner()
-        result = runner.invoke(sequence, input='1\n2\n3\n1\n1\n1\n1\n2')
+        result = runner.invoke(sequence, input='y\n1\n2\n3\n1\n1\n1\n1\n2')
         #tb = result.exc_info[2]
         #print(traceback.print_tb(tb))
         #print(result.exc_info)
@@ -349,7 +349,7 @@ class TestSequence(TestCase):
     def test_sequence(self):
 
         runner = CliRunner()
-        result = runner.invoke(sequence, input='1\n2\n3\n1\n1\n1\n1\n2')
+        result = runner.invoke(sequence, input='y\n1\n2\n3\n1\n1\n1\n1\n2')
         tb = result.exc_info[2]
         #print(traceback.print_tb(tb))
         #print(result.exc_info)
