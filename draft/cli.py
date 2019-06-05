@@ -25,28 +25,34 @@ def stats():
     """
     Gets statistics from the project (e.g., word count, etc.)
     """
+
     generator = Generator()
     generator.confirm_project_layout()
 
     outliner = Outliner()
     word_count, scene_count, sub_chapter_count, chapter_count, section_count = outliner.get_statistics()
 
-    click.echo("Words: " + str(word_count))
-    click.echo("Scenes: " + str(scene_count))
-    click.echo("Sub-Chapters: " + str(sub_chapter_count))
-    click.echo("Chapters: " + str(chapter_count))
-    click.echo("Sections: " + str(section_count))
+    click.secho("Words: " + str(word_count), fg="green")
+    click.secho("Scenes: " + str(scene_count), fg="green")
+    click.secho("Sub-Chapters: " + str(sub_chapter_count), fg="green")
+    click.secho("Chapters: " + str(chapter_count), fg="green")
+    click.secho("Sections: " + str(section_count), fg="green")
 
 @main.command()
 def sequence():
     """
     Resets indices in folders and files and resolves duplicates.
     """
-    generator = Generator()
-    generator.confirm_project_layout()
+    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
-    outliner = Outliner()
-    outliner.update_file_sequence()
+    if answer:
+        generator = Generator()
+        generator.confirm_project_layout()
+
+        outliner = Outliner()
+        outliner.update_file_sequence()
+
+        click.secho("Files resequenced.", fg="green")
 
 @main.command()
 @click.argument('filepath', type=click.Path(exists=True, dir_okay=False))
@@ -57,11 +63,16 @@ def make_tree(filepath):
     Useful for generating project trees based on legacy projects or an
     outline file.
     """
-    generator = Generator()
-    generator.confirm_project_layout()
+    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
-    outliner = Outliner()
-    outliner.generate_file_tree(filepath)
+    if answer:
+        generator = Generator()
+        generator.confirm_project_layout()
+
+        outliner = Outliner()
+        outliner.generate_file_tree(filepath)
+
+        click.secho("Tree generated.", fg="green")
 
 @main.command()
 @click.argument('filename', type=click.Path(exists=True))
@@ -71,8 +82,13 @@ def split_sentences(filename):
 
     Takes a FILENAME as the argument.
     """
-    formatter = Formatter(filename)
-    formatter.split_sentences()
+    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+
+    if answer:
+        formatter = Formatter(filename)
+        formatter.split_sentences()
+
+        click.secho("Sentence split complete.", fg="green")
 
 @main.command()
 @click.argument('filename', type=click.Path(exists=True))
@@ -82,11 +98,16 @@ def dupe_spaces(filename):
 
     Takes a FILENAME as the argument. File must be in the to-process folder.
     """
-    generator = Generator()
-    generator.confirm_project_layout()
+    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
-    formatter = Formatter(filename)
-    formatter.remove_duplicate_spaces()
+    if answer:
+        generator = Generator()
+        generator.confirm_project_layout()
+
+        formatter = Formatter(filename)
+        formatter.remove_duplicate_spaces()
+
+    click.secho("Duplicate spaces removed.", fg="green")
 
 @main.command()
 @click.argument('title', type=click.STRING)
@@ -99,6 +120,8 @@ def create_project(title):
     generator = Generator()
     generator.generate_project(title)
 
+    click.secho("Project " + title + " created.", fg="green")
+
 @main.command()
 def outline():
     """
@@ -110,6 +133,8 @@ def outline():
     outliner = Outliner()
     outliner.compile_project()
 
+    click.secho("Project outlined.")
+
 @main.command()
 def compile():
     """
@@ -120,3 +145,5 @@ def compile():
 
     outliner = Outliner()
     outliner.compile_project(draft=True)
+
+    click.secho("Project compiled.", fg="green")
