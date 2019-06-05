@@ -6,7 +6,66 @@ from draft.cli import stats, sequence, make_tree, split_sentences, dupe_spaces, 
 import datetime
 import traceback
 from draft.archiver import Archiver
+from draft.outliner import Outliner
 
+"""
+class TmpSequence(TestCase):
+    def tearDown(self):
+        rmtree('project')
+        rmtree('archive')
+
+    def setUp(self):
+        os.mkdir('project')
+        os.mkdir('project/Gatsby')
+        os.mkdir('archive')
+
+        os.mkdir('project/Gatsby/01-Part 1')
+        os.mkdir('project/Gatsby/01-Part 2')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 1')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 2')
+        os.mkdir('project/Gatsby/01-Part 2/05-Chapter 3')
+        os.mkdir('project/Gatsby/01-Part 2/05-Chapter 4')
+        os.mkdir('project/Gatsby/03-Part 3')
+        os.mkdir('project/Gatsby/04-Part 4/')
+        os.mkdir('project/Gatsby/04-Part 4/01-Chapter 1')
+        os.mkdir('project/Gatsby/04-Part 5')
+        os.mkdir('project/Gatsby/04-Part 6')
+        os.mkdir('project/Gatsby/05-Part 7')
+
+        base = 'project/Gatsby/01-Part 2/01-Chapter 1/'
+        for file in ['01-Scene 1.md','01-Scene 2.md','01-Scene 3.md','01-Scene 4.md']:
+            fp = open(base + file, 'w')
+            fp.close()
+
+        fp = open('project/Gatsby/04-Part 4/01-Chapter 1/02-Scene 5.md', 'w')
+        fp.close()
+
+        fp = open('project/Gatsby/05-Part 7/09-Scene 6.md', 'w')
+        fp.close()
+
+    def test_sequence(self):
+        outliner = Outliner()
+        outliner.update_file_sequence()
+
+        self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1'))
+        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2'))
+        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2/01-Chapter 1'))
+        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2/02-Chapter 2'))
+        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2/03-Chapter 3'))
+        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2/04-Chapter 4'))
+        self.assertTrue(os.path.isdir('project/Gatsby/03-Part 3'))
+        self.assertTrue(os.path.isdir('project/Gatsby/04-Part 4'))
+        self.assertTrue(os.path.isdir('project/Gatsby/04-Part 4/05-Chapter 1'))
+        self.assertTrue(os.path.isdir('project/Gatsby/05-Part 5'))
+        self.assertTrue(os.path.isdir('project/Gatsby/06-Part 6'))
+        self.assertTrue(os.path.isdir('project/Gatsby/07-Part 7'))
+        self.assertTrue(os.path.isfile('project/Gatsby/02-Part 2/01-Chapter 1/01-Scene 1.md'))
+        self.assertTrue(os.path.isfile('project/Gatsby/02-Part 2/01-Chapter 1/02-Scene 2.md'))
+        self.assertTrue(os.path.isfile('project/Gatsby/02-Part 2/01-Chapter 1/03-Scene 3.md'))
+        self.assertTrue(os.path.isfile('project/Gatsby/02-Part 2/01-Chapter 1/04-Scene 4.md'))
+        self.assertTrue(os.path.isfile('project/Gatsby/04-Part 4/05-Chapter 1/05-Scene 5.md'))
+        self.assertTrue(os.path.isfile('project/Gatsby/07-Part 7/06-Scene 6.md'))
+"""
 class TestRestoreDirectory(TestCase):
 
     def setUp(self):
@@ -33,8 +92,6 @@ class TestRestoreDirectory(TestCase):
 
         runner = CliRunner()
         result = runner.invoke(restore, input='30\n1\n')
-        #print(result.output)
-        #print(result.exc_info)
         self.assertEqual(result.exit_code, 0)
 
     def test_restore_first_choice(self):
@@ -305,10 +362,10 @@ class TestSequence(TestCase):
 
         runner = CliRunner()
         result = runner.invoke(sequence, input='1\n2\n3\n1\n1\n1\n1\n2')
-        #print(result.exc_info)
-        #tb = result.exc_info[2]
-        #print(traceback.print_tb(tb))
-        #print(result.output)
+        tb = result.exc_info[2]
+        print(traceback.print_tb(tb))
+        print(result.exc_info)
+        print(result.output)
         self.assertEqual(result.exit_code, 0)
 
         self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1'))
