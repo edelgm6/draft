@@ -198,7 +198,14 @@ class Outliner():
                 sequences[levels] = str(int(level_sequence) + 1).zfill(len(level_sequence))
 
             for old, new in rename_dict.items():
-                os.rename(old, new)
+                if os.path.isfile(new) or os.path.isdir(new):
+                    click.echo("Duplicate file or directory names: \n" +
+                        "Want to change: " + old + " \n" +
+                        "to: " + new + "\n" +
+                        "but 'to' already exists.")
+                    raise click.Abort()
+                else:
+                    os.rename(old, new)
 
     def _resolve_duplicates(self, duplicates):
         rename_list = []
@@ -214,11 +221,13 @@ class Outliner():
         """
         choices = list(range(1,len(duplicates) + 1))
         for duplicate in duplicates:
+            value = 0
             if len(choices) == 1:
                 value = choices[0]
             else:
                 click.echo("Of the " + str(len(duplicates)) + " duplicates, choose the order for " + duplicate[3:])
-                value = click.prompt("Select any of " + str(choices), type=int)
+                while value not in choices:
+                    value = click.prompt("Select any of " + str(choices), type=int)
 
             rename_list.append((value, duplicate))
             choices.remove(value)

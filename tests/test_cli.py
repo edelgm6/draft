@@ -1,4 +1,5 @@
 import os
+import click
 from click.testing import CliRunner
 from shutil import rmtree
 from unittest import TestCase
@@ -19,53 +20,24 @@ class TmpSequence(TestCase):
         os.mkdir('project/Gatsby')
         os.mkdir('archive')
 
-        os.mkdir('project/Gatsby/01-Part 1')
         os.mkdir('project/Gatsby/01-Part 2')
         os.mkdir('project/Gatsby/01-Part 2/01-Chapter 1')
         os.mkdir('project/Gatsby/01-Part 2/01-Chapter 2')
         os.mkdir('project/Gatsby/01-Part 2/05-Chapter 3')
         os.mkdir('project/Gatsby/01-Part 2/05-Chapter 4')
-        os.mkdir('project/Gatsby/03-Part 3')
-        os.mkdir('project/Gatsby/04-Part 4/')
-        os.mkdir('project/Gatsby/04-Part 4/01-Chapter 1')
-        os.mkdir('project/Gatsby/04-Part 5')
-        os.mkdir('project/Gatsby/04-Part 6')
-        os.mkdir('project/Gatsby/05-Part 7')
 
         base = 'project/Gatsby/01-Part 2/01-Chapter 1/'
-        for file in ['01-Scene 1.md','01-Scene 2.md','01-Scene 3.md','01-Scene 4.md']:
+        for file in ['01-Scene 1.md','01-Scene 2.md','02-Scene 2.md','01-Scene 4.md']:
             fp = open(base + file, 'w')
             fp.close()
 
-        fp = open('project/Gatsby/04-Part 4/01-Chapter 1/02-Scene 5.md', 'w')
-        fp.close()
-
-        fp = open('project/Gatsby/05-Part 7/09-Scene 6.md', 'w')
-        fp.close()
-
     def test_sequence(self):
         outliner = Outliner()
-        outliner.update_file_sequence()
 
-        self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1'))
-        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2'))
-        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2/01-Chapter 1'))
-        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2/02-Chapter 2'))
-        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2/03-Chapter 3'))
-        self.assertTrue(os.path.isdir('project/Gatsby/02-Part 2/04-Chapter 4'))
-        self.assertTrue(os.path.isdir('project/Gatsby/03-Part 3'))
-        self.assertTrue(os.path.isdir('project/Gatsby/04-Part 4'))
-        self.assertTrue(os.path.isdir('project/Gatsby/04-Part 4/05-Chapter 1'))
-        self.assertTrue(os.path.isdir('project/Gatsby/05-Part 5'))
-        self.assertTrue(os.path.isdir('project/Gatsby/06-Part 6'))
-        self.assertTrue(os.path.isdir('project/Gatsby/07-Part 7'))
-        self.assertTrue(os.path.isfile('project/Gatsby/02-Part 2/01-Chapter 1/01-Scene 1.md'))
-        self.assertTrue(os.path.isfile('project/Gatsby/02-Part 2/01-Chapter 1/02-Scene 2.md'))
-        self.assertTrue(os.path.isfile('project/Gatsby/02-Part 2/01-Chapter 1/03-Scene 3.md'))
-        self.assertTrue(os.path.isfile('project/Gatsby/02-Part 2/01-Chapter 1/04-Scene 4.md'))
-        self.assertTrue(os.path.isfile('project/Gatsby/04-Part 4/05-Chapter 1/05-Scene 5.md'))
-        self.assertTrue(os.path.isfile('project/Gatsby/07-Part 7/06-Scene 6.md'))
+        with self.assertRaises(click.Abort):
+            outliner.update_file_sequence()
 """
+
 class TestRestoreDirectory(TestCase):
 
     def setUp(self):
@@ -358,14 +330,30 @@ class TestSequence(TestCase):
         fp = open('project/Gatsby/05-Part 7/09-Scene 6.md', 'w')
         fp.close()
 
+    def test_bad_choice_keeps_going(self):
+        runner = CliRunner()
+        result = runner.invoke(sequence, input='5\n1\n2\n3\n1\n1\n1\n1\n2')
+        self.assertEqual(result.exit_code, 0)
+
+    def test_duplicate_files_aborts(self):
+        os.rename('project/Gatsby/01-Part 2/01-Chapter 1/01-Scene 3.md', 'project/Gatsby/01-Part 2/01-Chapter 1/02-Scene 2.md')
+
+        runner = CliRunner()
+        result = runner.invoke(sequence, input='1\n2\n3\n1\n1\n1\n1\n2')
+        #tb = result.exc_info[2]
+        #print(traceback.print_tb(tb))
+        #print(result.exc_info)
+        #print(result.output)
+        self.assertEqual(result.exit_code, 1)
+
     def test_sequence(self):
 
         runner = CliRunner()
         result = runner.invoke(sequence, input='1\n2\n3\n1\n1\n1\n1\n2')
         tb = result.exc_info[2]
-        print(traceback.print_tb(tb))
-        print(result.exc_info)
-        print(result.output)
+        #print(traceback.print_tb(tb))
+        #print(result.exc_info)
+        #print(result.output)
         self.assertEqual(result.exit_code, 0)
 
         self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1'))
