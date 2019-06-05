@@ -199,10 +199,10 @@ class Outliner():
 
             for old, new in rename_dict.items():
                 if os.path.isfile(new) or os.path.isdir(new):
-                    click.echo("Duplicate file or directory names: \n" +
+                    click.secho("Duplicate file or directory names: \n" +
                         "Want to change: " + old + " \n" +
                         "to: " + new + "\n" +
-                        "but 'to' already exists.")
+                        "but 'to' already exists.", fg="red")
                     raise click.Abort()
                 else:
                     os.rename(old, new)
@@ -210,9 +210,9 @@ class Outliner():
     def _resolve_duplicates(self, duplicates):
         rename_list = []
         counter = 1
-        click.echo("There are " + str(len(duplicates)) + " files with a duplicate sequence:")
+        click.secho("There are " + str(len(duplicates)) + " files with a duplicate sequence:", fg="green")
         for duplicate in duplicates:
-            click.echo(str(counter) + ") " + duplicate[3:])
+            click.secho(str(counter) + ") " + duplicate[3:], fg="green")
             counter += 1
         click.echo("\n")
 
