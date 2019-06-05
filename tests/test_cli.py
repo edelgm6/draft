@@ -1,4 +1,5 @@
 import os
+import click
 from click.testing import CliRunner
 from shutil import rmtree
 from unittest import TestCase
@@ -6,6 +7,36 @@ from draft.cli import stats, sequence, make_tree, split_sentences, dupe_spaces, 
 import datetime
 import traceback
 from draft.archiver import Archiver
+from draft.outliner import Outliner
+
+"""
+class TmpSequence(TestCase):
+    def tearDown(self):
+        rmtree('project')
+        rmtree('archive')
+
+    def setUp(self):
+        os.mkdir('project')
+        os.mkdir('project/Gatsby')
+        os.mkdir('archive')
+
+        os.mkdir('project/Gatsby/01-Part 2')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 1')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 2')
+        os.mkdir('project/Gatsby/01-Part 2/05-Chapter 3')
+        os.mkdir('project/Gatsby/01-Part 2/05-Chapter 4')
+
+        base = 'project/Gatsby/01-Part 2/01-Chapter 1/'
+        for file in ['01-Scene 1.md','01-Scene 2.md','02-Scene 2.md','01-Scene 4.md']:
+            fp = open(base + file, 'w')
+            fp.close()
+
+    def test_sequence(self):
+        outliner = Outliner()
+
+        with self.assertRaises(click.Abort):
+            outliner.update_file_sequence()
+"""
 
 class TestRestoreDirectory(TestCase):
 
@@ -33,8 +64,6 @@ class TestRestoreDirectory(TestCase):
 
         runner = CliRunner()
         result = runner.invoke(restore, input='30\n1\n')
-        #print(result.output)
-        #print(result.exc_info)
         self.assertEqual(result.exit_code, 0)
 
     def test_restore_first_choice(self):
@@ -301,13 +330,29 @@ class TestSequence(TestCase):
         fp = open('project/Gatsby/05-Part 7/09-Scene 6.md', 'w')
         fp.close()
 
+    def test_bad_choice_keeps_going(self):
+        runner = CliRunner()
+        result = runner.invoke(sequence, input='5\n1\n2\n3\n1\n1\n1\n1\n2')
+        self.assertEqual(result.exit_code, 0)
+
+    def test_duplicate_files_aborts(self):
+        os.rename('project/Gatsby/01-Part 2/01-Chapter 1/01-Scene 3.md', 'project/Gatsby/01-Part 2/01-Chapter 1/02-Scene 2.md')
+
+        runner = CliRunner()
+        result = runner.invoke(sequence, input='1\n2\n3\n1\n1\n1\n1\n2')
+        #tb = result.exc_info[2]
+        #print(traceback.print_tb(tb))
+        #print(result.exc_info)
+        #print(result.output)
+        self.assertEqual(result.exit_code, 1)
+
     def test_sequence(self):
 
         runner = CliRunner()
         result = runner.invoke(sequence, input='1\n2\n3\n1\n1\n1\n1\n2')
-        #print(result.exc_info)
-        #tb = result.exc_info[2]
+        tb = result.exc_info[2]
         #print(traceback.print_tb(tb))
+        #print(result.exc_info)
         #print(result.output)
         self.assertEqual(result.exit_code, 0)
 

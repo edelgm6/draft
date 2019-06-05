@@ -2,6 +2,7 @@ import re
 import os
 import shutil
 import click
+from collections import Counter
 from draft.generator import Generator, StructureError
 
 class Outliner():
@@ -155,50 +156,36 @@ class Outliner():
             'file': '01'
         }
 
-        for branch in outline:
-            # Do not run any of the below on files themselves
-            if os.path.isfile(branch):
-                continue
-            if len(os.listdir(branch)) == 0:
-                continue
+        rename_dict = {}
 
-            no_duplicates = False
-            while not no_duplicates:
-                no_duplicates = True
-                files = os.listdir(branch)
-                files.sort()
+        branches = [branch for branch in outline if os.path.isdir(branch)]
+        branches = [branch for branch in branches if len(os.listdir(branch)) > 0]
 
-                # Find if there are any duplicates
-                first_file = files[0]
-                sequence = first_file[:2]
-                for file in files[1:]:
-                    if file[:2] == sequence:
-                        no_duplicates = False
-                        break
-                    else:
-                        sequence = file[:2]
-                if no_duplicates:
-                    break
+        for branch in branches:
+            files = os.listdir(branch)
+            files.sort()
+            sequence_list = [file[:2] for file in files]
+            #sequence_list = Counter(sequence_list)
+            #sequence_list = [key for key, count in sequence_list.items() if count > 1]
 
-                # If there are duplicates, find all of the duplicates
-                duplicates = []
-                for file in files:
-                    if file[:2] == sequence:
-                        duplicates.append((file, branch + "/" + file))
+            #duplicates = [file for file in files if file[:2] in sequence_list]
+            file_dict = {}
+            for sequence in sequence_list:
+                file_dict[sequence] = [file for file in files if file[:2] == sequence]
 
-                # For all of the files after the file sequence that was ID'd as a
-                # duplicate, increase the index by the number of duplicates to avoid
-                # creating even more duplicates
-                for file in files:
-                    if int(file[:2]) > int(sequence):
-                        rank = str(int(file[:2]) + len(duplicates)).zfill(len(sequence))
-                        new_file_name = rank + file[2:]
-                        os.rename(branch + "/" + file, branch + "/" + new_file_name)
+            for sequence, objs in file_dict.items():
+                if len(objs) > 1:
+                    file_dict[sequence] = self._resolve_duplicates(objs)
 
-                self._resolve_duplicates(duplicates, sequence)
+            ordered_files = []
+            for key, objs in file_dict.items():
+                for file in objs:
+                    ordered_files.append(file)
 
             # Once all files are de-duped, re-base at 01 for each tree level and sequence
-            for file in files:
+            print(ordered_files)
+            rename_dict = {}
+            for file in ordered_files:
                 if file[-3:] == '.md':
                     levels = 'file'
                 else:
@@ -207,14 +194,25 @@ class Outliner():
                 level_sequence = sequences[levels]
                 if file[:2] != level_sequence:
                     new_file_name = level_sequence + file[2:]
-                    os.rename(branch + "/" + file, branch + "/" + new_file_name)
+                    rename_dict[branch + "/" + file] = branch + "/" + new_file_name
                 sequences[levels] = str(int(level_sequence) + 1).zfill(len(level_sequence))
 
-    def _resolve_duplicates(self, duplicates, sequence):
+            for old, new in rename_dict.items():
+                if os.path.isfile(new) or os.path.isdir(new):
+                    click.echo("Duplicate file or directory names: \n" +
+                        "Want to change: " + old + " \n" +
+                        "to: " + new + "\n" +
+                        "but 'to' already exists.")
+                    raise click.Abort()
+                else:
+                    os.rename(old, new)
+
+    def _resolve_duplicates(self, duplicates):
+        rename_list = []
         counter = 1
         click.echo("There are " + str(len(duplicates)) + " files with a duplicate sequence:")
         for duplicate in duplicates:
-            click.echo(str(counter) + ") " + duplicate[0][3:])
+            click.echo(str(counter) + ") " + duplicate[3:])
             counter += 1
         click.echo("\n")
 
@@ -223,20 +221,20 @@ class Outliner():
         """
         choices = list(range(1,len(duplicates) + 1))
         for duplicate in duplicates:
+            value = 0
             if len(choices) == 1:
                 value = choices[0]
             else:
-                click.echo("Of the " + str(len(duplicates)) + " duplicates, choose the order for " + duplicate[0][3:])
-                value = click.prompt("Select any of " + str(choices), type=int)
+                click.echo("Of the " + str(len(duplicates)) + " duplicates, choose the order for " + duplicate[3:])
+                while value not in choices:
+                    value = click.prompt("Select any of " + str(choices), type=int)
 
-            rank = str(int(sequence) + value - 1).zfill(len(sequence))
-
-            directory_split = duplicate[1].split('/')
-            new_file_name = rank + duplicate[0][2:]
-            directory_split[-1] = new_file_name
-            new_directory = "/".join(directory_split)
-            os.rename(duplicate[1], new_directory)
+            rename_list.append((value, duplicate))
             choices.remove(value)
+
+        rename_list.sort()
+        rename_list = [rename[1] for rename in rename_list]
+        return rename_list
 
     def generate_file_tree(self, filepath):
 
