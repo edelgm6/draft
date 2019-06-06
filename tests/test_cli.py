@@ -195,7 +195,10 @@ class TestCleanSpaces(TestCase):
         os.mkdir('archive')
 
     def tearDown(self):
-        os.remove('testfile.txt')
+        try:
+            os.remove('testfile.txt')
+        except:
+            pass
         rmtree('project')
         rmtree('archive')
 
@@ -214,9 +217,28 @@ class TestCleanSpaces(TestCase):
 
         self.assertEqual(lines[0],"\" It's the end of the world as we know it.\" \"And I feel fine. \"")
 
+    def test_clean_spaces_no_args(self):
+        fp = open('project/Gatsby/testfile.md','w+')
+        fp.write("\"     It's the end of the world as  we know it.\" \"And I    feel fine.     \"")
+        fp.close()
+
+        runner = CliRunner()
+        result = runner.invoke(dupe_spaces, input='y\n')
+        #tb = result.exc_info[2]
+        #print(traceback.print_tb(tb))
+        #print(result.exc_info)
+        #print(result.output)
+        self.assertEqual(result.exit_code, 0)
+
+        fp = open('project/Gatsby/testfile.md','r')
+        lines = fp.readlines()
+        fp.close()
+
+        self.assertEqual(lines[0],"\" It's the end of the world as we know it.\" \"And I feel fine. \"")
+
 class TestSplitSentences(TestCase):
 
-    def test_split_sentences(self):
+    def test_split_sentences_with_arg(self):
         fp = open('testfile.txt','w+')
         fp.write("\"It's the end of the world as we know it.\" \"And I feel fine.\"")
         fp.write(" \"You are nice!\" she said.")
@@ -236,6 +258,28 @@ class TestSplitSentences(TestCase):
         self.assertEqual(len(lines), 3)
 
         os.remove('testfile.txt')
+
+    def test_split_sentences_without_arg(self):
+        os.mkdir('project')
+        fp = open('project/testfile.md','w+')
+        fp.write("\"It's the end of the world as we know it.\" \"And I feel fine.\"")
+        fp.write(" \"You are nice!\" she said.")
+        fp.close()
+
+        runner = CliRunner()
+        result = runner.invoke(split_sentences, input='y\n')
+        self.assertEqual(result.exit_code, 0)
+        fp = open('project/testfile.md','r')
+
+        lines = fp.readlines()
+        fp.close()
+
+        self.assertEqual(lines[0],"\"It's the end of the world as we know it.\"\n")
+        self.assertEqual(lines[1],"\"And I feel fine.\"\n")
+        self.assertEqual(lines[2],"\"You are nice!\" she said.")
+        self.assertEqual(len(lines), 3)
+
+        rmtree('project')
 
 class TestFileTree(TestCase):
 
@@ -350,10 +394,6 @@ class TestSequence(TestCase):
 
         runner = CliRunner()
         result = runner.invoke(sequence, input='y\n1\n2\n3\n1\n1\n1\n1\n2')
-        tb = result.exc_info[2]
-        #print(traceback.print_tb(tb))
-        #print(result.exc_info)
-        #print(result.output)
         self.assertEqual(result.exit_code, 0)
 
         self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1'))
