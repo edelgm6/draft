@@ -75,13 +75,16 @@ def make_tree(filepath):
         click.secho("Tree generated.", fg="green")
 
 @main.command()
-@click.argument('filename', type=click.Path(exists=True))
-def split_sentences(filename):
+@click.argument('filename', type=click.Path(exists=True), required=False)
+def split_sentences(filename=None):
     """
     Splits multi-line sentences into separate lines.
 
     Takes a FILENAME as the argument.
     """
+    if not filename:
+        click.secho("WARNING: You are about to split-sentences across the " +
+            "entire project tree.", fg="red", bold=True)
     answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
     if answer:
@@ -91,8 +94,8 @@ def split_sentences(filename):
         click.secho("Sentence split complete.", fg="green")
 
 @main.command()
-@click.argument('filename', type=click.Path(exists=True))
-def dupe_spaces(filename):
+@click.argument('filename', type=click.Path(exists=True), required=False)
+def dupe_spaces(filename=None):
     """
     Removes all duplicate spaces from text file.
 

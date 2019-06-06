@@ -12,7 +12,10 @@ class TestCleanSpaces(TestCase):
         os.mkdir('archive')
 
     def tearDown(self):
-        os.remove('testfile.txt')
+        try:
+            os.remove('testfile.txt')
+        except:
+            pass
         rmtree('project')
         rmtree('archive')
 
@@ -29,6 +32,19 @@ class TestCleanSpaces(TestCase):
 
         self.assertEqual(lines[0],"\" It's the end of the world as we know it.\" \"And I feel fine. \"")
 
+    def test_clean_spaces_no_args(self):
+        fp = open('project/testfile.md','w+')
+        fp.write("\"     It's the end of the world as  we know it.\" \"And I    feel fine.     \"")
+        fp.close()
+        formatter = Formatter(None)
+        formatter.remove_duplicate_spaces()
+
+        fp = open('project/testfile.md','r')
+        lines = fp.readlines()
+        fp.close()
+
+        self.assertEqual(lines[0],"\" It's the end of the world as we know it.\" \"And I feel fine. \"")
+
 class TestSplitSentences(TestCase):
 
     def setUp(self):
@@ -37,9 +53,44 @@ class TestSplitSentences(TestCase):
         os.mkdir('archive')
 
     def tearDown(self):
-        os.remove('testfile.txt')
+        try:
+            os.remove('testfile.txt')
+        except:
+            pass
         rmtree('project')
         rmtree('archive')
+
+    def test_split_sentences_in_full_project(self):
+        fp = open('project/testfile.md','w+')
+        fp.write("\"It's the end of the world as we know it.\" \"And I feel fine.\"")
+        fp.write(" \"You are nice!\" she said.")
+        fp.close()
+        formatter = Formatter(None)
+        formatter.split_sentences()
+
+        fp = open('project/testfile.md','r')
+
+        lines = fp.readlines()
+        fp.close()
+
+        self.assertEqual(lines[0],"\"It's the end of the world as we know it.\"\n")
+        self.assertEqual(lines[1],"\"And I feel fine.\"\n")
+        self.assertEqual(lines[2],"\"You are nice!\" she said.")
+        self.assertEqual(len(lines), 3)
+
+        fp = open('project/testfile1.md','w+')
+        fp.write("It's the end of the world as we know it. And I feel fine.")
+        fp.close()
+        formatter = Formatter(None)
+        formatter.split_sentences()
+
+        fp = open('project/testfile1.md','r')
+        lines = fp.readlines()
+        fp.close()
+
+        self.assertEqual(lines[0],"It's the end of the world as we know it.\n")
+        self.assertEqual(lines[1],"And I feel fine.")
+        self.assertEqual(len(lines), 2)
 
     def test_split_sentences_on_quotes_within_a_sentence(self):
 

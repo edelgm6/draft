@@ -127,10 +127,6 @@ class Outliner():
         # Get outline of all files in tree
         outline = self._get_file_tree()
 
-        # Build up base of all files in first level directory
-        title = os.listdir('project')[0]
-        base_dir = 'project/' + title + '/'
-
         leveled_branches = []
         for branch in outline:
             leveled_branch = branch.split('/')
