@@ -216,7 +216,7 @@ class TestCleanSpaces(TestCase):
 
 class TestSplitSentences(TestCase):
 
-    def test_split_sentences(self):
+    def test_split_sentences_with_arg(self):
         fp = open('testfile.txt','w+')
         fp.write("\"It's the end of the world as we know it.\" \"And I feel fine.\"")
         fp.write(" \"You are nice!\" she said.")
@@ -236,6 +236,28 @@ class TestSplitSentences(TestCase):
         self.assertEqual(len(lines), 3)
 
         os.remove('testfile.txt')
+
+    def test_split_sentences_without_arg(self):
+        os.mkdir('project')
+        fp = open('project/testfile.md','w+')
+        fp.write("\"It's the end of the world as we know it.\" \"And I feel fine.\"")
+        fp.write(" \"You are nice!\" she said.")
+        fp.close()
+
+        runner = CliRunner()
+        result = runner.invoke(split_sentences, input='y\n')
+        self.assertEqual(result.exit_code, 0)
+        fp = open('project/testfile.md','r')
+
+        lines = fp.readlines()
+        fp.close()
+
+        self.assertEqual(lines[0],"\"It's the end of the world as we know it.\"\n")
+        self.assertEqual(lines[1],"\"And I feel fine.\"\n")
+        self.assertEqual(lines[2],"\"You are nice!\" she said.")
+        self.assertEqual(len(lines), 3)
+
+        rmtree('project')
 
 class TestFileTree(TestCase):
 
