@@ -195,7 +195,10 @@ class TestCleanSpaces(TestCase):
         os.mkdir('archive')
 
     def tearDown(self):
-        os.remove('testfile.txt')
+        try:
+            os.remove('testfile.txt')
+        except:
+            pass
         rmtree('project')
         rmtree('archive')
 
@@ -209,6 +212,25 @@ class TestCleanSpaces(TestCase):
         self.assertEqual(result.exit_code, 0)
 
         fp = open('testfile.txt','r')
+        lines = fp.readlines()
+        fp.close()
+
+        self.assertEqual(lines[0],"\" It's the end of the world as we know it.\" \"And I feel fine. \"")
+
+    def test_clean_spaces_no_args(self):
+        fp = open('project/Gatsby/testfile.md','w+')
+        fp.write("\"     It's the end of the world as  we know it.\" \"And I    feel fine.     \"")
+        fp.close()
+
+        runner = CliRunner()
+        result = runner.invoke(dupe_spaces, input='y\n')
+        #tb = result.exc_info[2]
+        #print(traceback.print_tb(tb))
+        #print(result.exc_info)
+        #print(result.output)
+        self.assertEqual(result.exit_code, 0)
+
+        fp = open('project/Gatsby/testfile.md','r')
         lines = fp.readlines()
         fp.close()
 
@@ -372,10 +394,6 @@ class TestSequence(TestCase):
 
         runner = CliRunner()
         result = runner.invoke(sequence, input='y\n1\n2\n3\n1\n1\n1\n1\n2')
-        tb = result.exc_info[2]
-        #print(traceback.print_tb(tb))
-        #print(result.exc_info)
-        #print(result.output)
         self.assertEqual(result.exit_code, 0)
 
         self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1'))

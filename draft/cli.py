@@ -94,8 +94,8 @@ def split_sentences(filename=None):
         click.secho("Sentence split complete.", fg="green")
 
 @main.command()
-@click.argument('filename', type=click.Path(exists=True))
-def dupe_spaces(filename):
+@click.argument('filename', type=click.Path(exists=True), required=False)
+def dupe_spaces(filename=None):
     """
     Removes all duplicate spaces from text file.
 

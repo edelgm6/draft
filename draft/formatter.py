@@ -12,14 +12,22 @@ class Formatter():
     def remove_duplicate_spaces(self):
         pattern = ' {2,}'
 
-        with open(self.filename, 'r+') as file:
+        if self.filename:
+            paths = [self.filename]
+        else:
+            outliner = Outliner()
+            files = outliner._get_file_tree()
+            paths = [file for file in files if os.path.isfile(file) and file[-3:] == ".md"]
 
-            text = file.read()
-            text = re.sub(pattern, ' ', text)
+        for path in paths:
+            with open(path, 'r+') as file:
 
-            file.truncate(0)
-            file.seek(0)
-            file.write(text)
+                text = file.read()
+                text = re.sub(pattern, ' ', text)
+
+                file.truncate(0)
+                file.seek(0)
+                file.write(text)
 
     def split_sentences(self):
 
