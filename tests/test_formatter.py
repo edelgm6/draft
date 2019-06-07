@@ -4,17 +4,6 @@ from draft.generator import Generator
 import os
 from shutil import rmtree
 
-class Tmp(TestCase):
-
-    def test_counter(self):
-        formatter = Formatter('testdraft.md')
-
-        fp = open('testdraft.md', 'r')
-        text = fp.read()
-        fp.close()
-
-        formatter._get_split_ratio(text)
-
 class TestCleanSpaces(TestCase):
 
     def setUp(self):
