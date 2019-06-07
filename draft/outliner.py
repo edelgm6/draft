@@ -82,7 +82,7 @@ class Outliner():
                     text = sc.read().strip()
                     text = self._get_text_element(text, draft)
                     if draft:
-                        page = page + text.strip() + "\n\n"
+                        page = page + text.strip() + "\n\n</br>\n\n"
                     else:
                         split_branch = branch.split("/")
                         branch_end = split_branch[-1]
@@ -179,7 +179,6 @@ class Outliner():
                     ordered_files.append(file)
 
             # Once all files are de-duped, re-base at 01 for each tree level and sequence
-            print(ordered_files)
             rename_dict = {}
             for file in ordered_files:
                 if file[-3:] == '.md':
