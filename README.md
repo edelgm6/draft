@@ -56,7 +56,7 @@ whalebook/
 │           etc.
 └─.gitignore         
 ```
-You don't _need_ to you every 'level' of the project -- i.e., you could just have the Title and a bunch of scenes, only use sections and scenes, have some scenes in sub-chapters and some scenes in chapters, etc.
+You don't _need_ to use every 'level' of the project -- i.e., you could just have the Title and a bunch of scenes, only use sections and scenes, have some scenes in sub-chapters and some scenes in chapters, etc.
 
 The only required elements are the `project/` folder, the `title/` folder, and scene `.md` files.
 

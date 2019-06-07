@@ -56,7 +56,7 @@ def sequence():
 
 @main.command()
 @click.argument('filepath', type=click.Path(exists=True, dir_okay=False))
-def make_tree(filepath):
+def parse(filepath):
     """
     Generates a project tree based on a Markdown formatted .md or .txt file.
 
@@ -76,7 +76,7 @@ def make_tree(filepath):
 
 @main.command()
 @click.argument('filename', type=click.Path(exists=True), required=False)
-def split_sentences(filename=None):
+def split(filename=None):
     """
     Splits multi-line sentences into separate lines.
 
@@ -95,7 +95,7 @@ def split_sentences(filename=None):
 
 @main.command()
 @click.argument('filename', type=click.Path(exists=True), required=False)
-def dupe_spaces(filename=None):
+def trim(filename=None):
     """
     Removes all duplicate spaces from text file.
 

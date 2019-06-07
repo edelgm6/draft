@@ -3,7 +3,7 @@ import click
 from click.testing import CliRunner
 from shutil import rmtree
 from unittest import TestCase
-from draft.cli import stats, sequence, make_tree, split_sentences, dupe_spaces, create_project, outline, compile, restore
+from draft.cli import stats, sequence, parse, split, trim, create_project, outline, compile, restore
 import datetime
 import traceback
 from draft.archiver import Archiver
@@ -208,7 +208,7 @@ class TestCleanSpaces(TestCase):
         fp.close()
 
         runner = CliRunner()
-        result = runner.invoke(dupe_spaces, ['testfile.txt'], input='y\n')
+        result = runner.invoke(trim, ['testfile.txt'], input='y\n')
         self.assertEqual(result.exit_code, 0)
 
         fp = open('testfile.txt','r')
@@ -223,7 +223,7 @@ class TestCleanSpaces(TestCase):
         fp.close()
 
         runner = CliRunner()
-        result = runner.invoke(dupe_spaces, input='y\n')
+        result = runner.invoke(trim, input='y\n')
         #tb = result.exc_info[2]
         #print(traceback.print_tb(tb))
         #print(result.exc_info)
@@ -245,7 +245,7 @@ class TestSplitSentences(TestCase):
         fp.close()
 
         runner = CliRunner()
-        result = runner.invoke(split_sentences, ['testfile.txt'], input='y\n')
+        result = runner.invoke(split, ['testfile.txt'], input='y\n')
         self.assertEqual(result.exit_code, 0)
         fp = open('testfile.txt','r')
 
@@ -267,7 +267,7 @@ class TestSplitSentences(TestCase):
         fp.close()
 
         runner = CliRunner()
-        result = runner.invoke(split_sentences, input='y\n')
+        result = runner.invoke(split, input='y\n')
         self.assertEqual(result.exit_code, 0)
         fp = open('project/testfile.md','r')
 
@@ -321,7 +321,7 @@ class TestFileTree(TestCase):
         fp.close()
 
         runner = CliRunner()
-        result = runner.invoke(make_tree, ['legacy.txt'], input='y\n')
+        result = runner.invoke(parse, ['legacy.txt'], input='y\n')
         self.assertEqual(result.exit_code, 0)
 
         self.assertEqual(len(os.listdir('project/Gatsby/')), 3)
