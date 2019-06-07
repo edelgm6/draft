@@ -1,5 +1,6 @@
 import os
 import re
+import click
 from draft.archiver import Archiver
 from draft.generator import Generator
 from draft.outliner import Outliner
@@ -29,6 +30,16 @@ class Formatter():
                 file.seek(0)
                 file.write(text)
 
+    def _get_split_ratio(self, text):
+
+        split_pattern = '[\.|\\”|\"] {0,2}\\n'
+        unsplit_pattern = '[\.|?|!]\"?”? [A-Z|\"|“]'
+
+        split_lines = len(re.findall(split_pattern, text))
+        unsplit_lines = len(re.findall(unsplit_pattern, text))
+
+        return split_lines / (split_lines + unsplit_lines)
+
     def split_sentences(self):
 
         pattern = '([\"\“]?[A-Z][^\.!?]*[\.!?][\"\”]?) {1,2}'
@@ -41,9 +52,19 @@ class Formatter():
             files = outliner._get_file_tree()
             paths = [file for file in files if os.path.isfile(file) and file[-3:] == ".md"]
 
+        skipped_files = []
+
         for path in paths:
             with open(path, 'r+') as file:
                 text = file.read()
+
+                # If more than half of the lines in a file is already on new lines
+                # then skip it unless it was explicitly called on that file
+                if self._get_split_ratio(text) > .5 and not self.filename:
+                    split_path = path.split("/")
+                    name = split_path[-1]
+                    skipped_files.append(name)
+                    continue
 
                 text = text.replace('\t', '')
                 text = text.replace('\n', '\n\n')
@@ -81,3 +102,10 @@ class Formatter():
                 file.truncate(0)
                 file.seek(0)
                 file.write(text)
+
+        for file in skipped_files:
+            click.secho(name, fg="red")
+
+        if skipped_files:
+            click.secho("Above files skipped since >50% of lines are already separated", fg="red")
+            click.secho("You can force by running `draft trim [filename.md]`", fg="red")

@@ -4,6 +4,17 @@ from draft.generator import Generator
 import os
 from shutil import rmtree
 
+class Tmp(TestCase):
+
+    def test_counter(self):
+        formatter = Formatter('testdraft.md')
+
+        fp = open('testdraft.md', 'r')
+        text = fp.read()
+        fp.close()
+
+        formatter._get_split_ratio(text)
+
 class TestCleanSpaces(TestCase):
 
     def setUp(self):
@@ -59,6 +70,19 @@ class TestSplitSentences(TestCase):
             pass
         rmtree('project')
         rmtree('archive')
+
+    def test_split_sentences_skips_already_split_file(self):
+        fp = open('project/testfile.md','w+')
+        fp.write('She blushed-automatically conferring on me the social poise I\'d\nbeen missing. "Well. Most of the Americans I\'ve seen act like\nanimals. They\'re forever punching one another about, and insulting\neveryone, and--You know what one of them did?"\nI shook my head.\n"One of them threw an empty whiskey bottle through my aunt\'s\nwindow. Fortunately, the window was open. But does that sound\nvery intelligent to you?"\nIt didn\'t especially, but I didn\'t say so. I said that many soldiers, all\nover the world, were a long way from home, and that few of them\nhad had many real advantages in life. I said I\'d thought that most\npeople could figure that out for themselves.\n')
+        fp.close()
+        formatter = Formatter(None)
+        formatter.split_sentences()
+
+        fp = open('project/testfile.md','r')
+        text = fp.read()
+        fp.close()
+
+        self.assertEqual(text, 'She blushed-automatically conferring on me the social poise I\'d\n\nbeen missing.\n"Well.\nMost of the Americans I\'ve seen act like\n\nanimals.\nThey\'re forever punching one another about, and insulting\n\neveryone, and--You know what one of them did?"\n\nI shook my head.\n\n"One of them threw an empty whiskey bottle through my aunt\'s\n\nwindow.\nFortunately, the window was open.\nBut does that sound\n\nvery intelligent to you?"\n\nIt didn\'t especially, but I didn\'t say so.\nI said that many soldiers, all\n\nover the world, were a long way from home, and that few of them\n\nhad had many real advantages in life.\nI said I\'d thought that most\n\npeople could figure that out for themselves.\n\n')
 
     def test_split_sentences_in_full_project(self):
         fp = open('project/testfile.md','w+')
