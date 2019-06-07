@@ -47,8 +47,8 @@ whalebook/
 │     │   │   │    01-His Name is Ishmael.md [Scene 1]
 │     │   │   │    02-Habit of Going To Sea.md [Scene 2]
 │     │   │   └──02-The Carpet-Bag/ [Sub-Chapt 2]
-│     │   │   │     03-Old Manhatto.md [Scene 3]
-│     │   │   │     etc.
+│     │   │   │    03-Old Manhatto.md [Scene 3]
+│     │   │   │    etc.
 │     │   │   └──03-etc.
 │     │   └─02-Shoving Off/ [Section 2]
 │     │        etc.
