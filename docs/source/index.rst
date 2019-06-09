@@ -4,3 +4,4 @@
    :maxdepth: 1
 
    system
+   getting-started
