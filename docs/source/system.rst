@@ -8,7 +8,6 @@ But get beyond a few thousand words and all of a sudden opening that file comes 
 Philosophy
 ----------
 
-
 1) Writing in *modules* (or 'scenes' in Draft lingo) is easier and more fun than working out of a single large document.
 
 2) Writing in plaintext is a more pure and distraction-free experience than .. _WYSIWYG: https://en.wikipedia.org/wiki/WYSIWYG word processors.
