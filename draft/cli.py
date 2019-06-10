@@ -2,23 +2,10 @@ import click
 from draft.formatter import Formatter
 from draft.generator import Generator
 from draft.outliner import Outliner
-from draft.archiver import Archiver
 
 @click.group()
 def main():
     pass # pragma: no cover
-
-
-@main.command()
-def restore():
-    """
-    Restore archived project copy.
-    """
-    generator = Generator()
-    generator.confirm_project_layout()
-
-    archiver = Archiver()
-    archiver.restore_directory()
 
 @main.command()
 def stats():
