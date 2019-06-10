@@ -1,7 +1,6 @@
 import os
 import re
 import click
-from draft.archiver import Archiver
 from draft.generator import Generator
 from draft.outliner import Outliner
 
