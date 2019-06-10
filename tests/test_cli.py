@@ -184,7 +184,6 @@ class TestGenerateProject(TestCase):
         self.assertEqual(result.exit_code, 0)
 
         self.assertTrue(os.path.isdir('Gatsby/project/Gatsby/'))
-        self.assertTrue(os.path.isdir('Gatsby/archive'))
         rmtree('Gatsby')
 
 class TestCleanSpaces(TestCase):
