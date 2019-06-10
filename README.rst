@@ -2,6 +2,9 @@
     :target: https://codecov.io/gh/edelgm6/draft
 .. image:: https://travis-ci.com/edelgm6/draft.svg?branch=master
     :target: https://travis-ci.com/edelgm6/draft
+.. image:: https://readthedocs.org/projects/draft-cli/badge/?version=latest
+    :target: https://draft-cli.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 Draft: Write Like a Programmer
 ==============================
