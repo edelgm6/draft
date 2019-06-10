@@ -7,14 +7,14 @@ from draft.outliner import Outliner
 
 class Formatter():
 
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self, filepath):
+        self.filepath = filepath
 
     def remove_duplicate_spaces(self):
         pattern = ' {2,}'
 
-        if self.filename:
-            paths = [self.filename]
+        if self.filepath:
+            paths = [self.filepath]
         else:
             outliner = Outliner()
             files = outliner._get_file_tree()
@@ -45,8 +45,8 @@ class Formatter():
         pattern = '([\"\“]?[A-Z][^\.!?]*[\.!?][\"\”]?) {1,2}'
         abbreviations = ['etc.', 'Mrs.', 'Mr.', 'Dr.']
 
-        if self.filename:
-            paths = [self.filename]
+        if self.filepath:
+            paths = [self.filepath]
         else:
             outliner = Outliner()
             files = outliner._get_file_tree()
@@ -60,7 +60,7 @@ class Formatter():
 
                 # If more than half of the lines in a file is already on new lines
                 # then skip it unless it was explicitly called on that file
-                if self._get_split_ratio(text) > .5 and not self.filename:
+                if self._get_split_ratio(text) > .5 and not self.filepath:
                     split_path = path.split("/")
                     name = split_path[-1]
                     skipped_files.append(name)
@@ -108,4 +108,4 @@ class Formatter():
 
         if skipped_files:
             click.secho("Above files skipped since >50% of lines are already separated", fg="red")
-            click.secho("You can force by running `draft trim [filename.md]`", fg="red")
+            click.secho("You can force by running `draft trim filepath`", fg="red")

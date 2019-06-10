@@ -22,8 +22,19 @@ def restore():
 
 @main.command()
 def stats():
-    """
-    Gets statistics from the project (e.g., word count, etc.)
+    """Gets statistics from the project (e.g., word count, etc.)
+
+    :return: word_count, scene_count, sub_chapter_count, chapter_count, section_count
+    :rtype: int
+
+    Usage:
+      >>> draft stats
+      >>> Words: 54034
+      >>> Scenes: 67
+      >>> Sub-Chapters: 30
+      >>> Chapters: 10
+      >>> Sections: 3
+
     """
 
     generator = Generator()
@@ -40,9 +51,10 @@ def stats():
 
 @main.command()
 def sequence():
+    """Resets indices in folders and files and resolves duplicates.
+
     """
-    Resets indices in folders and files and resolves duplicates.
-    """
+
     answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
     if answer:
@@ -57,11 +69,15 @@ def sequence():
 @main.command()
 @click.argument('filepath', type=click.Path(exists=True, dir_okay=False))
 def parse(filepath):
-    """
-    Generates a project tree based on a Markdown formatted .md or .txt file.
-
+    """Generates a project tree based on a Markdown formatted .md or .txt file.
     Useful for generating project trees based on legacy projects or an
     outline file.
+
+    :param str filepath: Path to file to be parsed.
+    :return: None
+
+    Usage:
+      >>> draft parse mobydick.md
     """
     answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
@@ -77,11 +93,16 @@ def parse(filepath):
 @main.command()
 @click.argument('filename', type=click.Path(exists=True), required=False)
 def split(filename=None):
-    """
-    Splits multi-line sentences into separate lines.
+    """Splits multi-line sentences into separate lines.
+    Affects all project files unless filename is passed as an argument.
 
-    Takes a FILENAME as the argument.
+    :param str filename: (optional) Path to file to be parsed.
+    :return: None
+
+    Usage:
+      >>> draft split '01-Meeting Ishmael.md'
     """
+
     if not filename:
         click.secho("WARNING: You are about to split-sentences across the " +
             "entire project tree.", fg="red", bold=True)
@@ -94,12 +115,16 @@ def split(filename=None):
         click.secho("Sentence split complete.", fg="green")
 
 @main.command()
-@click.argument('filename', type=click.Path(exists=True), required=False)
-def trim(filename=None):
-    """
-    Removes all duplicate spaces from text file.
+@click.argument('filepath', type=click.Path(exists=True), required=False)
+def trim(filepath=None):
+    """Removes all duplicate spaces from text.
+    Acts on every file in project unless filepath argument passed.
 
-    Takes a FILENAME as the argument. File must be in the to-process folder.
+    :param str filepath: (optional) Filepath to be trimmed.
+    :return: None
+
+    Usage:
+      >>> draft generate-project 'The Great Gatsby'
     """
     answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
@@ -107,7 +132,7 @@ def trim(filename=None):
         generator = Generator()
         generator.confirm_project_layout()
 
-        formatter = Formatter(filename)
+        formatter = Formatter(filepath)
         formatter.remove_duplicate_spaces()
 
     click.secho("Duplicate spaces removed.", fg="green")
@@ -115,11 +140,16 @@ def trim(filename=None):
 @main.command()
 @click.argument('title', type=click.STRING)
 def create_project(title):
-    """
-    Generates a project structure.
+    """Generates a project structure.
 
-    Takes a TITLE as the argument.
+    :param str title: Title for the project.
+    :return: None
+
+    Usage:
+      >>> draft generate-project 'The Great Gatsby'
+
     """
+
     generator = Generator()
     generator.generate_project(title)
 
@@ -127,8 +157,8 @@ def create_project(title):
 
 @main.command()
 def outline():
-    """
-    Generates or updates a project outline.
+    """Generates or updates a project outline.
+
     """
     generator = Generator()
     generator.confirm_project_layout()
@@ -140,8 +170,8 @@ def outline():
 
 @main.command()
 def compile():
-    """
-    Generates or updates a project outline.
+    """Compiles the project into a final document.
+
     """
     generator = Generator()
     generator.confirm_project_layout()
