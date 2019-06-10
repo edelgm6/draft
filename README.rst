@@ -25,3 +25,8 @@ Installation
 ------------
 
 ``pip install draft-cli``
+
+Documentation
+-------------
+
+https://draft-cli.readthedocs.io/en/latest/
