@@ -10,7 +10,7 @@ Philosophy
 
 1) Writing in *modules* (or 'scenes' in Draft lingo) is easier and more fun than working out of a single large document.
 
-2) Writing in plaintext is a more pure and distraction-free experience than .. _WYSIWYG: https://en.wikipedia.org/wiki/WYSIWYG word processors.
+2) Writing in plaintext is a more pure and distraction-free experience than `WYSIWYG <https://en.wikipedia.org/wiki/WYSIWYG>`_ word processors.
 
 3) Git is too useful a tool to not use in a writing project.
 
@@ -20,8 +20,8 @@ Organization
 Folders
 ~~~~~~~
 
-A Draft project is made up of a simple file tree as shown below:
-::
+A Draft project is made up of a simple file tree as shown below::
+
     whalebook/
     └─project/                                   Organization:
     │ └──Moby Dick, Or The Whale/                [Title]
@@ -80,17 +80,21 @@ Writing with Draft works best under the following guidelines:
 1. **Use Markdown.**
 
 2. **One sentence on each line.**
+
   This isn't required -- it won't break anything! -- it's just better for tracking changes in Git
 
 3. **Save hash-based Markdown headings for separating sections.**
+
   If you need to use big font for whatever reason, stick to other header conventions (e.g., ========)
 
 4. **Use Git and Github, and Commit often.**
+
   Git is incredibly useful in a writing environment and it's branching feature is a godsend if you want to try something radical (e.g., what if we switched from first to third person?).
   Github is a great visualization tool and provides a Cloud storage option for your project.
   And COMMIT-ing often is just good hygiene.
 
 5. **Use a text editor with soft-wrapping and Markdown preview.**
+
   * **Soft-wrapping:** Keeps your single-line sentences from running off of the page
   * **Markdown preview:** See how your text translates into Markdown
   * `Atom <https://atom.io/>`_ has both of these features

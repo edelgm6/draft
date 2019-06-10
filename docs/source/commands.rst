@@ -2,6 +2,8 @@
 Commands
 ========
 
+.. module:: draft.cli
+
 Draft commands can be split into three buckets:
 
 1. **Create** a project
@@ -10,20 +12,19 @@ Draft commands can be split into three buckets:
 
 Create
 ------
-
-- ``create-project``: content
-- ``parse``: content
+.. autofunction:: create_project(title)
+.. autofunction:: parse(filepath)
 
 Format
 ------
 
-- ``split``: content
-- ``trim``: content
+.. autofunction:: split(filename)
+.. autofunction:: trim(filename)
 
 Maintain
 --------
 
-- ``sequence``: content
-- ``stats``: content
-- ``compile``: content
-- ``outline``: content
+.. autofunction:: sequence()
+.. autofunction:: stats()
+.. autofunction:: compile()
+.. autofunction:: outline()
