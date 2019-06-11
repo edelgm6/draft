@@ -17,29 +17,18 @@ Let's assume you wanted to create a project titled "Catcher In the Rye."
 2. Create virtualenv: ``virtualenv rye``
 3. Activate virtualenv: ``source rye/bin/activate``
 4. Install Draft: ``pip install draft-cli``
-5. Create project: ``draft create-project 'Catcher In the Rye'``
+5. Create project: ``draft create-project 'Catcher In The Rye'``
 
-You will now have the following file tree::
+You will now have the following file tree:
 
-    Catcher In the Rye/
-    └─project/
-    │ └─Catcher In the Rye/
-    │     01-Scene 1.md
-    └─.gitignore
+.. include:: start-file-tree.rst
 
 From a WIP Project
 ------------------
 
 1. Follow the same steps as "Starting From Scratch."
 
-2. Take your current project in whatever format it is in, and paste it into a Markdown file (e.g., ``myproject.md``) in your root. Your project should now look like this::
-
-    Catcher In the Rye/
-    └─project/
-    │ └─Catcher In the Rye/
-    │     01-Scene 1.md
-    └─myproject.md
-    └─.gitignore
+2. Take your current project in whatever format it is in, and paste it into a Markdown file and put in your project's root directory (e.g., if your current project is ``myproject.md``, you should put it in ``Catcher In The Rye/myproject.md``, in the same folder as ``project``).
 
 3. Edit your file's Headings to follow Markdown conventions. This will inform your file tree:
 
@@ -53,7 +42,7 @@ From a WIP Project
 
   For example, your ``myproject.md`` file might look like this:
 
-    # Catcher In the Rye
+    # Catcher In The Rye
 
     ## Meeting Holden
 
@@ -74,7 +63,7 @@ From a WIP Project
 
     Catcher In the Rye/
     └─project/
-    │ └─Catcher In the Rye/
+    │ └─Catcher In The Rye/
     │   └─01-Meeting Holden
     │     └─01-Leaving School
     │       └─01-Roommates
