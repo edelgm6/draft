@@ -133,7 +133,7 @@ def create_project(title):
     :return: None
 
     Usage:
-      >>> draft generate-project 'The Great Gatsby'
+      >>> draft generate-project 'Catcher In The Rye'
 
     """
 
