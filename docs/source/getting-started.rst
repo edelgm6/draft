@@ -19,7 +19,7 @@ Let's assume you wanted to create a project titled "Catcher In the Rye."
 4. Install Draft: ``pip install draft-cli``
 5. Create project: ``draft create-project 'Catcher In The Rye'``
 
-You will now have the following file tree:
+You will now have the following file tree (note that Draft truncates your root directory to ``catcher-rye``):
 
 .. include:: start-file-tree.rst
 
@@ -61,7 +61,7 @@ From a WIP Project
 
   E.g., the above ``myproject.md`` would result in::
 
-    Catcher In the Rye/
+    catcher-rye/
     └─project/
     │ └─Catcher In The Rye/
     │   └─01-Meeting Holden

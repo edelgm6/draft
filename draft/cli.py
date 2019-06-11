@@ -128,6 +128,7 @@ def trim(filepath=None):
 @click.argument('title', type=click.STRING)
 def create_project(title):
     """Generates a project structure.
+    The root file name will be the title but: lower case, spaces replaced with dashes, and only the first two words (minus articles like 'and', 'of', etc.)
 
     :param str title: Title for the project.
     :return: None

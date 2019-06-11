@@ -16,6 +16,17 @@ class StructureError(Error):
 
 class Generator():
 
+    def _create_simple_name(self, title):
+        articles = ["the","a","on","with","of","in","and"]
+        split_title = title.lower().split()
+
+        clean_split = [word for word in split_title if word not in articles]
+        if len(clean_split) > 0:
+            split_title = clean_split
+
+        new_title = ("-").join(split_title[:2])
+        return new_title
+
     def confirm_project_layout(self):
 
         try:
@@ -29,7 +40,7 @@ class Generator():
             raise StructureError("project/ folder has more than one directory:" + str(project_files))
 
     def generate_project(self, title):
-
-        os.mkdir(title)
-        os.mkdir(title + '/project')
-        os.mkdir(title + '/project/' + title)
+        root = self._create_simple_name(title)
+        os.mkdir(root)
+        os.mkdir(root + '/project')
+        os.mkdir(root + '/project/' + title)

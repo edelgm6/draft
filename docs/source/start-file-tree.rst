@@ -1,6 +1,6 @@
 ::
 
-    Catcher In The Rye/
+    catcher-rye/
     └─project/
     │ └─Catcher In The Rye/
     └─.gitignore

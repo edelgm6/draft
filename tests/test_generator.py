@@ -52,7 +52,35 @@ class TestProjectLayout(TestCase):
 class TestFileTree(TestCase):
 
     def tearDown(self):
-        rmtree('Gatsby')
+        try:
+            rmtree('Gatsby')
+        except:
+            try:
+                rmtree('great-gatsby')
+            except:
+                pass
+
+    def test_simple_name_removes_articles(self):
+
+        titles = [
+            ("The Great Gatsby","great-gatsby"),
+            ("Catcher In The Rye","catcher-rye"),
+            ("A Light In August","light-august"),
+            ("On Writing","writing"),
+            ("Of Mice And Men","mice-men")
+        ]
+
+        generator = Generator()
+
+        for title in titles:
+            shortened = generator._create_simple_name(title[0])
+            self.assertEqual(shortened, title[1])
+
+    def test_root_is_shortened_title(self):
+        generator = Generator()
+        generator.generate_project('The Great Gatsby')
+
+        self.assertTrue(os.path.isdir('great-gatsby/project/The Great Gatsby/'))
 
     def test_generate_file_tree_does_not_overwrite_existing_files(self):
 
