@@ -30,8 +30,8 @@ Format
 ------
 Format commands are used to change the way text is arranged within files.
 
-.. autofunction:: split(filename)
-.. autofunction:: trim(filename)
+.. autofunction:: split(filepath=None)
+.. autofunction:: trim(filepath=None)
 
 Maintain
 --------
