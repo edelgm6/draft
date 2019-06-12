@@ -94,8 +94,8 @@ class TestGenerateProject(TestCase):
         result = runner.invoke(create_project, ['Gatsby'], input='y\n')
         self.assertEqual(result.exit_code, 0)
 
-        self.assertTrue(os.path.isdir('Gatsby/project/Gatsby/'))
-        rmtree('Gatsby')
+        self.assertTrue(os.path.isdir('gatsby/project/Gatsby/'))
+        rmtree('gatsby')
 
 class TestCleanSpaces(TestCase):
 
