@@ -102,8 +102,8 @@ class TestFileTree(TestCase):
         rmtree('Gatsby2')
 
     def test_generate_file_tree(self):
-
         generator = Generator()
         generator.generate_project('Gatsby')
 
-        self.assertTrue(os.path.isdir('Gatsby/project/Gatsby/'))
+        self.assertTrue(os.path.isdir('gatsby/project/Gatsby/'))
+        rmtree('gatsby')
