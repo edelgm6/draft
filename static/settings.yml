@@ -1,0 +1,22 @@
+
+# Governs sequence digits: no = 2 digits (i.e., 01, 02),
+# yes = 3 digits (i.e., 001, 002)
+three_digit_sequence: no
+
+# Governs if section, chapter, and sub-chapter headers are showing when compiled
+headers:
+  section: yes
+  chapter: yes
+  sub_chapter: yes
+
+# Select 'no' to disable COMMIT warnings
+warnings:
+  parse: yes
+  split: yes
+  sequence: yes
+  trim: yes
+
+# Use to override title, section, chapter, or sub-chapter names.
+# Useful for including punctuation since
+# Example override -- Chapter 1 Looming: Chapter 1: Looming
+overrides:

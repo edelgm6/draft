@@ -43,7 +43,7 @@ class Formatter():
     def split_sentences(self):
 
         pattern = '([\"\“]?[A-Z][^\.!?]*[\.!?][\"\”]?) {1,2}'
-        abbreviations = ['etc.', 'Mrs.', 'Mr.', 'Dr.']
+        abbreviations = ['etc.', 'Mrs.', 'Mr.', 'Dr.', 'Ms.']
 
         if self.filepath:
             paths = [self.filepath]
