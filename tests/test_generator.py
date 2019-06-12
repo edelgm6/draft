@@ -67,7 +67,8 @@ class TestFileTree(TestCase):
             ("Catcher In The Rye","catcher-rye"),
             ("A Light In August","light-august"),
             ("On Writing","writing"),
-            ("Of Mice And Men","mice-men")
+            ("Of Mice And Men","mice-men"),
+            ("Gatsby","gatsby")
         ]
 
         generator = Generator()
@@ -84,10 +85,10 @@ class TestFileTree(TestCase):
 
     def test_generate_file_tree_does_not_overwrite_existing_files(self):
 
-        os.mkdir('Gatsby')
-        os.mkdir('Gatsby/project')
-        os.mkdir('Gatsby/project/arbitrary')
-        with open('Gatsby/project/arbitrary/whatever.txt', 'w') as test:
+        os.mkdir('gatsby')
+        os.mkdir('gatsby/project')
+        os.mkdir('gatsby/project/arbitrary')
+        with open('gatsby/project/arbitrary/whatever.txt', 'w') as test:
             test.write('whatever')
 
         generator = Generator()
@@ -99,7 +100,7 @@ class TestFileTree(TestCase):
         with self.assertRaises(FileExistsError):
             generator.generate_project('Gatsby')
 
-        rmtree('Gatsby2')
+        rmtree('gatsby2')
 
     def test_generate_file_tree(self):
         generator = Generator()
