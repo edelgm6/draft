@@ -78,25 +78,25 @@ def parse(filepath):
         click.secho("Tree generated.", fg="green")
 
 @main.command()
-@click.argument('filename', type=click.Path(exists=True), required=False)
-def split(filename=None):
+@click.argument('filepath', type=click.Path(exists=True), required=False)
+def split(filepath=None):
     """Splits multi-line sentences into separate lines.
-    Affects all project files unless filename is passed as an argument.
+    Affects all project files unless filepath is passed as an argument.
 
-    :param str filename: (optional) Path to file to be parsed.
+    :param str filepath: (optional) Path to file to be parsed.
     :return: None
 
     Usage:
       >>> draft split '01-Meeting Ishmael.md'
     """
 
-    if not filename:
+    if not filepath:
         click.secho("WARNING: You are about to split-sentences across the " +
             "entire project tree.", fg="red", bold=True)
     answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
     if answer:
-        formatter = Formatter(filename)
+        formatter = Formatter(filepath)
         formatter.split_sentences()
 
         click.secho("Sentence split complete.", fg="green")
