@@ -1,4 +1,5 @@
 import os
+from draft.helpers import clean_filename
 
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -18,6 +19,8 @@ class Generator():
 
     def _create_simple_name(self, title):
         articles = ["the","a","on","with","of","in","and"]
+        title = clean_filename(title)
+
         split_title = title.lower().split()
 
         clean_split = [word for word in split_title if word not in articles]
@@ -41,6 +44,7 @@ class Generator():
 
     def generate_project(self, title):
         root = self._create_simple_name(title)
+        title = clean_filename(title)
         os.mkdir(root)
         os.mkdir(root + '/project')
         os.mkdir(root + '/project/' + title)

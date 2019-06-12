@@ -60,6 +60,14 @@ class TestFileTree(TestCase):
             except:
                 pass
 
+    def test_file_names_sanitized(self):
+        generator = Generator()
+        generator.generate_project('The Great Gatsby!')
+
+        self.assertTrue(os.path.isdir('great-gatsby/project/The Great Gatsby/'))
+
+        #rmtree('great-gatsby!')
+
     def test_simple_name_removes_articles(self):
 
         titles = [

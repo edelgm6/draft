@@ -4,6 +4,7 @@ import shutil
 import click
 from collections import Counter
 from draft.generator import Generator, StructureError
+from draft.helpers import clean_filename
 
 class Outliner():
 
@@ -263,7 +264,7 @@ class Outliner():
             if re.match(title, header.group(0)):
                 title = header.group(0)
                 title = title.strip('#')
-                title = title.strip()
+                title = clean_filename(title)
                 title_path = current_path + "/" + title
 
         if not title_path:
@@ -275,7 +276,7 @@ class Outliner():
 
             if re.match(section, header.group(0)):
                 name = name.strip('#')
-                name = name.strip()
+                name = clean_filename(name)
                 section_path = title_path + "/" + section_count + "-" + name + "/"
                 chapter_path, sub_chapter_path, scene_path = section_path, section_path, section_path
 
@@ -285,7 +286,7 @@ class Outliner():
 
             elif re.match(chapter, header.group(0)):
                 name = name.strip('#')
-                name = name.strip()
+                name = clean_filename(name)
                 chapter_path = section_path + chapter_count + "-" + name + "/"
                 sub_chapter_path, scene_path = chapter_path, chapter_path
                 os.mkdir(chapter_path)
@@ -294,7 +295,7 @@ class Outliner():
 
             elif re.match(sub_chapter, header.group(0)):
                 name = name.strip('#')
-                name = name.strip()
+                name = clean_filename(name)
                 sub_chapter_path = chapter_path + sub_chapter_count + "-" + name + "/"
                 scene_path = sub_chapter_path
                 os.mkdir(sub_chapter_path)
@@ -303,7 +304,7 @@ class Outliner():
 
             elif re.match(scene, header.group(0)):
                 name = name.strip('#')
-                name = name.strip()
+                name = clean_filename(name)
                 scene_path = sub_chapter_path + scene_count + "-" + name + ".md"
 
                 start_scene = header.end(0) + 1

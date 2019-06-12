@@ -1,6 +1,7 @@
 import os
 import re
 import click
+import string
 from draft.generator import Generator
 from draft.outliner import Outliner
 
