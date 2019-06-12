@@ -94,8 +94,8 @@ class TestFileTree(TestCase):
         generator = Generator()
         generator.generate_project('Gatsby2')
 
-        self.assertTrue(os.path.isdir('Gatsby/project/arbitrary/'))
-        self.assertTrue(os.path.isfile('Gatsby/project/arbitrary/whatever.txt'))
+        self.assertTrue(os.path.isdir('gatsby/project/arbitrary/'))
+        self.assertTrue(os.path.isfile('gatsby/project/arbitrary/whatever.txt'))
 
         with self.assertRaises(FileExistsError):
             generator.generate_project('Gatsby')
