@@ -49,8 +49,8 @@ class Generator():
         os.mkdir(root + '/project')
         os.mkdir(root + '/project/' + title)
 
-        with open("draft/settings.yml","r") as yaml:
-            text = yaml.read()
+        with open("draft/settings.yml","r") as default_file:
+            text = default_file.read()
 
-        with open(root + "/settings.yml", "w+") as yaml:
-            yaml.write(text)
+        with open(root + "/settings.yml", "w+") as settings_file:
+            settings_file.write(text)

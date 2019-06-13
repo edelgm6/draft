@@ -1,16 +1,16 @@
 
 # Governs if section, chapter, and sub-chapter headers are showing when compiled
 headers:
-  section: yes
-  chapter: yes
-  sub_chapter: yes
+  section: true
+  chapter: true
+  sub_chapter: true
 
-# Select 'no' to disable COMMIT warnings
+# Select 'false' to disable COMMIT warnings
 warnings:
-  parse: yes
-  split: yes
-  sequence: yes
-  trim: yes
+  parse: true
+  split: true
+  sequence: true
+  trim: true
 
 # Use to override title, section, chapter, or sub-chapter names.
 # Useful for including punctuation since

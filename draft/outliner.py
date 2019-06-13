@@ -2,6 +2,7 @@ import re
 import os
 import shutil
 import click
+import yaml
 from collections import Counter
 from draft.generator import Generator, StructureError
 from draft.helpers import clean_filename, get_settings
@@ -292,12 +293,16 @@ class Outliner():
             raise StructureError("Must be a title (e.g., # The Great Gatsby) in the source file.")
         os.mkdir(title_path)
 
+        overrides = {}
+
         for index, header in enumerate(headers):
             name = header.group(0)
+            original_name = name.strip('#').strip()
+            name = clean_filename(original_name)
+            if original_name != name:
+                overrides[name] = original_name
 
             if re.match(section, header.group(0)):
-                name = name.strip('#')
-                name = clean_filename(name)
                 section_path = title_path + "/" + section_count + "-" + name + "/"
                 chapter_path, sub_chapter_path, scene_path = section_path, section_path, section_path
 
@@ -306,8 +311,6 @@ class Outliner():
                 section_count = str(int(section_count) + 1).zfill(len(section_count))
 
             elif re.match(chapter, header.group(0)):
-                name = name.strip('#')
-                name = clean_filename(name)
                 chapter_path = section_path + chapter_count + "-" + name + "/"
                 sub_chapter_path, scene_path = chapter_path, chapter_path
                 os.mkdir(chapter_path)
@@ -315,8 +318,6 @@ class Outliner():
                 chapter_count = str(int(chapter_count) + 1).zfill(len(chapter_count))
 
             elif re.match(sub_chapter, header.group(0)):
-                name = name.strip('#')
-                name = clean_filename(name)
                 sub_chapter_path = chapter_path + sub_chapter_count + "-" + name + "/"
                 scene_path = sub_chapter_path
                 os.mkdir(sub_chapter_path)
@@ -324,8 +325,6 @@ class Outliner():
                 sub_chapter_count = str(int(sub_chapter_count) + 1).zfill(len(sub_chapter_count))
 
             elif re.match(scene, header.group(0)):
-                name = name.strip('#')
-                name = clean_filename(name)
                 scene_path = sub_chapter_path + scene_count + "-" + name + ".md"
 
                 start_scene = header.end(0) + 1
@@ -343,6 +342,18 @@ class Outliner():
 
                 scene_count = str(int(scene_count) + 1).zfill(len(scene_count))
 
+            try:
+                with open('settings.yml', 'r') as settings_file:
+                    settings = yaml.safe_load(settings_file)
+
+            except FileNotFoundError:
+                settings = {}
+
+            settings['overrides'] = overrides
+
+            new_settings = yaml.dump(settings)
+            with open('settings.yml', 'w') as settings_file:
+                settings_file.write(new_settings)
 
     def _get_header_intervals(self, file):
 

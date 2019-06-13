@@ -172,6 +172,38 @@ class TestFileTree(TestCase):
         with self.assertRaises(Exception):
             outliner.generate_file_tree('legacy.doc')
 
+    def test_existing_settings_not_overwritten(self):
+        fp = open('legacy.txt','w+')
+        fp.write("# Gatsby\n")
+        fp.write("\n")
+        fp.write("## Part 1: The Reckoning\n")
+        fp.write("\n")
+        fp.write("### Chapter 1: The Promise\n")
+        fp.write("\n")
+        fp.write("#### New York, 1942\n")
+        fp.write("##### The Bar\n")
+        fp.write("\n")
+        fp.write("It was a fall day.\n")
+        fp.write("It was cold.\n")
+        fp.close()
+
+        with open("draft/settings.yml","r") as settings_file:
+            text = settings_file.read()
+
+        with open("settings.yml", "w+") as settings_file:
+            settings_file.write(text)
+
+        outliner = Outliner()
+        outliner.generate_file_tree('legacy.txt')
+
+        with open('settings.yml', 'r') as settings_file:
+            settings = yaml.safe_load(settings_file)
+
+        self.assertEqual(settings, {'headers': {'chapter': True, 'section': True, 'sub_chapter': True}, 'overrides': {'Chapter 1 The Promise': 'Chapter 1: The Promise', 'New York 1942': 'New York, 1942', 'Part 1 The Reckoning': 'Part 1: The Reckoning'}, 'warnings': {'parse': True, 'sequence': True, 'split': True, 'trim': True}})
+
+        os.remove('settings.yml')
+
+
     def test_returns_error_if_no_title(self):
 
         fp = open('legacy.txt','w+')
@@ -214,13 +246,14 @@ class TestFileTree(TestCase):
         fp.write("\n")
         fp.write("Now it's tomorrow.\n")
         fp.write("It's still cold.\n")
+        fp.write("## Part 4 Test\n")
 
         fp.close()
 
         outliner = Outliner()
         outliner.generate_file_tree('legacy.txt')
 
-        self.assertEqual(len(os.listdir('project/Gatsby/')),3)
+        self.assertEqual(len(os.listdir('project/Gatsby/')),4)
 
         self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1 The Reckoning'))
         self.assertTrue(os.path.isdir('project/Gatsby/01-Part 1 The Reckoning/01-Chapter 1 The Promise'))
@@ -234,3 +267,8 @@ class TestFileTree(TestCase):
             self.assertEqual(lines[0],"It was a fall day.\n")
             self.assertEqual(lines[1],"It was cold.\n")
             self.assertEqual(len(lines), 2)
+
+        with open('settings.yml', 'r') as settings_file:
+            settings = yaml.safe_load(settings_file)
+
+        self.assertEqual(settings, {'overrides': {'Chapter 1 The Promise': 'Chapter 1: The Promise', 'New York 1942': 'New York, 1942', 'Part 1 The Reckoning': 'Part 1: The Reckoning', 'Part 2 The Whatever': 'Part 2: The Whatever', 'Part 3 Tomorrow': 'Part 3: Tomorrow'}})
