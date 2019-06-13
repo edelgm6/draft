@@ -63,8 +63,9 @@ def sequence():
 @click.argument('filepath', type=click.Path(exists=True, dir_okay=False))
 def parse(filepath):
     """Generates a project tree based on a Markdown formatted .md or .txt file.
-    Useful for generating project trees based on legacy projects or an
-    outline file.
+    Useful for generating project trees based on legacy projects or an outline file.
+
+    Will automatically strip punctuation out of Markdown headers for folder names, but will preserve them in the 'overrides' section of settings.yml for use in compiling.
 
     :param str filepath: Path to file to be parsed.
     :return: None

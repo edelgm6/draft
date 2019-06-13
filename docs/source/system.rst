@@ -38,7 +38,7 @@ A Draft project is made up of a simple file tree as shown below::
     │    │      etc.
     │    └──02-Whaling/                          [Section 2]
     │         etc.
-    └─.gitignore
+    └─settings.yml
 
 You don't *need* to use every 'level' of the project -- i.e., you could just have the Title and a bunch of scenes, only use sections and scenes, have some scenes in sub-chapters and some scenes in chapters, etc.
 

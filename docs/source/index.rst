@@ -9,4 +9,5 @@ Contents
    system
    getting-started
    commands
+   settings
    about
