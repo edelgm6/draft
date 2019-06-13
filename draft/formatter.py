@@ -96,7 +96,8 @@ class Formatter():
 
                 lines = [line for index, line in enumerate(lines) if index not in kill_index]
                 text = "\n".join(lines)
-                text = text.replace('\n\n\n', '\n\n')
+                text = re.sub("\\n{3,}","\\n\\n", text)
+                #text = text.replace('\n\n\n', '\n\n')
                 text = text.replace(' \n','\n')
 
                 file.truncate(0)
@@ -104,7 +105,7 @@ class Formatter():
                 file.write(text)
 
         for file in skipped_files:
-            click.secho(name, fg="red")
+            click.secho(file, fg="red")
 
         if skipped_files:
             click.secho("Above files skipped since >50% of lines are already separated", fg="red")

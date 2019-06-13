@@ -55,7 +55,7 @@ For example, if we use the ``parse`` command, the chapter name *Ahab's Leg* woul
 ::
 
   overrides:
-    Ahabs Leg: "Ahab's Leg"
+    Ahabs Leg: Ahab's Leg
 
 .. note::
   When using the ``parse`` command, any header names that require cleaning before being created will automatically be logged in the ``settings.yml`` file if it exists (i.e., the above example would have been added automatically if detected during ``parse``)
