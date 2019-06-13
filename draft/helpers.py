@@ -3,6 +3,7 @@ import string
 import yaml
 
 def clean_filename(filename):
+    filename = filename.replace("-", " ")
     less_punctuation = filename.translate(str.maketrans('', '', string.punctuation)).strip()
 
     return re.sub(' +', ' ',less_punctuation)
@@ -33,7 +34,7 @@ def get_settings():
                 try:
                     override = user_settings[key]
                     settings[key] = override
-                except KeyError:
+                except (KeyError, TypeError):
                     continue
     except FileNotFoundError:
         pass

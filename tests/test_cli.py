@@ -309,10 +309,6 @@ class TestFileTree(TestCase):
 
         runner = CliRunner()
         result = runner.invoke(parse, ['legacy.txt'], input='y\n')
-        tb = result.exc_info[2]
-        print(traceback.print_tb(tb))
-        print(result.exc_info)
-        print(result.output)
         self.assertEqual(result.exit_code, 0)
 
         self.assertEqual(len(os.listdir('project/Gatsby/')), 3)
