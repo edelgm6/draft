@@ -112,8 +112,8 @@ class TestCompileProject(TestCase):
         with open('settings.yml','w+') as settings_file:
             settings = {
                 'headers': {
-                    'section': True,
-                    'chapter': True,
+                    'section': False,
+                    'chapter': False,
                     'sub_chapter': False
                 }
             }
@@ -127,7 +127,7 @@ class TestCompileProject(TestCase):
         gatsby.close()
         os.remove('Gatsby.md')
 
-        self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n\n\n</br>\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n')
+        self.assertEqual(text,'# Gatsby\n\n</br>\n\n</br>\n\n</br>\n\n</br>\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n</br>\n\n')
 
         os.remove('settings.yml')
 

@@ -9,11 +9,19 @@ def clean_filename(filename):
 
 def get_settings():
 
+    with open("draft/settings.yml","r") as default_settings:
+        settings = yaml.safe_load(default_settings)
+
     try:
-        with open('settings.yml', 'r') as settings_file:
-            settings = yaml.safe_load(settings_file)
+        with open('settings.yml', 'r') as user_settings_file:
+            user_settings = yaml.safe_load(user_settings_file)
+            for key, value in settings.items():
+                try:
+                    override = user_settings[key]
+                    settings[key] = override
+                except KeyError:
+                    continue
     except FileNotFoundError:
-        with open("static/settings.yml","r") as settings_file:
-            settings = yaml.safe_load(settings_file)
+        pass
 
     return settings

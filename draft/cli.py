@@ -44,10 +44,7 @@ def sequence():
     """
 
     settings = get_settings()
-    try:
-        present_warning = settings['warnings']['sequence']
-    except TypeError:
-        present_warning = True
+    present_warning = settings['warnings']['sequence']
 
     answer = False
     if present_warning:
@@ -76,10 +73,7 @@ def parse(filepath):
       >>> draft parse mobydick.md
     """
     settings = get_settings()
-    try:
-        present_warning = settings['warnings']['parse']
-    except TypeError:
-        present_warning = True
+    present_warning = settings['warnings']['parse']
 
     answer = False
     if present_warning:
@@ -107,10 +101,7 @@ def split(filepath=None):
       >>> draft split '01-Meeting Ishmael.md'
     """
     settings = get_settings()
-    try:
-        present_warning = settings['warnings']['split']
-    except TypeError:
-        present_warning = True
+    present_warning = settings['warnings']['split']
 
     answer = False
     if present_warning:
@@ -137,10 +128,7 @@ def trim(filepath=None):
       >>> draft generate-project 'The Great Gatsby'
     """
     settings = get_settings()
-    try:
-        present_warning = settings['warnings']['trim']
-    except TypeError:
-        present_warning = True
+    present_warning = settings['warnings']['trim']
 
     answer = False
     if present_warning:

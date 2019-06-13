@@ -112,8 +112,9 @@ class Outliner():
                         section = "#### " + branch_end[3:] + "\n\n"
                     else:
                         section = "\n\n</br>\n\n"
-                else:
+                elif len(split_branch) == 2:
                     continue
+
                 page = page + section
 
         if draft:
@@ -121,21 +122,29 @@ class Outliner():
         else:
             file_name = 'outline.md'
         with open(file_name, 'w') as fp:
+            page = re.sub("\\n{3,}","\\n\\n", page)
             fp.write(page)
 
 
     def update_file_sequence(self):
-        """
-        TODO: Add in something that checks that all files
-        are named correctly.
-        TODO: Add in something that checks to make sure there are not
-        more than 99 files
-        TODO: Add a method to more cleanly change the name of a directory (gets repeated a lot)
-        TODO: Test with markdown files
-        """
 
         # Get outline of all files in tree
         outline = self._get_file_tree()
+
+        files = [branch for branch in outline if branch[-3:] == '.md']
+        if len(files) > 99:
+            sequence_base = '001' # pragma: no cover
+        else:
+            sequence_base = '01'
+
+        sequences = {
+            1: sequence_base,
+            2: sequence_base,
+            3: sequence_base,
+            4: sequence_base,
+            5: sequence_base,
+            'file': sequence_base
+        }
 
         leveled_branches = []
         for branch in outline:
@@ -153,15 +162,6 @@ class Outliner():
             level_list.sort()
             outline += level_list
 
-        sequences = {
-            1: '01',
-            2: '01',
-            3: '01',
-            4: '01',
-            5: '01',
-            'file': '01'
-        }
-
         rename_dict = {}
 
         branches = [branch for branch in outline if os.path.isdir(branch)]
@@ -171,8 +171,6 @@ class Outliner():
             files = os.listdir(branch)
             files.sort()
             sequence_list = [file[:2] for file in files]
-            #sequence_list = Counter(sequence_list)
-            #sequence_list = [key for key, count in sequence_list.items() if count > 1]
 
             #duplicates = [file for file in files if file[:2] in sequence_list]
             file_dict = {}

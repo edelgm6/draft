@@ -1,8 +1,4 @@
 
-# Governs sequence digits: no = 2 digits (i.e., 01, 02),
-# yes = 3 digits (i.e., 001, 002)
-three_digit_sequence: no
-
 # Governs if section, chapter, and sub-chapter headers are showing when compiled
 headers:
   section: yes
