@@ -131,6 +131,27 @@ class TestCompileProject(TestCase):
 
         os.remove('settings.yml')
 
+    def test_headers_overridden(self):
+        with open('settings.yml','w+') as settings_file:
+            settings = {
+                'overrides': {
+                    'Gatsby': 'The Great Gatsby',
+                    'Chapter 1': 'Chapter 1: Word',
+                }
+            }
+            settings_file.write(yaml.dump(settings))
+
+        outliner = Outliner()
+        outliner.compile_project(draft=True)
+
+        gatsby = open('Gatsby.md', 'r')
+        text = gatsby.read()
+        gatsby.close()
+        os.remove('Gatsby.md')
+        os.remove('settings.yml')
+
+        self.assertEqual(text,'# The Great Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1: Word\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n')
+
 class TestFileTree(TestCase):
 
     def setUp(self):

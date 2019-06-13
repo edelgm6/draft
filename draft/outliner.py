@@ -72,9 +72,16 @@ class Outliner():
             return outline.strip()
 
     def compile_project(self, draft=False):
-        title = os.listdir('project')[0]
         outline = self._get_file_tree()
         settings = get_settings()['headers']
+        overrides = get_settings()['overrides']
+
+        title = os.listdir('project')[0]
+        try:
+            override = overrides[title]
+            title = override
+        except (KeyError, TypeError):
+            pass
 
         page = "# " + title + "\n\n"
         for branch in outline:
@@ -95,21 +102,27 @@ class Outliner():
             elif os.path.isdir(branch):
                 split_branch = branch.split("/")
                 branch_end = split_branch[-1]
+
+                try:
+                    title = overrides[branch_end[3:]]
+                except (KeyError, TypeError):
+                    title = branch_end[3:]
+
                 if len(split_branch) == 3:
                     if settings['section'] or not draft:
-                        section = "## " + branch_end[3:] + "\n\n"
+                        section = "## " + title + "\n\n"
                     else:
                         section = "\n\n</br>\n\n"
 
                 elif len(split_branch) == 4:
                     if settings['chapter'] or not draft:
-                        section = "### " + branch_end[3:] + "\n\n"
+                        section = "### " + title + "\n\n"
                     else:
                         section = "\n\n</br>\n\n"
 
                 elif len(split_branch) == 5:
                     if settings['sub_chapter'] or not draft:
-                        section = "#### " + branch_end[3:] + "\n\n"
+                        section = "#### " + title + "\n\n"
                     else:
                         section = "\n\n</br>\n\n"
                 elif len(split_branch) == 2:
@@ -118,6 +131,7 @@ class Outliner():
                 page = page + section
 
         if draft:
+            title = os.listdir('project')[0]
             file_name = title + '.md'
         else:
             file_name = 'outline.md'
