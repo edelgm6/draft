@@ -2,6 +2,7 @@ import click
 from draft.formatter import Formatter
 from draft.generator import Generator
 from draft.outliner import Outliner
+from draft.helpers import get_settings
 
 @click.group()
 def main():
@@ -42,9 +43,17 @@ def sequence():
 
     """
 
-    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+    settings = get_settings()
+    try:
+        present_warning = settings['warnings']['sequence']
+    except TypeError:
+        present_warning = True
 
-    if answer:
+    answer = False
+    if present_warning:
+        answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+
+    if answer or not present_warning:
         generator = Generator()
         generator.confirm_project_layout()
 
@@ -66,9 +75,17 @@ def parse(filepath):
     Usage:
       >>> draft parse mobydick.md
     """
-    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+    settings = get_settings()
+    try:
+        present_warning = settings['warnings']['parse']
+    except TypeError:
+        present_warning = True
 
-    if answer:
+    answer = False
+    if present_warning:
+        answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+
+    if answer or not present_warning:
         generator = Generator()
         generator.confirm_project_layout()
 
@@ -89,13 +106,19 @@ def split(filepath=None):
     Usage:
       >>> draft split '01-Meeting Ishmael.md'
     """
+    settings = get_settings()
+    try:
+        present_warning = settings['warnings']['split']
+    except TypeError:
+        present_warning = True
 
-    if not filepath:
-        click.secho("WARNING: You are about to split-sentences across the " +
-            "entire project tree.", fg="red", bold=True)
-    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+    answer = False
+    if present_warning:
+        if not filepath:
+            click.secho("WARNING: You are about to split-sentences across the " + "entire project tree.", fg="red", bold=True)
+        answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
-    if answer:
+    if answer or not present_warning:
         formatter = Formatter(filepath)
         formatter.split_sentences()
 
@@ -113,9 +136,17 @@ def trim(filepath=None):
     Usage:
       >>> draft generate-project 'The Great Gatsby'
     """
-    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+    settings = get_settings()
+    try:
+        present_warning = settings['warnings']['trim']
+    except TypeError:
+        present_warning = True
 
-    if answer:
+    answer = False
+    if present_warning:
+        answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+
+    if answer or not present_warning:
         generator = Generator()
         generator.confirm_project_layout()
 
