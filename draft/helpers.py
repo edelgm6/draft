@@ -9,8 +9,22 @@ def clean_filename(filename):
 
 def get_settings():
 
-    with open("draft/settings.yml","r") as default_settings:
-        settings = yaml.safe_load(default_settings)
+    DEFAULT_SETTINGS = {
+        'headers': {
+            'section': True,
+            'chapter': True,
+            'sub_chapter': True
+        },
+        'warnings': {
+            'parse': True,
+            'split': True,
+            'sequence': True,
+            'trim': True
+        },
+        'overrides': None
+        }
+
+    settings = DEFAULT_SETTINGS
 
     try:
         with open('settings.yml', 'r') as user_settings_file:

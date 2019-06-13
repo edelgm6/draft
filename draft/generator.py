@@ -1,5 +1,6 @@
 import os
-from draft.helpers import clean_filename
+import yaml
+from draft.helpers import clean_filename, get_settings
 
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -49,8 +50,5 @@ class Generator():
         os.mkdir(root + '/project')
         os.mkdir(root + '/project/' + title)
 
-        with open("draft/settings.yml","r") as default_file:
-            text = default_file.read()
-
         with open(root + "/settings.yml", "w+") as settings_file:
-            settings_file.write(text)
+            settings_file.write(yaml.dump(get_settings()))
