@@ -305,7 +305,6 @@ class TestFileTree(TestCase):
         fp.write("\n")
         fp.write("Now it's tomorrow.\n")
         fp.write("It's still cold.\n")
-
         fp.close()
 
         runner = CliRunner()

@@ -2,6 +2,7 @@ from unittest import TestCase, skip
 from draft.outliner import Outliner
 from draft.generator import Generator, StructureError
 import os
+import yaml
 from shutil import rmtree
 
 class TestStatistics(TestCase):
@@ -51,9 +52,10 @@ class TestCompileProject(TestCase):
         os.mkdir('project/Gatsby/01-Part 1')
         os.mkdir('project/Gatsby/01-Part 2')
         os.mkdir('project/Gatsby/01-Part 2/01-Chapter 1')
+        os.mkdir('project/Gatsby/01-Part 2/01-Chapter 1/01-SubChapter 1')
         os.mkdir('project/Gatsby/01-Part 2/01-Chapter 2')
 
-        base = 'project/Gatsby/01-Part 2/01-Chapter 1/'
+        base = 'project/Gatsby/01-Part 2/01-Chapter 1/01-SubChapter 1/'
         for file in ['01-Scene 1.md','01-Scene 2.md']:
             fp = open(base + file, 'w')
             fp.write("***\n")
@@ -71,7 +73,29 @@ class TestCompileProject(TestCase):
         gatsby.close()
         os.remove('outline.md')
 
-        self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**: This is an outline\n\n### Chapter 2\n\n')
+        self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**: This is an outline\n\n### Chapter 2\n\n')
+
+    def test_outline_unaffected_by_header_settings(self):
+        with open('settings.yml','w+') as settings_file:
+            settings = {
+                'headers': {
+                    'section': False,
+                    'chapter': False,
+                    'sub_chapter': False
+                }
+            }
+            settings_file.write(yaml.dump(settings))
+
+        outliner = Outliner()
+        outliner.compile_project(draft=False)
+
+        gatsby = open('outline.md', 'r')
+        text = gatsby.read()
+        gatsby.close()
+        os.remove('outline.md')
+        os.remove('settings.yml')
+
+        self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**: This is an outline\n\n### Chapter 2\n\n')
 
     def test_compiles_project(self):
         outliner = Outliner()
@@ -82,7 +106,30 @@ class TestCompileProject(TestCase):
         gatsby.close()
         os.remove('Gatsby.md')
 
-        self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n')
+        self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n')
+
+    def test_headers_ignored_if_compiled_project(self):
+        with open('settings.yml','w+') as settings_file:
+            settings = {
+                'headers': {
+                    'section': True,
+                    'chapter': True,
+                    'sub_chapter': False
+                }
+            }
+            settings_file.write(yaml.dump(settings))
+
+        outliner = Outliner()
+        outliner.compile_project(draft=True)
+
+        gatsby = open('Gatsby.md', 'r')
+        text = gatsby.read()
+        gatsby.close()
+        os.remove('Gatsby.md')
+
+        self.assertEqual(text,'# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n\n\n</br>\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n')
+
+        os.remove('settings.yml')
 
 class TestFileTree(TestCase):
 

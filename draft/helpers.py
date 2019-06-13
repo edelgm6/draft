@@ -13,6 +13,7 @@ def get_settings():
         with open('settings.yml', 'r') as settings_file:
             settings = yaml.safe_load(settings_file)
     except FileNotFoundError:
-        settings = None
+        with open("static/settings.yml","r") as settings_file:
+            settings = yaml.safe_load(settings_file)
 
     return settings

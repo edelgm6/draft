@@ -4,7 +4,7 @@ import shutil
 import click
 from collections import Counter
 from draft.generator import Generator, StructureError
-from draft.helpers import clean_filename
+from draft.helpers import clean_filename, get_settings
 
 class Outliner():
 
@@ -73,10 +73,10 @@ class Outliner():
 
     def compile_project(self, draft=False):
         title = os.listdir('project')[0]
-        outline_tag = '(?<=\*{3}\n).*(?=\n\*{3})'
         outline = self._get_file_tree()
+        settings = get_settings()['headers']
 
-        page = ""
+        page = "# " + title + "\n\n"
         for branch in outline:
             if os.path.isfile(branch):
                 with open(branch, 'r') as sc:
@@ -95,17 +95,26 @@ class Outliner():
             elif os.path.isdir(branch):
                 split_branch = branch.split("/")
                 branch_end = split_branch[-1]
-                if len(split_branch) == 2:
-                    section = branch_end
-                    page = page + "# " + section + "\n\n"
-
-                elif len(split_branch) == 3:
-                    chapter = branch_end[3:]
-                    page = page + "## " + chapter + "\n\n"
+                if len(split_branch) == 3:
+                    if settings['section'] or not draft:
+                        section = "## " + branch_end[3:] + "\n\n"
+                    else:
+                        section = "\n\n</br>\n\n"
 
                 elif len(split_branch) == 4:
-                    sub_chapter = branch_end[3:]
-                    page = page + "### " + sub_chapter + "\n\n"
+                    if settings['chapter'] or not draft:
+                        section = "### " + branch_end[3:] + "\n\n"
+                    else:
+                        section = "\n\n</br>\n\n"
+
+                elif len(split_branch) == 5:
+                    if settings['sub_chapter'] or not draft:
+                        section = "#### " + branch_end[3:] + "\n\n"
+                    else:
+                        section = "\n\n</br>\n\n"
+                else:
+                    continue
+                page = page + section
 
         if draft:
             file_name = title + '.md'
