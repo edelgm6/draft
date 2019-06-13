@@ -53,12 +53,23 @@ class TestFileTree(TestCase):
 
     def tearDown(self):
         try:
+            os.remove('gatsby/settings.yml')
+        except:
+            pass
+
+        try:
             rmtree('Gatsby')
         except:
             try:
                 rmtree('great-gatsby')
             except:
                 pass
+
+    def test_file_names_sanitized(self):
+        generator = Generator()
+        generator.generate_project('The Great Gatsby!')
+
+        self.assertTrue(os.path.isdir('great-gatsby/project/The Great Gatsby/'))
 
     def test_simple_name_removes_articles(self):
 
@@ -107,4 +118,6 @@ class TestFileTree(TestCase):
         generator.generate_project('Gatsby')
 
         self.assertTrue(os.path.isdir('gatsby/project/Gatsby/'))
+        self.assertTrue(os.path.isfile('gatsby/settings.yml'))
+
         rmtree('gatsby')

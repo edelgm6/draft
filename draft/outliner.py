@@ -2,8 +2,10 @@ import re
 import os
 import shutil
 import click
+import yaml
 from collections import Counter
 from draft.generator import Generator, StructureError
+from draft.helpers import clean_filename, get_settings
 
 class Outliner():
 
@@ -71,11 +73,18 @@ class Outliner():
             return outline.strip()
 
     def compile_project(self, draft=False):
-        title = os.listdir('project')[0]
-        outline_tag = '(?<=\*{3}\n).*(?=\n\*{3})'
         outline = self._get_file_tree()
+        settings = get_settings()['headers']
+        overrides = get_settings()['overrides']
 
-        page = ""
+        title = os.listdir('project')[0]
+        try:
+            override = overrides[title]
+            title = override
+        except (KeyError, TypeError):
+            pass
+
+        page = "# " + title + "\n\n"
         for branch in outline:
             if os.path.isfile(branch):
                 with open(branch, 'r') as sc:
@@ -94,38 +103,63 @@ class Outliner():
             elif os.path.isdir(branch):
                 split_branch = branch.split("/")
                 branch_end = split_branch[-1]
-                if len(split_branch) == 2:
-                    section = branch_end
-                    page = page + "# " + section + "\n\n"
 
-                elif len(split_branch) == 3:
-                    chapter = branch_end[3:]
-                    page = page + "## " + chapter + "\n\n"
+                try:
+                    title = overrides[branch_end[3:]]
+                except (KeyError, TypeError):
+                    title = branch_end[3:]
+
+                if len(split_branch) == 3:
+                    if settings['section'] or not draft:
+                        section = "## " + title + "\n\n"
+                    else:
+                        section = "\n\n</br>\n\n"
 
                 elif len(split_branch) == 4:
-                    sub_chapter = branch_end[3:]
-                    page = page + "### " + sub_chapter + "\n\n"
+                    if settings['chapter'] or not draft:
+                        section = "### " + title + "\n\n"
+                    else:
+                        section = "\n\n</br>\n\n"
+
+                elif len(split_branch) == 5:
+                    if settings['sub_chapter'] or not draft:
+                        section = "#### " + title + "\n\n"
+                    else:
+                        section = "\n\n</br>\n\n"
+                elif len(split_branch) == 2:
+                    continue
+
+                page = page + section
 
         if draft:
+            title = os.listdir('project')[0]
             file_name = title + '.md'
         else:
             file_name = 'outline.md'
         with open(file_name, 'w') as fp:
+            page = re.sub("\\n{3,}","\\n\\n", page)
             fp.write(page)
 
 
     def update_file_sequence(self):
-        """
-        TODO: Add in something that checks that all files
-        are named correctly.
-        TODO: Add in something that checks to make sure there are not
-        more than 99 files
-        TODO: Add a method to more cleanly change the name of a directory (gets repeated a lot)
-        TODO: Test with markdown files
-        """
 
         # Get outline of all files in tree
         outline = self._get_file_tree()
+
+        files = [branch for branch in outline if branch[-3:] == '.md']
+        if len(files) > 99:
+            sequence_base = '001' # pragma: no cover
+        else:
+            sequence_base = '01'
+
+        sequences = {
+            1: sequence_base,
+            2: sequence_base,
+            3: sequence_base,
+            4: sequence_base,
+            5: sequence_base,
+            'file': sequence_base
+        }
 
         leveled_branches = []
         for branch in outline:
@@ -143,15 +177,6 @@ class Outliner():
             level_list.sort()
             outline += level_list
 
-        sequences = {
-            1: '01',
-            2: '01',
-            3: '01',
-            4: '01',
-            5: '01',
-            'file': '01'
-        }
-
         rename_dict = {}
 
         branches = [branch for branch in outline if os.path.isdir(branch)]
@@ -161,8 +186,6 @@ class Outliner():
             files = os.listdir(branch)
             files.sort()
             sequence_list = [file[:2] for file in files]
-            #sequence_list = Counter(sequence_list)
-            #sequence_list = [key for key, count in sequence_list.items() if count > 1]
 
             #duplicates = [file for file in files if file[:2] in sequence_list]
             file_dict = {}
@@ -263,19 +286,23 @@ class Outliner():
             if re.match(title, header.group(0)):
                 title = header.group(0)
                 title = title.strip('#')
-                title = title.strip()
+                title = clean_filename(title)
                 title_path = current_path + "/" + title
 
         if not title_path:
             raise StructureError("Must be a title (e.g., # The Great Gatsby) in the source file.")
         os.mkdir(title_path)
 
+        overrides = {}
+
         for index, header in enumerate(headers):
             name = header.group(0)
+            original_name = name.strip('#').strip()
+            name = clean_filename(original_name)
+            if original_name != name:
+                overrides[name] = original_name
 
             if re.match(section, header.group(0)):
-                name = name.strip('#')
-                name = name.strip()
                 section_path = title_path + "/" + section_count + "-" + name + "/"
                 chapter_path, sub_chapter_path, scene_path = section_path, section_path, section_path
 
@@ -284,8 +311,6 @@ class Outliner():
                 section_count = str(int(section_count) + 1).zfill(len(section_count))
 
             elif re.match(chapter, header.group(0)):
-                name = name.strip('#')
-                name = name.strip()
                 chapter_path = section_path + chapter_count + "-" + name + "/"
                 sub_chapter_path, scene_path = chapter_path, chapter_path
                 os.mkdir(chapter_path)
@@ -293,8 +318,6 @@ class Outliner():
                 chapter_count = str(int(chapter_count) + 1).zfill(len(chapter_count))
 
             elif re.match(sub_chapter, header.group(0)):
-                name = name.strip('#')
-                name = name.strip()
                 sub_chapter_path = chapter_path + sub_chapter_count + "-" + name + "/"
                 scene_path = sub_chapter_path
                 os.mkdir(sub_chapter_path)
@@ -302,8 +325,6 @@ class Outliner():
                 sub_chapter_count = str(int(sub_chapter_count) + 1).zfill(len(sub_chapter_count))
 
             elif re.match(scene, header.group(0)):
-                name = name.strip('#')
-                name = name.strip()
                 scene_path = sub_chapter_path + scene_count + "-" + name + ".md"
 
                 start_scene = header.end(0) + 1
@@ -321,6 +342,18 @@ class Outliner():
 
                 scene_count = str(int(scene_count) + 1).zfill(len(scene_count))
 
+            try:
+                with open('settings.yml', 'r') as settings_file:
+                    settings = yaml.safe_load(settings_file)
+
+            except FileNotFoundError:
+                settings = {}
+
+            settings['overrides'] = overrides
+
+            new_settings = yaml.dump(settings)
+            with open('settings.yml', 'w') as settings_file:
+                settings_file.write(new_settings)
 
     def _get_header_intervals(self, file):
 

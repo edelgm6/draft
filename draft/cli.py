@@ -2,6 +2,7 @@ import click
 from draft.formatter import Formatter
 from draft.generator import Generator
 from draft.outliner import Outliner
+from draft.helpers import get_settings
 
 @click.group()
 def main():
@@ -42,9 +43,14 @@ def sequence():
 
     """
 
-    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+    settings = get_settings()
+    present_warning = settings['warnings']['sequence']
 
-    if answer:
+    answer = False
+    if present_warning:
+        answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+
+    if answer or not present_warning:
         generator = Generator()
         generator.confirm_project_layout()
 
@@ -57,8 +63,9 @@ def sequence():
 @click.argument('filepath', type=click.Path(exists=True, dir_okay=False))
 def parse(filepath):
     """Generates a project tree based on a Markdown formatted .md or .txt file.
-    Useful for generating project trees based on legacy projects or an
-    outline file.
+    Useful for generating project trees based on legacy projects or an outline file.
+
+    Will automatically strip punctuation out of Markdown headers for folder names, but will preserve them in the 'overrides' section of settings.yml for use in compiling.
 
     :param str filepath: Path to file to be parsed.
     :return: None
@@ -66,9 +73,14 @@ def parse(filepath):
     Usage:
       >>> draft parse mobydick.md
     """
-    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+    settings = get_settings()
+    present_warning = settings['warnings']['parse']
 
-    if answer:
+    answer = False
+    if present_warning:
+        answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+
+    if answer or not present_warning:
         generator = Generator()
         generator.confirm_project_layout()
 
@@ -89,13 +101,16 @@ def split(filepath=None):
     Usage:
       >>> draft split '01-Meeting Ishmael.md'
     """
+    settings = get_settings()
+    present_warning = settings['warnings']['split']
 
-    if not filepath:
-        click.secho("WARNING: You are about to split-sentences across the " +
-            "entire project tree.", fg="red", bold=True)
-    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+    answer = False
+    if present_warning:
+        if not filepath:
+            click.secho("WARNING: You are about to split-sentences across the " + "entire project tree.", fg="red", bold=True)
+        answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
-    if answer:
+    if answer or not present_warning:
         formatter = Formatter(filepath)
         formatter.split_sentences()
 
@@ -113,9 +128,14 @@ def trim(filepath=None):
     Usage:
       >>> draft generate-project 'The Great Gatsby'
     """
-    answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+    settings = get_settings()
+    present_warning = settings['warnings']['trim']
 
-    if answer:
+    answer = False
+    if present_warning:
+        answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
+
+    if answer or not present_warning:
         generator = Generator()
         generator.confirm_project_layout()
 
