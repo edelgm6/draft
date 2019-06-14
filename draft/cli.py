@@ -41,6 +41,9 @@ def stats():
 def sequence():
     """Resets indices in folders and files and resolves duplicates.
 
+    Usage:
+      >>> draft sequence
+
     """
 
     settings = get_settings()
@@ -107,7 +110,7 @@ def split(filepath=None):
     answer = False
     if present_warning:
         if not filepath:
-            click.secho("WARNING: You are about to split-sentences across the " + "entire project tree.", fg="red", bold=True)
+            click.secho("WARNING: You are about to split sentences across the " + "entire project tree.", fg="red", bold=True)
         answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
     if answer or not present_warning:
@@ -126,7 +129,8 @@ def trim(filepath=None):
     :return: None
 
     Usage:
-      >>> draft generate-project 'The Great Gatsby'
+      >>> draft trim project/The Great Gatsby/intro.md
+
     """
     settings = get_settings()
     present_warning = settings['warnings']['trim']
@@ -167,6 +171,9 @@ def create_project(title):
 def outline():
     """Generates or updates a project outline.
 
+    Usage:
+      >>> draft outline
+
     """
     generator = Generator()
     generator.confirm_project_layout()
@@ -179,6 +186,9 @@ def outline():
 @main.command()
 def compile():
     """Compiles the project into a final document.
+
+    Usage:
+      >>> draft compile
 
     """
     generator = Generator()

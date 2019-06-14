@@ -1,5 +1,6 @@
 import os
-from draft.helpers import clean_filename
+import yaml
+from draft.helpers import clean_filename, get_settings
 
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -35,7 +36,7 @@ class Generator():
         try:
             project_files = os.listdir('project')
         except FileNotFoundError:
-            raise StructureError("project/ folder missing. Try running generate-project to create a layout.")
+            raise StructureError("project/ folder missing. Try running create-project to create a layout.")
 
         if '.DS_Store' in project_files:
             project_files.remove('.DS_Store')
@@ -49,8 +50,5 @@ class Generator():
         os.mkdir(root + '/project')
         os.mkdir(root + '/project/' + title)
 
-        with open("draft/settings.yml","r") as default_file:
-            text = default_file.read()
-
         with open(root + "/settings.yml", "w+") as settings_file:
-            settings_file.write(text)
+            settings_file.write(yaml.dump(get_settings()))

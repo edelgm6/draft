@@ -1,6 +1,7 @@
 from unittest import TestCase, skip
 from draft.outliner import Outliner
 from draft.generator import Generator, StructureError
+from draft.helpers import get_settings
 import os
 import yaml
 from shutil import rmtree
@@ -187,11 +188,8 @@ class TestFileTree(TestCase):
         fp.write("It was cold.\n")
         fp.close()
 
-        with open("draft/settings.yml","r") as settings_file:
-            text = settings_file.read()
-
         with open("settings.yml", "w+") as settings_file:
-            settings_file.write(text)
+            settings_file.write(yaml.dump(get_settings()))
 
         outliner = Outliner()
         outliner.generate_file_tree('legacy.txt')
@@ -272,3 +270,5 @@ class TestFileTree(TestCase):
             settings = yaml.safe_load(settings_file)
 
         self.assertEqual(settings, {'overrides': {'Chapter 1 The Promise': 'Chapter 1: The Promise', 'New York 1942': 'New York, 1942', 'Part 1 The Reckoning': 'Part 1: The Reckoning', 'Part 2 The Whatever': 'Part 2: The Whatever', 'Part 3 Tomorrow': 'Part 3: Tomorrow'}})
+
+        os.remove('settings.yml')
