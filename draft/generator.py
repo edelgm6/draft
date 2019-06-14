@@ -34,12 +34,12 @@ class Generator():
     def confirm_project_layout(self):
 
         try:
-            project_files = os.listdir('project')
+            project_files = os.listdir("project")
         except FileNotFoundError:
             raise StructureError("project/ folder missing. Try running create-project to create a layout.")
 
-        if '.DS_Store' in project_files:
-            project_files.remove('.DS_Store')
+        if ".DS_Store" in project_files:
+            project_files.remove(".DS_Store")
         if len(project_files) > 1:
             raise StructureError("project/ folder has more than one directory:" + str(project_files))
 
@@ -47,8 +47,8 @@ class Generator():
         root = self._create_simple_name(title)
         title = clean_filename(title)
         os.mkdir(root)
-        os.mkdir(root + '/project')
-        os.mkdir(root + '/project/' + title)
+        os.mkdir(root + "/project")
+        os.mkdir(root + "/project/" + title)
 
         with open(root + "/settings.yml", "w+") as settings_file:
             settings_file.write(yaml.dump(get_settings()))

@@ -11,7 +11,7 @@ class Formatter():
         self.filepath = filepath
 
     def remove_duplicate_spaces(self):
-        pattern = ' {2,}'
+        pattern = " {2,}"
 
         if self.filepath:
             paths = [self.filepath]
@@ -21,10 +21,10 @@ class Formatter():
             paths = [file for file in files if os.path.isfile(file) and file[-3:] == ".md"]
 
         for path in paths:
-            with open(path, 'r+') as file:
+            with open(path, "r+") as file:
 
                 text = file.read()
-                text = re.sub(pattern, ' ', text)
+                text = re.sub(pattern, " ", text)
 
                 file.truncate(0)
                 file.seek(0)
@@ -43,7 +43,7 @@ class Formatter():
     def split_sentences(self):
 
         pattern = '([\"\“]?[A-Z][^\.!?]*[\.!?][\"\”]?) {1,2}'
-        abbreviations = ['etc.', 'Mrs.', 'Mr.', 'Dr.', 'Ms.']
+        abbreviations = ["etc.", "Mrs.", "Mr.", "Dr.", "Ms."]
 
         if self.filepath:
             paths = [self.filepath]
@@ -55,7 +55,7 @@ class Formatter():
         skipped_files = []
 
         for path in paths:
-            with open(path, 'r+') as file:
+            with open(path, "r+") as file:
                 text = file.read()
 
                 # If more than half of the lines in a file is already on new lines
@@ -66,8 +66,8 @@ class Formatter():
                     skipped_files.append(name)
                     continue
 
-                text = text.replace('\t', '')
-                text = text.replace('\n', '\n\n')
+                text = text.replace("\t", "")
+                text = text.replace("\n", "\n\n")
                 lines = re.split(pattern, text)
                 lines = [line for line in lines if line]
 
@@ -81,14 +81,14 @@ class Formatter():
 
                     for abbreviation in abbreviations:
                         if line.endswith(abbreviation):
-                            line = line + ' ' + lines[index + 1]
+                            line = line + " " + lines[index + 1]
                             lines[index] = line
                             skip = True
                             break
 
                     try:
                         if lines[index + 1][0].islower():
-                            line = line + ' ' + lines[index + 1]
+                            line = line + " " + lines[index + 1]
                             lines[index] = line
                             skip = True
                     except IndexError:
@@ -97,8 +97,7 @@ class Formatter():
                 lines = [line for index, line in enumerate(lines) if index not in kill_index]
                 text = "\n".join(lines)
                 text = re.sub("\\n{3,}","\\n\\n", text)
-                #text = text.replace('\n\n\n', '\n\n')
-                text = text.replace(' \n','\n')
+                text = text.replace(" \n","\n")
 
                 file.truncate(0)
                 file.seek(0)

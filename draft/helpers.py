@@ -7,31 +7,31 @@ GITIGNORE = '## Mac\n# General\n.DS_Store\n.AppleDouble\n.LSOverride\n\n# Icon m
 
 def clean_filename(filename):
     filename = filename.replace("-", " ")
-    less_punctuation = filename.translate(str.maketrans('', '', string.punctuation)).strip()
+    less_punctuation = filename.translate(str.maketrans("", "", string.punctuation)).strip()
 
-    return re.sub(' +', ' ',less_punctuation)
+    return re.sub(" +", " ",less_punctuation)
 
 def get_settings():
 
     DEFAULT_SETTINGS = {
-        'headers': {
-            'section': True,
-            'chapter': True,
-            'sub_chapter': True
+        "headers": {
+            "section": True,
+            "chapter": True,
+            "sub_chapter": True
         },
-        'warnings': {
-            'parse': True,
-            'split': True,
-            'sequence': True,
-            'trim': True
+        "warnings": {
+            "parse": True,
+            "split": True,
+            "sequence": True,
+            "trim": True
         },
-        'overrides': None
+        "overrides": None
         }
 
     settings = DEFAULT_SETTINGS
 
     try:
-        with open('settings.yml', 'r') as user_settings_file:
+        with open("settings.yml", "r") as user_settings_file:
             user_settings = yaml.safe_load(user_settings_file)
             for key, value in settings.items():
                 try:

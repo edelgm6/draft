@@ -22,7 +22,7 @@ Draft turns that half-finished novel into a clean, plaintext file tree perfect f
 - ``sequence`` your files and directories to maintain a sequential index
 - ``outline`` of your project to help plan and fill in gaps
 - ``compile`` your Scenes, Sub-Chapters, Chapters, and Sections into a single document once you're ready to publish
-- Other features include ``stats`` (e.g., get word count), ``trim`` (remove duplicate spaces), and ``split`` (put each sentence on its own line)
+- Other features include ``stats`` (word count, etc.), ``trim`` (remove duplicate spaces), and ``split`` (put each sentence on its own line)
 
 Installation
 ------------
