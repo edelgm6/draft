@@ -119,5 +119,6 @@ class TestFileTree(TestCase):
 
         self.assertTrue(os.path.isdir('gatsby/project/Gatsby/'))
         self.assertTrue(os.path.isfile('gatsby/settings.yml'))
+        self.assertTrue(os.path.isfile('gatsby/.gitignore'))
 
         rmtree('gatsby')
