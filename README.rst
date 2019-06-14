@@ -32,6 +32,4 @@ Installation
 Documentation
 -------------
 
-- Docs: https://draft-cli.readthedocs.io/en/latest/
-
-- Source Code: https://github.com/edelgm6/draft
+https://draft-cli.readthedocs.io/en/latest/
