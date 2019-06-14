@@ -47,7 +47,7 @@ def sequence():
     """
 
     settings = get_settings()
-    present_warning = settings['warnings']['sequence']
+    present_warning = settings["warnings"]["sequence"]
 
     answer = False
     if present_warning:
@@ -63,7 +63,7 @@ def sequence():
         click.secho("Files resequenced.", fg="green")
 
 @main.command()
-@click.argument('filepath', type=click.Path(exists=True, dir_okay=False))
+@click.argument("filepath", type=click.Path(exists=True, dir_okay=False))
 def parse(filepath):
     """Generates a project tree based on a Markdown formatted .md or .txt file.
     Useful for generating project trees based on legacy projects or an outline file.
@@ -77,7 +77,7 @@ def parse(filepath):
       >>> draft parse mobydick.md
     """
     settings = get_settings()
-    present_warning = settings['warnings']['parse']
+    present_warning = settings["warnings"]["parse"]
 
     answer = False
     if present_warning:
@@ -93,7 +93,7 @@ def parse(filepath):
         click.secho("Tree generated.", fg="green")
 
 @main.command()
-@click.argument('filepath', type=click.Path(exists=True), required=False)
+@click.argument("filepath", type=click.Path(exists=True), required=False)
 def split(filepath=None):
     """Splits multi-line sentences into separate lines.
     Affects all project files unless filepath is passed as an argument.
@@ -105,7 +105,7 @@ def split(filepath=None):
       >>> draft split '01-Meeting Ishmael.md'
     """
     settings = get_settings()
-    present_warning = settings['warnings']['split']
+    present_warning = settings["warnings"]["split"]
 
     answer = False
     if present_warning:
@@ -120,7 +120,7 @@ def split(filepath=None):
         click.secho("Sentence split complete.", fg="green")
 
 @main.command()
-@click.argument('filepath', type=click.Path(exists=True), required=False)
+@click.argument("filepath", type=click.Path(exists=True), required=False)
 def trim(filepath=None):
     """Removes all duplicate spaces from text.
     Acts on every file in project unless filepath argument passed.
@@ -133,7 +133,7 @@ def trim(filepath=None):
 
     """
     settings = get_settings()
-    present_warning = settings['warnings']['trim']
+    present_warning = settings["warnings"]["trim"]
 
     answer = False
     if present_warning:
@@ -149,7 +149,7 @@ def trim(filepath=None):
     click.secho("Duplicate spaces removed.", fg="green")
 
 @main.command()
-@click.argument('title', type=click.STRING)
+@click.argument("title", type=click.STRING)
 def create_project(title):
     """Generates a project structure.
     The root file name will be the title but: lower case, spaces replaced with dashes, and only the first two words (minus articles like 'and', 'of', etc.)
