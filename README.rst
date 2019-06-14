@@ -32,4 +32,4 @@ Installation
 Documentation
 -------------
 
-**Docs**: https://draft-cli.readthedocs.io/en/latest/
+https://draft-cli.readthedocs.io/en/latest/
