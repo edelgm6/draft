@@ -36,7 +36,7 @@ class Generator():
         try:
             project_files = os.listdir('project')
         except FileNotFoundError:
-            raise StructureError("project/ folder missing. Try running generate-project to create a layout.")
+            raise StructureError("project/ folder missing. Try running create-project to create a layout.")
 
         if '.DS_Store' in project_files:
             project_files.remove('.DS_Store')

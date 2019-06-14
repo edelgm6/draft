@@ -110,7 +110,7 @@ def split(filepath=None):
     answer = False
     if present_warning:
         if not filepath:
-            click.secho("WARNING: You are about to split-sentences across the " + "entire project tree.", fg="red", bold=True)
+            click.secho("WARNING: You are about to split sentences across the " + "entire project tree.", fg="red", bold=True)
         answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
     if answer or not present_warning:
