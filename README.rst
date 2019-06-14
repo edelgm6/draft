@@ -20,7 +20,7 @@ Draft turns that half-finished novel into a clean, plaintext file tree perfect f
 
 - ``parse`` any Markdown file into a file tree of Sections, Chapters, Sub-chapters, and Scenes
 - ``sequence`` your files and directories to maintain a sequential index
-- ``outline`` of your project to help plan and fill in gaps
+- ``outline`` your project to help plan and fill in gaps
 - ``compile`` your Scenes, Sub-Chapters, Chapters, and Sections into a single document once you're ready to publish
 - Other features include ``stats`` (word count, etc.), ``trim`` (remove duplicate spaces), and ``split`` (put each sentence on its own line)
 
