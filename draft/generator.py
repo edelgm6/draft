@@ -1,6 +1,6 @@
 import os
 import yaml
-from draft.helpers import clean_filename, get_settings
+from draft.helpers import clean_filename, get_settings, GITIGNORE
 
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -52,3 +52,6 @@ class Generator():
 
         with open(root + "/settings.yml", "w+") as settings_file:
             settings_file.write(yaml.dump(get_settings()))
+
+        with open(root + "/.gitignore", "w+") as gitignore:
+            gitignore.write(GITIGNORE)

@@ -70,6 +70,7 @@ From a WIP Project
     │         └─01-We Meet Holden.md
     └─myproject.md
     └─settings.yml
+    └─.gitignore
 
   If it doesn't turn out exactly as you want, no biggie!
   ``myproject.md`` is preserved, so just make whatever tweaks you need and re-run ``draft parse myproject.md`` to update the tree.
