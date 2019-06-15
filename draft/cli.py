@@ -153,7 +153,7 @@ def trim(filename=None):
     :return: None
 
     Usage:
-      >>> draft trim project/The Great Gatsby/intro.md
+      >>> draft trim '01-Meeting Ishmael.md'
 
     """
     settings = get_settings()
