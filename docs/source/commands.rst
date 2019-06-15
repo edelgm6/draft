@@ -24,14 +24,14 @@ Create commands are helpful when first starting up a project (``parse`` especial
 
   .. include:: start-file-tree.rst
 
-.. autofunction:: parse(filepath)
+.. autofunction:: parse(filename)
 
 Format
 ------
 Format commands are used to change the way text is arranged within files.
 
-.. autofunction:: split(filepath=None)
-.. autofunction:: trim(filepath=None)
+.. autofunction:: split(filename=None)
+.. autofunction:: trim(filename=None)
 
 Maintain
 --------

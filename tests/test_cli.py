@@ -3,10 +3,49 @@ import click
 from click.testing import CliRunner
 from shutil import rmtree
 from unittest import TestCase
+from draft import cli
 from draft.cli import stats, sequence, parse, split, trim, create_project, outline, compile
 import datetime
 import traceback
 from draft.outliner import Outliner
+
+class TestGetMDFiles(TestCase):
+
+    def test_get_filepaths_raises_error_if_multiple(self):
+        file = open("whatever.md", "w")
+        file.close()
+        os.mkdir("project")
+        file = open("project/whatever.md", "w")
+        file.close()
+
+        outliner = Outliner()
+        with self.assertRaises(click.ClickException):
+            files = cli._get_filepath("whatever.md")
+
+        os.remove("whatever.md")
+        rmtree("project")
+
+    def test_get_filepaths_raises_error_if_none(self):
+        os.mkdir("project")
+        file = open("project/whatever.md", "w")
+        file.close()
+
+        outliner = Outliner()
+        with self.assertRaises(click.ClickException):
+            files = cli._get_filepath("whatevers.md")
+
+        rmtree("project")
+
+    def test_get_filepaths_returns_file_if_single(self):
+        os.mkdir("project")
+        file = open("project/whatever.md", "w")
+        file.close()
+
+        outliner = Outliner()
+        file = cli._get_filepath("whatever.md")
+
+        rmtree("project")
+        self.assertEqual(file, "project/whatever.md")
 
 class TestOutliners(TestCase):
 
