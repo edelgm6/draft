@@ -1,8 +1,29 @@
+import os
 import click
 from draft.formatter import Formatter
 from draft.generator import Generator
 from draft.outliner import Outliner
 from draft.helpers import get_settings
+
+def _get_filepath(filename):
+
+    outliner = Outliner()
+    project_outline = outliner._get_file_tree()
+    root_files = os.listdir(".")
+
+    filepaths = [file for file in project_outline if file.split("/")[-1] == filename]
+
+    filepaths += [file for file in root_files if file == filename]
+
+    if len(filepaths) == 1:
+        return filepaths[0]
+    elif len(filepaths) == 0:
+        raise click.ClickException("No files matching " + filename + " found.")
+    else:
+        error_msg = "Multiple files matching " + filename + " found:"
+        for filepath in filepaths:
+            error_msg += "\n" + filepath
+        raise click.ClickException(error_msg)
 
 @click.group()
 def main():
@@ -63,14 +84,14 @@ def sequence():
         click.secho("Files resequenced.", fg="green")
 
 @main.command()
-@click.argument("filepath", type=click.Path(exists=True, dir_okay=False))
-def parse(filepath):
-    """Generates a project tree based on a Markdown formatted .md or .txt file.
+@click.argument("filename")
+def parse(filename):
+    """Generates a project tree based on a Markdown formatted file.
     Useful for generating project trees based on legacy projects or an outline file.
 
     Will automatically strip punctuation out of Markdown headers for folder names, but will preserve them in the 'overrides' section of settings.yml for use in compiling.
 
-    :param str filepath: Path to file to be parsed.
+    :param str filename: Filename (i.e., not the full path) to be parsed (must include extension).
     :return: None
 
     Usage:
@@ -88,17 +109,18 @@ def parse(filepath):
         generator.confirm_project_layout()
 
         outliner = Outliner()
+        filepath = _get_filepath(filename)
         outliner.generate_file_tree(filepath)
 
         click.secho("Tree generated.", fg="green")
 
 @main.command()
-@click.argument("filepath", type=click.Path(exists=True), required=False)
-def split(filepath=None):
+@click.argument("filename", required=False)
+def split(filename=None):
     """Splits multi-line sentences into separate lines.
     Affects all project files unless filepath is passed as an argument.
 
-    :param str filepath: (optional) Path to file to be parsed.
+    :param str filename: (optional) Filename (i.e., not the full path) to be parsed (must include extension).
     :return: None
 
     Usage:
@@ -109,23 +131,25 @@ def split(filepath=None):
 
     answer = False
     if present_warning:
-        if not filepath:
+        if not filename:
             click.secho("WARNING: You are about to split sentences across the " + "entire project tree.", fg="red", bold=True)
         answer = click.confirm(click.style("Highly recommend changes are COMMITed before proceeding. Continue?", fg="red", bold=True))
 
     if answer or not present_warning:
-        formatter = Formatter(filepath)
+        if filename:
+            filename = _get_filepath(filename)
+        formatter = Formatter(filename)
         formatter.split_sentences()
 
         click.secho("Sentence split complete.", fg="green")
 
 @main.command()
-@click.argument("filepath", type=click.Path(exists=True), required=False)
-def trim(filepath=None):
+@click.argument("filename", required=False)
+def trim(filename=None):
     """Removes all duplicate spaces from text.
     Acts on every file in project unless filepath argument passed.
 
-    :param str filepath: (optional) Filepath to be trimmed.
+    :param str filepath: (optional) Filename (i.e., not the full path) to be parsed (must include extension).
     :return: None
 
     Usage:
@@ -143,7 +167,9 @@ def trim(filepath=None):
         generator = Generator()
         generator.confirm_project_layout()
 
-        formatter = Formatter(filepath)
+        if filename:
+            filename = _get_filepath(filename)
+        formatter = Formatter(filename)
         formatter.remove_duplicate_spaces()
 
     click.secho("Duplicate spaces removed.", fg="green")
