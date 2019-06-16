@@ -9,6 +9,19 @@ from draft.helpers import clean_filename, get_settings
 
 class Outliner():
 
+
+    def _create_next_filename(self, filename):
+
+        root_files = os.listdir(".")
+
+        duplicates = [file for file in root_files if filename in file]
+
+        sequence = str(len(duplicates) + 1).zfill(2)
+        while os.path.exists(sequence + "-" + filename):
+            sequence = str(int(sequence) + 1).zfill(len(sequence))
+
+        return sequence + "-" + filename
+
     def _get_file_tree(self):
 
         outline = []
@@ -136,9 +149,13 @@ class Outliner():
             file_name = title + ".md"
         else:
             file_name = "outline.md"
+
+        file_name = self._create_next_filename(file_name)
         with open(file_name, "w") as fp:
             page = re.sub("\\n{3,}","\\n\\n", page)
             fp.write(page)
+
+        return file_name
 
 
     def update_file_sequence(self):
