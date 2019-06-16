@@ -155,6 +155,8 @@ class Outliner():
             page = re.sub("\\n{3,}","\\n\\n", page)
             fp.write(page)
 
+        return file_name
+
 
     def update_file_sequence(self):
 

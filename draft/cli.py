@@ -195,7 +195,7 @@ def create_project(title):
 
 @main.command()
 def outline():
-    """Generates or updates a project outline.
+    """Generates a new project outline.
 
     Usage:
       >>> draft outline
@@ -205,9 +205,9 @@ def outline():
     generator.confirm_project_layout()
 
     outliner = Outliner()
-    outliner.compile_project()
+    filename = outliner.compile_project()
 
-    click.secho("Project outlined.")
+    click.secho("Project outlined at " + filename + ".", fg="green")
 
 @main.command()
 def compile():
@@ -221,6 +221,6 @@ def compile():
     generator.confirm_project_layout()
 
     outliner = Outliner()
-    outliner.compile_project(draft=True)
+    filename = outliner.compile_project(draft=True)
 
-    click.secho("Project compiled.", fg="green")
+    click.secho("Project compiled at " + filename + ".", fg="green")
