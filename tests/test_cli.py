@@ -77,10 +77,10 @@ class TestOutliners(TestCase):
         result = runner.invoke(outline, input="y\n")
         self.assertEqual(result.exit_code, 0)
 
-        gatsby = open("outline.md", "r")
+        gatsby = open("01-outline.md", "r")
         text = gatsby.read()
         gatsby.close()
-        os.remove("outline.md")
+        os.remove("01-outline.md")
 
         self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**: This is an outline\n\n### Chapter 2\n\n")
 
@@ -89,10 +89,10 @@ class TestOutliners(TestCase):
         result = runner.invoke(compile, input="y\n")
         self.assertEqual(result.exit_code, 0)
 
-        gatsby = open("Gatsby.md", "r")
+        gatsby = open("01-Gatsby.md", "r")
         text = gatsby.read()
         gatsby.close()
-        os.remove("Gatsby.md")
+        os.remove("01-Gatsby.md")
 
         self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
 
