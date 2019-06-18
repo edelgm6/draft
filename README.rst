@@ -5,6 +5,9 @@
 .. image:: https://readthedocs.org/projects/draft-cli/badge/?version=latest
     :target: https://draft-cli.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+.. image:: https://img.shields.io/pypi/pyversions/draft-cli.svg
+    :target: https://pypi.org/project/draft-cli/
+    :alt: PyPI - Python Version
 
 Draft: Write Like a Programmer
 ==============================
