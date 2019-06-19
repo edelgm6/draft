@@ -260,7 +260,7 @@ class Outliner():
             if len(choices) == 1:
                 value = choices[0]
             else:
-                click.echo("Of the " + str(len(duplicates)) + " duplicates, choose the order for " + duplicate[3:])
+                click.echo("Of the " + str(len(duplicates)) + " duplicates, choose which is first.")
                 while value not in choices:
                     value = click.prompt("Select any of " + str(choices), type=int)
 
