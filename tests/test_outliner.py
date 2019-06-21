@@ -126,7 +126,6 @@ class TestCompileProject(TestCase):
 
         gatsby = open("01-Gatsby.md", "r")
         text = gatsby.read()
-        print(repr(text))
         gatsby.close()
         os.remove("01-Gatsby.md")
         os.remove("settings.yml")
@@ -193,11 +192,9 @@ class TestFileTree(TestCase):
     def setUp(self):
         os.mkdir("project")
         os.mkdir("project/Gatsby")
-        os.mkdir("archive")
 
     def tearDown(self):
         rmtree("project/")
-        rmtree("archive")
         try:
             os.remove("legacy.txt")
         except FileNotFoundError:
@@ -207,7 +204,28 @@ class TestFileTree(TestCase):
         outliner = Outliner()
         with self.assertRaises(Exception):
             outliner.generate_file_tree("legacy.doc")
+    """
+    def test_file_tree_hundred(self):
+        fp = open("legacy.txt","w+")
+        fp.write("# Gatsby\n")
+        fp.write("\n")
+        fp.write("## Part 1: The Reckoning\n")
+        fp.write("\n")
+        fp.write("### Chapter 1: The Promise\n")
+        fp.write("\n")
+        fp.write("#### New York, 1942\n")
 
+        for scene in range(0,101):
+            fp.write("##### The Bar" + str(scene) + "\n")
+            fp.write("\n")
+            fp.write("It was a fall day.\n")
+            fp.write("It was cold.\n")
+        fp.close()
+
+        outliner = Outliner()
+        outliner.generate_file_tree("legacy.txt")
+        os.remove('settings.yml')
+    """
     def test_existing_settings_not_overwritten(self):
         fp = open("legacy.txt","w+")
         fp.write("# Gatsby\n")

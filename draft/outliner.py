@@ -161,6 +161,12 @@ class Outliner():
 
         return file_name
 
+    """
+    TODO: split the below into methods
+    1) Get dict of levels and order
+    2) Sequence all of the files
+    Then #2 can be re-used when you're generating the tree in the first place
+    """
 
     def update_file_sequence(self):
 
@@ -286,8 +292,6 @@ class Outliner():
 
     def _generate_folders(self, intervals, file):
         headers = list(intervals)
-        current_path = "project"
-
         shutil.rmtree("project/")
         os.mkdir("project/")
 
@@ -308,14 +312,17 @@ class Outliner():
                 title = header.group(0)
                 title = title.strip("#")
                 title = clean_filename(title)
-                title_path = current_path + "/" + title
+                title_path = "project/" + title
+                break
 
         if not title_path:
             raise StructureError("Must be a title (e.g., # The Great Gatsby) in the source file.")
         os.mkdir(title_path)
 
-        overrides = {}
 
+        with open(file, "r") as fp:
+            text = fp.read()
+        overrides = {}
         for index, header in enumerate(headers):
             name = header.group(0)
             original_name = name.strip("#").strip()
@@ -353,9 +360,6 @@ class Outliner():
                     end_scene = headers[index + 1].start(0)
                 except IndexError:
                     end_scene = None
-
-                with open(file, "r") as fp:
-                    text = fp.read()
 
                 scene_text = text[start_scene:end_scene]
                 with open(scene_path, "w") as scene_file:
