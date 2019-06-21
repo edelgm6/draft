@@ -33,6 +33,8 @@ The default file layout (i.e., the one added automatically with ``generate-proje
 
   overrides:
 
+  author:
+
 headers
 ~~~~~~~
 
@@ -59,3 +61,8 @@ For example, if we use the ``parse`` command, the chapter name *Ahab's Leg* woul
 
 .. note::
   When using the ``parse`` command, any header names that require cleaning before being created will automatically be logged in the ``settings.yml`` file if it exists (i.e., the above example would have been added automatically if detected during ``parse``)
+
+author
+~~~~~~
+
+**author** is used to add an author name during the ``compile`` command.

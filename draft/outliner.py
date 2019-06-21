@@ -87,8 +87,10 @@ class Outliner():
 
     def compile_project(self, draft=False):
         outline = self._get_file_tree()
-        settings = get_settings()["headers"]
-        overrides = get_settings()["overrides"]
+        settings = get_settings()
+        headers = settings["headers"]
+        overrides = settings["overrides"]
+        author = settings["author"]
 
         title = os.listdir("project")[0]
         try:
@@ -98,6 +100,8 @@ class Outliner():
             pass
 
         page = "# " + title + "\n\n"
+        if author:
+            page = page + "##### " + author + "\n\n"
         for branch in outline:
             if os.path.isfile(branch):
                 with open(branch, "r") as sc:
@@ -123,19 +127,19 @@ class Outliner():
                     title = branch_end[3:]
 
                 if len(split_branch) == 3:
-                    if settings["section"] or not draft:
+                    if headers["section"] or not draft:
                         section = "## " + title + "\n\n"
                     else:
                         section = "\n\n</br>\n\n"
 
                 elif len(split_branch) == 4:
-                    if settings["chapter"] or not draft:
+                    if headers["chapter"] or not draft:
                         section = "### " + title + "\n\n"
                     else:
                         section = "\n\n</br>\n\n"
 
                 elif len(split_branch) == 5:
-                    if settings["sub_chapter"] or not draft:
+                    if headers["sub_chapter"] or not draft:
                         section = "#### " + title + "\n\n"
                     else:
                         section = "\n\n</br>\n\n"
