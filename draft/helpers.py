@@ -14,19 +14,21 @@ def clean_filename(filename):
 def get_settings():
 
     DEFAULT_SETTINGS = {
-        "headers": {
-            "section": True,
-            "chapter": True,
-            "sub_chapter": True
-        },
-        "warnings": {
-            "parse": True,
-            "split": True,
-            "sequence": True,
-            "trim": True
-        },
-        "overrides": None
+            "headers": {
+                "section": True,
+                "chapter": True,
+                "sub_chapter": True
+            },
+            "warnings": {
+                "parse": True,
+                "split": True,
+                "sequence": True,
+                "trim": True
+            },
+            "overrides": None,
+            "author": None
         }
+
 
     settings = DEFAULT_SETTINGS
 

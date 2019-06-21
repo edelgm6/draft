@@ -114,6 +114,25 @@ class TestCompileProject(TestCase):
 
         self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**: This is an outline\n\n### Chapter 2\n\n")
 
+    def test_includes_author(self):
+        with open("settings.yml","w+") as settings_file:
+            settings = {
+                "author": "Garrett Edel"
+            }
+            settings_file.write(yaml.dump(settings))
+
+        outliner = Outliner()
+        outliner.compile_project(draft=True)
+
+        gatsby = open("01-Gatsby.md", "r")
+        text = gatsby.read()
+        print(repr(text))
+        gatsby.close()
+        os.remove("01-Gatsby.md")
+        os.remove("settings.yml")
+
+        self.assertEqual(text,"# Gatsby\n\n##### Garrett Edel\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
+
     def test_compiles_project(self):
         outliner = Outliner()
         outliner.compile_project(draft=True)
@@ -213,7 +232,7 @@ class TestFileTree(TestCase):
         with open("settings.yml", "r") as settings_file:
             settings = yaml.safe_load(settings_file)
 
-        self.assertEqual(settings, {"headers": {"chapter": True, "section": True, "sub_chapter": True}, "overrides": {"Chapter 1 The Promise": "Chapter 1: The Promise", "New York 1942": "New York, 1942", "Part 1 The Reckoning": "Part 1: The Reckoning"}, "warnings": {"parse": True, "sequence": True, "split": True, "trim": True}})
+        self.assertEqual(settings, {"author": None, "headers": {"chapter": True, "section": True, "sub_chapter": True}, "overrides": {"Chapter 1 The Promise": "Chapter 1: The Promise", "New York 1942": "New York, 1942", "Part 1 The Reckoning": "Part 1: The Reckoning"}, "warnings": {"parse": True, "sequence": True, "split": True, "trim": True}})
 
         os.remove("settings.yml")
 
