@@ -245,6 +245,7 @@ class Outliner():
         max_index = max(indices)
         digits = len(str(max_index))
 
+        renames = {}
         for tuple in rename_tuples:
             index = str(tuple[0]).zfill(digits)
             path = tuple[1]
@@ -272,6 +273,9 @@ class Outliner():
                 raise click.Abort()
             else:
                 os.rename(path, new)
+                renames[path] = new
+
+        return renames
 
     def _resolve_duplicates(self, duplicates):
         rename_list = []
@@ -322,10 +326,10 @@ class Outliner():
         sub_chapter = "^#{4} "
         scene = "^#{5} "
 
-        section_count = "01"
-        chapter_count = "01"
-        sub_chapter_count = "01"
-        scene_count = "01"
+        section_count = 1
+        chapter_count = 1
+        sub_chapter_count = 1
+        scene_count = 1
 
         title_path = ""
         for header in headers:
@@ -342,7 +346,9 @@ class Outliner():
 
         with open(file, "r") as fp:
             text = fp.read()
+
         overrides = {}
+        rename_tuples = []
         for index, header in enumerate(headers):
             name = header.group(0)
             original_name = name.strip("#").strip()
@@ -351,29 +357,32 @@ class Outliner():
                 overrides[name] = original_name
 
             if re.match(section, header.group(0)):
-                section_path = title_path + "/" + section_count + "-" + name + "/"
+                section_path = title_path + "/" + name + "/"
                 chapter_path, sub_chapter_path, scene_path = section_path, section_path, section_path
 
                 os.mkdir(section_path)
+                rename_tuples.append((section_count,section_path))
 
-                section_count = str(int(section_count) + 1).zfill(len(section_count))
+                section_count += 1
 
             elif re.match(chapter, header.group(0)):
-                chapter_path = section_path + chapter_count + "-" + name + "/"
+                chapter_path = section_path + name + "/"
                 sub_chapter_path, scene_path = chapter_path, chapter_path
                 os.mkdir(chapter_path)
+                rename_tuples.append((chapter_count,chapter_path))
 
-                chapter_count = str(int(chapter_count) + 1).zfill(len(chapter_count))
+                chapter_count += 1
 
             elif re.match(sub_chapter, header.group(0)):
-                sub_chapter_path = chapter_path + sub_chapter_count + "-" + name + "/"
+                sub_chapter_path = chapter_path + name + "/"
                 scene_path = sub_chapter_path
                 os.mkdir(sub_chapter_path)
+                rename_tuples.append((sub_chapter_count,sub_chapter_path))
 
-                sub_chapter_count = str(int(sub_chapter_count) + 1).zfill(len(sub_chapter_count))
+                sub_chapter_count += 1
 
             elif re.match(scene, header.group(0)):
-                scene_path = sub_chapter_path + scene_count + "-" + name + ".md"
+                scene_path = sub_chapter_path + name + ".md"
 
                 start_scene = header.end(0) + 1
                 try:
@@ -384,21 +393,28 @@ class Outliner():
                 scene_text = text[start_scene:end_scene]
                 with open(scene_path, "w") as scene_file:
                     scene_file.write(scene_text)
+                rename_tuples.append((scene_count,scene_path))
 
-                scene_count = str(int(scene_count) + 1).zfill(len(scene_count))
+                scene_count += 1
 
-            try:
-                with open("settings.yml", "r") as settings_file:
-                    settings = yaml.safe_load(settings_file)
+        renames = self._rename_files(rename_tuples)
 
-            except FileNotFoundError:
-                settings = {}
+        try:
+            with open("settings.yml", "r") as settings_file:
+                settings = yaml.safe_load(settings_file)
+        except FileNotFoundError:
+            settings = {}
 
-            settings["overrides"] = overrides
+        new_overrides = {}
+        for new_name, original_name in overrides.items():
+            actual_new_name = renames[new_name]
+            new_overrides[actual_new_name] = original_name
 
-            new_settings = yaml.dump(settings)
-            with open("settings.yml", "w") as settings_file:
-                settings_file.write(new_settings)
+        settings["overrides"] = new_overrides
+
+        new_settings = yaml.dump(settings)
+        with open("settings.yml", "w") as settings_file:
+            settings_file.write(new_settings)
 
     def _get_header_intervals(self, file):
 
