@@ -245,21 +245,26 @@ class Outliner():
         max_index = max(indices)
         digits = len(str(max_index))
 
-        renames = {}
         for tuple in rename_tuples:
             index = str(tuple[0]).zfill(digits)
             path = tuple[1]
 
             split_path = path.split("/")
+            #Remove empty strings
+            split_path = [node for node in split_path if node]
             terminal = split_path[-1]
 
             try:
                 sequence_index = terminal.index("-")
                 sequence = terminal[:sequence_index]
-                sequence = int(sequence)
+                sequence_integer = int(sequence)
             except ValueError:
                 sequence_index = -1
+                sequence = None
 
+            # If file/path already has the right index, skip
+            if sequence == index:
+                continue
             filename = index + "-" + terminal[sequence_index + 1:]
 
             split_path[-1] = filename
@@ -273,9 +278,6 @@ class Outliner():
                 raise click.Abort()
             else:
                 os.rename(path, new)
-                renames[path] = new
-
-        return renames
 
     def _resolve_duplicates(self, duplicates):
         rename_list = []
@@ -397,7 +399,19 @@ class Outliner():
 
                 scene_count += 1
 
-        renames = self._rename_files(rename_tuples)
+        clean_tuples = []
+        for tuple in rename_tuples:
+            path = tuple[1]
+            if path[-1] == "/":
+                path = path[:-1]
+
+            path_length = len(path.split("/"))
+
+            clean_tuples.append((path_length, tuple[0], tuple[1]))
+
+        clean_tuples.sort(reverse=True)
+        clean_tuples = [(tuple[1], tuple[2]) for tuple in clean_tuples]
+        self._rename_files(clean_tuples)
 
         try:
             with open("settings.yml", "r") as settings_file:
@@ -405,12 +419,7 @@ class Outliner():
         except FileNotFoundError:
             settings = {}
 
-        new_overrides = {}
-        for new_name, original_name in overrides.items():
-            actual_new_name = renames[new_name]
-            new_overrides[actual_new_name] = original_name
-
-        settings["overrides"] = new_overrides
+        settings["overrides"] = overrides
 
         new_settings = yaml.dump(settings)
         with open("settings.yml", "w") as settings_file:

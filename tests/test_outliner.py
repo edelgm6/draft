@@ -21,6 +21,36 @@ class TestRenameFiles(TestCase):
         self.assertTrue(os.path.isfile("1-Whatever.md"))
         os.remove("1-Whatever.md")
 
+    def test_rename_files_with_path(self):
+
+        os.mkdir("project/")
+        os.mkdir("project/Gatsby/")
+        os.mkdir("project/Gatsby/Whatever/")
+
+        list = [(1, "project/Gatsby/Whatever/")]
+
+        outliner = Outliner()
+        outliner._rename_files(list)
+
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Whatever"))
+        rmtree('project')
+
+    def test_skips_files_with_right_sequence(self):
+
+        os.mkdir("project/")
+        os.mkdir("project/Gatsby/")
+        os.mkdir("project/Gatsby/1-Whatever/")
+        os.mkdir("project/Gatsby/4-Other/")
+
+        list = [(1, "project/Gatsby/1-Whatever/"), (2, "project/Gatsby/4-Other/")]
+
+        outliner = Outliner()
+        outliner._rename_files(list)
+
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Whatever"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Other"))
+        rmtree('project')
+
 class TestStatistics(TestCase):
     def tearDown(self):
         rmtree("project")
@@ -219,7 +249,7 @@ class TestFileTree(TestCase):
         outliner = Outliner()
         with self.assertRaises(Exception):
             outliner.generate_file_tree("legacy.doc")
-    """
+
     def test_file_tree_hundred(self):
         fp = open("legacy.txt","w+")
         fp.write("# Gatsby\n")
@@ -240,7 +270,10 @@ class TestFileTree(TestCase):
         outliner = Outliner()
         outliner.generate_file_tree("legacy.txt")
         os.remove('settings.yml')
-    """
+
+        self.assertTrue(os.path.isfile("project/Gatsby/001-Part 1 The Reckoning/001-Chapter 1 The Promise/001-New York 1942/001-The Bar0.md"))
+
+
     def test_existing_settings_not_overwritten(self):
         fp = open("legacy.txt","w+")
         fp.write("# Gatsby\n")
@@ -321,14 +354,14 @@ class TestFileTree(TestCase):
 
         self.assertEqual(len(os.listdir("project/Gatsby/")),4)
 
-        self.assertTrue(os.path.isdir("project/Gatsby/01-Part 1 The Reckoning"))
-        self.assertTrue(os.path.isdir("project/Gatsby/01-Part 1 The Reckoning/01-Chapter 1 The Promise"))
-        self.assertTrue(os.path.isdir("project/Gatsby/01-Part 1 The Reckoning/01-Chapter 1 The Promise/01-New York 1942"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2 The Whatever"))
-        self.assertTrue(os.path.isdir("project/Gatsby/03-Part 3 Tomorrow"))
-        self.assertTrue(os.path.isfile("project/Gatsby/02-Part 2 The Whatever/01-The Bar.md"))
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Part 1 The Reckoning"))
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Part 1 The Reckoning/1-Chapter 1 The Promise"))
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Part 1 The Reckoning/1-Chapter 1 The Promise/1-New York 1942"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2 The Whatever"))
+        self.assertTrue(os.path.isdir("project/Gatsby/3-Part 3 Tomorrow"))
+        self.assertTrue(os.path.isfile("project/Gatsby/2-Part 2 The Whatever/1-The Bar.md"))
 
-        with open("project/Gatsby/02-Part 2 The Whatever/01-The Bar.md", "r") as fp:
+        with open("project/Gatsby/2-Part 2 The Whatever/1-The Bar.md", "r") as fp:
             lines = fp.readlines()
             self.assertEqual(lines[0],"It was a fall day.\n")
             self.assertEqual(lines[1],"It was cold.\n")
