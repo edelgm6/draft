@@ -285,10 +285,10 @@ class TestFileTree(TestCase):
 
         self.assertEqual(len(os.listdir("project/Gatsby/")), 2)
 
-        self.assertTrue(os.path.isdir("project/Gatsby/01-Part 1 The Reckoning"))
-        self.assertTrue(os.path.isdir("project/Gatsby/01-Part 1 The Reckoning/01-Chapter 1 The Promise"))
-        self.assertTrue(os.path.isdir("project/Gatsby/01-Part 1 The Reckoning/01-Chapter 1 The Promise/01-New York 1942"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2 The Whatever"))
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Part 1 The Reckoning"))
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Part 1 The Reckoning/1-Chapter 1 The Promise"))
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Part 1 The Reckoning/1-Chapter 1 The Promise/1-New York 1942"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2 The Whatever"))
         os.remove("settings.yml")
 
     def test_generate_file_tree(self):
@@ -323,14 +323,14 @@ class TestFileTree(TestCase):
 
         self.assertEqual(len(os.listdir("project/Gatsby/")), 3)
 
-        self.assertTrue(os.path.isdir("project/Gatsby/01-Part 1 The Reckoning"))
-        self.assertTrue(os.path.isdir("project/Gatsby/01-Part 1 The Reckoning/01-Chapter 1 The Promise"))
-        self.assertTrue(os.path.isdir("project/Gatsby/01-Part 1 The Reckoning/01-Chapter 1 The Promise/01-New York 1942"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2 The Whatever"))
-        self.assertTrue(os.path.isdir("project/Gatsby/03-Part 3 Tomorrow"))
-        self.assertTrue(os.path.isfile("project/Gatsby/02-Part 2 The Whatever/01-The Bar.md"))
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Part 1 The Reckoning"))
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Part 1 The Reckoning/1-Chapter 1 The Promise"))
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Part 1 The Reckoning/1-Chapter 1 The Promise/1-New York 1942"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2 The Whatever"))
+        self.assertTrue(os.path.isdir("project/Gatsby/3-Part 3 Tomorrow"))
+        self.assertTrue(os.path.isfile("project/Gatsby/2-Part 2 The Whatever/1-The Bar.md"))
 
-        with open("project/Gatsby/02-Part 2 The Whatever/01-The Bar.md", "r") as fp:
+        with open("project/Gatsby/2-Part 2 The Whatever/1-The Bar.md", "r") as fp:
             lines = fp.readlines()
             self.assertEqual(lines[0],"It was a fall day.\n")
             self.assertEqual(lines[1],"It was cold.\n")
@@ -340,12 +340,11 @@ class TestSequence(TestCase):
 
     def tearDown(self):
         rmtree("project")
-        rmtree("archive")
+        pass
 
     def setUp(self):
         os.mkdir("project")
         os.mkdir("project/Gatsby")
-        os.mkdir("archive")
 
         os.mkdir("project/Gatsby/01-Part 1")
         os.mkdir("project/Gatsby/01-Part 2")
@@ -382,7 +381,7 @@ class TestSequence(TestCase):
         #print(result.exc_info)
         #print(result.output)
         self.assertEqual(result.exit_code, 0)
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2"))
         os.remove("settings.yml")
 
     def test_bad_choice_keeps_going(self):
@@ -393,28 +392,28 @@ class TestSequence(TestCase):
         result = runner.invoke(sequence, input="y\n5\n1\n2\n3\n1\n1\n1\n1\n2")
         self.assertEqual(result.exit_code, 0)
 
-        self.assertTrue(os.path.isdir("project/Gatsby/01-Part 1"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2/01-Chapter 1"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2/02-Chapter 2"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2/03-Chapter 3"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2/04-Chapter 4"))
-        self.assertTrue(os.path.isdir("project/Gatsby/03-Part 3"))
-        self.assertTrue(os.path.isdir("project/Gatsby/04-Part 4"))
-        self.assertTrue(os.path.isdir("project/Gatsby/04-Part 4/05-Chapter 1"))
-        self.assertTrue(os.path.isdir("project/Gatsby/05-Part 5"))
-        self.assertTrue(os.path.isdir("project/Gatsby/06-Part 6"))
-        self.assertTrue(os.path.isdir("project/Gatsby/07-Part 7"))
-        self.assertTrue(os.path.isfile("project/Gatsby/02-Part 2/01-Chapter 1/01-Scene 1.md"))
-        self.assertTrue(os.path.isfile("project/Gatsby/02-Part 2/01-Chapter 1/02-Scene 2.md"))
-        self.assertTrue(os.path.isfile("project/Gatsby/02-Part 2/01-Chapter 1/03-Scene 3.md"))
-        self.assertTrue(os.path.isfile("project/Gatsby/02-Part 2/01-Chapter 1/04-Scene 4.md"))
-        self.assertTrue(os.path.isfile("project/Gatsby/04-Part 4/05-Chapter 1/05-Scene 5.md"))
-        self.assertTrue(os.path.isfile("project/Gatsby/07-Part 7/06-Scene 6.md"))
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Part 1"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2/1-Chapter 1"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2/2-Chapter 2"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2/3-Chapter 3"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2/4-Chapter 4"))
+        self.assertTrue(os.path.isdir("project/Gatsby/3-Part 3"))
+        self.assertTrue(os.path.isdir("project/Gatsby/4-Part 4"))
+        self.assertTrue(os.path.isdir("project/Gatsby/4-Part 4/5-Chapter 1"))
+        self.assertTrue(os.path.isdir("project/Gatsby/5-Part 5"))
+        self.assertTrue(os.path.isdir("project/Gatsby/6-Part 6"))
+        self.assertTrue(os.path.isdir("project/Gatsby/7-Part 7"))
+        self.assertTrue(os.path.isfile("project/Gatsby/2-Part 2/1-Chapter 1/1-Scene 1.md"))
+        self.assertTrue(os.path.isfile("project/Gatsby/2-Part 2/1-Chapter 1/2-Scene 2.md"))
+        self.assertTrue(os.path.isfile("project/Gatsby/2-Part 2/1-Chapter 1/3-Scene 3.md"))
+        self.assertTrue(os.path.isfile("project/Gatsby/2-Part 2/1-Chapter 1/4-Scene 4.md"))
+        self.assertTrue(os.path.isfile("project/Gatsby/4-Part 4/5-Chapter 1/5-Scene 5.md"))
+        self.assertTrue(os.path.isfile("project/Gatsby/7-Part 7/6-Scene 6.md"))
         os.remove("settings.yml")
 
     def test_duplicate_files_aborts(self):
-        os.rename("project/Gatsby/01-Part 2/01-Chapter 1/01-Scene 3.md", "project/Gatsby/01-Part 2/01-Chapter 1/02-Scene 2.md")
+        os.rename("project/Gatsby/01-Part 2/01-Chapter 1/01-Scene 3.md", "project/Gatsby/01-Part 2/01-Chapter 1/2-Scene 2.md")
 
         runner = CliRunner()
         result = runner.invoke(sequence, input="y\n1\n2\n3\n1\n1\n1\n1\n2")
@@ -427,24 +426,24 @@ class TestSequence(TestCase):
         result = runner.invoke(sequence, input="y\n1\n2\n3\n1\n1\n1\n1\n2")
         self.assertEqual(result.exit_code, 0)
 
-        self.assertTrue(os.path.isdir("project/Gatsby/01-Part 1"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2/01-Chapter 1"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2/02-Chapter 2"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2/03-Chapter 3"))
-        self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2/04-Chapter 4"))
-        self.assertTrue(os.path.isdir("project/Gatsby/03-Part 3"))
-        self.assertTrue(os.path.isdir("project/Gatsby/04-Part 4"))
-        self.assertTrue(os.path.isdir("project/Gatsby/04-Part 4/05-Chapter 1"))
-        self.assertTrue(os.path.isdir("project/Gatsby/05-Part 5"))
-        self.assertTrue(os.path.isdir("project/Gatsby/06-Part 6"))
-        self.assertTrue(os.path.isdir("project/Gatsby/07-Part 7"))
-        self.assertTrue(os.path.isfile("project/Gatsby/02-Part 2/01-Chapter 1/01-Scene 1.md"))
-        self.assertTrue(os.path.isfile("project/Gatsby/02-Part 2/01-Chapter 1/02-Scene 2.md"))
-        self.assertTrue(os.path.isfile("project/Gatsby/02-Part 2/01-Chapter 1/03-Scene 3.md"))
-        self.assertTrue(os.path.isfile("project/Gatsby/02-Part 2/01-Chapter 1/04-Scene 4.md"))
-        self.assertTrue(os.path.isfile("project/Gatsby/04-Part 4/05-Chapter 1/05-Scene 5.md"))
-        self.assertTrue(os.path.isfile("project/Gatsby/07-Part 7/06-Scene 6.md"))
+        self.assertTrue(os.path.isdir("project/Gatsby/1-Part 1"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2/1-Chapter 1"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2/2-Chapter 2"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2/3-Chapter 3"))
+        self.assertTrue(os.path.isdir("project/Gatsby/2-Part 2/4-Chapter 4"))
+        self.assertTrue(os.path.isdir("project/Gatsby/3-Part 3"))
+        self.assertTrue(os.path.isdir("project/Gatsby/4-Part 4"))
+        self.assertTrue(os.path.isdir("project/Gatsby/4-Part 4/5-Chapter 1"))
+        self.assertTrue(os.path.isdir("project/Gatsby/5-Part 5"))
+        self.assertTrue(os.path.isdir("project/Gatsby/6-Part 6"))
+        self.assertTrue(os.path.isdir("project/Gatsby/7-Part 7"))
+        self.assertTrue(os.path.isfile("project/Gatsby/2-Part 2/1-Chapter 1/1-Scene 1.md"))
+        self.assertTrue(os.path.isfile("project/Gatsby/2-Part 2/1-Chapter 1/2-Scene 2.md"))
+        self.assertTrue(os.path.isfile("project/Gatsby/2-Part 2/1-Chapter 1/3-Scene 3.md"))
+        self.assertTrue(os.path.isfile("project/Gatsby/2-Part 2/1-Chapter 1/4-Scene 4.md"))
+        self.assertTrue(os.path.isfile("project/Gatsby/4-Part 4/5-Chapter 1/5-Scene 5.md"))
+        self.assertTrue(os.path.isfile("project/Gatsby/7-Part 7/6-Scene 6.md"))
 
 class TestStats(TestCase):
 

@@ -161,6 +161,12 @@ class Outliner():
 
         return file_name
 
+    """
+    TODO: split the below into methods
+    1) Get dict of levels and order
+    2) Sequence all of the files
+    Then #2 can be re-used when you're generating the tree in the first place
+    """
 
     def update_file_sequence(self):
 
@@ -168,18 +174,14 @@ class Outliner():
         outline = self._get_file_tree()
 
         files = [branch for branch in outline if branch[-3:] == ".md"]
-        if len(files) > 99:
-            sequence_base = "001" # pragma: no cover
-        else:
-            sequence_base = "01"
 
         sequences = {
-            1: sequence_base,
-            2: sequence_base,
-            3: sequence_base,
-            4: sequence_base,
-            5: sequence_base,
-            "file": sequence_base
+            1: 1,
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1,
+            "file": 1
         }
 
         leveled_branches = []
@@ -201,18 +203,19 @@ class Outliner():
         rename_dict = {}
 
         branches = [branch for branch in outline if os.path.isdir(branch)]
-        branches = [branch for branch in branches if len(os.listdir(branch)) > 0]
 
+        rename_tuples = []
         for branch in branches:
             files = os.listdir(branch)
             files.sort()
             sequence_list = [file[:2] for file in files]
 
-            #duplicates = [file for file in files if file[:2] in sequence_list]
+            # Build dictionary of every existing sequence and a list of every file with that sequence
             file_dict = {}
             for sequence in sequence_list:
                 file_dict[sequence] = [file for file in files if file[:2] == sequence]
 
+            # For every sequence with more than one file, get back the correct order from the user
             for sequence, objs in file_dict.items():
                 if len(objs) > 1:
                     file_dict[sequence] = self._resolve_duplicates(objs)
@@ -223,7 +226,6 @@ class Outliner():
                     ordered_files.append(file)
 
             # Once all files are de-duped, re-base at 01 for each tree level and sequence
-            rename_dict = {}
             for file in ordered_files:
                 if file[-3:] == ".md":
                     levels = "file"
@@ -232,19 +234,50 @@ class Outliner():
                     levels = len(split_branch)
                 level_sequence = sequences[levels]
                 if file[:2] != level_sequence:
-                    new_file_name = level_sequence + file[2:]
-                    rename_dict[branch + "/" + file] = branch + "/" + new_file_name
-                sequences[levels] = str(int(level_sequence) + 1).zfill(len(level_sequence))
+                    rename_tuples.append((level_sequence, branch + "/" + file))
+                sequences[levels] += 1
 
-            for old, new in rename_dict.items():
-                if os.path.isfile(new) or os.path.isdir(new):
-                    click.secho("Duplicate file or directory names: \n" +
-                        "Want to change: " + old + " \n" +
-                        "to: " + new + "\n" +
-                        "but 'to' already exists.", fg="red")
-                    raise click.Abort()
-                else:
-                    os.rename(old, new)
+        self._rename_files(rename_tuples)
+
+    def _rename_files(self, rename_tuples):
+
+        indices = [tuple[0] for tuple in rename_tuples]
+        max_index = max(indices)
+        digits = len(str(max_index))
+
+        for tuple in rename_tuples:
+            index = str(tuple[0]).zfill(digits)
+            path = tuple[1]
+
+            split_path = path.split("/")
+            #Remove empty strings
+            split_path = [node for node in split_path if node]
+            terminal = split_path[-1]
+
+            try:
+                sequence_index = terminal.index("-")
+                sequence = terminal[:sequence_index]
+                sequence_integer = int(sequence)
+            except ValueError:
+                sequence_index = -1
+                sequence = None
+
+            # If file/path already has the right index, skip
+            if sequence == index:
+                continue
+            filename = index + "-" + terminal[sequence_index + 1:]
+
+            split_path[-1] = filename
+            new = "/".join(split_path)
+
+            if os.path.isfile(new) or os.path.isdir(new):
+                click.secho("Duplicate file or directory names: \n" +
+                    "Want to change: " + path + " \n" +
+                    "to: " + new + "\n" +
+                    "but 'to' already exists.", fg="red")
+                raise click.Abort()
+            else:
+                os.rename(path, new)
 
     def _resolve_duplicates(self, duplicates):
         rename_list = []
@@ -286,8 +319,6 @@ class Outliner():
 
     def _generate_folders(self, intervals, file):
         headers = list(intervals)
-        current_path = "project"
-
         shutil.rmtree("project/")
         os.mkdir("project/")
 
@@ -297,10 +328,10 @@ class Outliner():
         sub_chapter = "^#{4} "
         scene = "^#{5} "
 
-        section_count = "01"
-        chapter_count = "01"
-        sub_chapter_count = "01"
-        scene_count = "01"
+        section_count = 1
+        chapter_count = 1
+        sub_chapter_count = 1
+        scene_count = 1
 
         title_path = ""
         for header in headers:
@@ -308,14 +339,18 @@ class Outliner():
                 title = header.group(0)
                 title = title.strip("#")
                 title = clean_filename(title)
-                title_path = current_path + "/" + title
+                title_path = "project/" + title
+                break
 
         if not title_path:
             raise StructureError("Must be a title (e.g., # The Great Gatsby) in the source file.")
         os.mkdir(title_path)
 
-        overrides = {}
+        with open(file, "r") as fp:
+            text = fp.read()
 
+        overrides = {}
+        rename_tuples = []
         for index, header in enumerate(headers):
             name = header.group(0)
             original_name = name.strip("#").strip()
@@ -324,29 +359,32 @@ class Outliner():
                 overrides[name] = original_name
 
             if re.match(section, header.group(0)):
-                section_path = title_path + "/" + section_count + "-" + name + "/"
+                section_path = title_path + "/" + name + "/"
                 chapter_path, sub_chapter_path, scene_path = section_path, section_path, section_path
 
                 os.mkdir(section_path)
+                rename_tuples.append((section_count,section_path))
 
-                section_count = str(int(section_count) + 1).zfill(len(section_count))
+                section_count += 1
 
             elif re.match(chapter, header.group(0)):
-                chapter_path = section_path + chapter_count + "-" + name + "/"
+                chapter_path = section_path + name + "/"
                 sub_chapter_path, scene_path = chapter_path, chapter_path
                 os.mkdir(chapter_path)
+                rename_tuples.append((chapter_count,chapter_path))
 
-                chapter_count = str(int(chapter_count) + 1).zfill(len(chapter_count))
+                chapter_count += 1
 
             elif re.match(sub_chapter, header.group(0)):
-                sub_chapter_path = chapter_path + sub_chapter_count + "-" + name + "/"
+                sub_chapter_path = chapter_path + name + "/"
                 scene_path = sub_chapter_path
                 os.mkdir(sub_chapter_path)
+                rename_tuples.append((sub_chapter_count,sub_chapter_path))
 
-                sub_chapter_count = str(int(sub_chapter_count) + 1).zfill(len(sub_chapter_count))
+                sub_chapter_count += 1
 
             elif re.match(scene, header.group(0)):
-                scene_path = sub_chapter_path + scene_count + "-" + name + ".md"
+                scene_path = sub_chapter_path + name + ".md"
 
                 start_scene = header.end(0) + 1
                 try:
@@ -354,27 +392,38 @@ class Outliner():
                 except IndexError:
                     end_scene = None
 
-                with open(file, "r") as fp:
-                    text = fp.read()
-
                 scene_text = text[start_scene:end_scene]
                 with open(scene_path, "w") as scene_file:
                     scene_file.write(scene_text)
+                rename_tuples.append((scene_count,scene_path))
 
-                scene_count = str(int(scene_count) + 1).zfill(len(scene_count))
+                scene_count += 1
 
-            try:
-                with open("settings.yml", "r") as settings_file:
-                    settings = yaml.safe_load(settings_file)
+        clean_tuples = []
+        for tuple in rename_tuples:
+            path = tuple[1]
+            if path[-1] == "/":
+                path = path[:-1]
 
-            except FileNotFoundError:
-                settings = {}
+            path_length = len(path.split("/"))
 
-            settings["overrides"] = overrides
+            clean_tuples.append((path_length, tuple[0], tuple[1]))
 
-            new_settings = yaml.dump(settings)
-            with open("settings.yml", "w") as settings_file:
-                settings_file.write(new_settings)
+        clean_tuples.sort(reverse=True)
+        clean_tuples = [(tuple[1], tuple[2]) for tuple in clean_tuples]
+        self._rename_files(clean_tuples)
+
+        try:
+            with open("settings.yml", "r") as settings_file:
+                settings = yaml.safe_load(settings_file)
+        except FileNotFoundError:
+            settings = {}
+
+        settings["overrides"] = overrides
+
+        new_settings = yaml.dump(settings)
+        with open("settings.yml", "w") as settings_file:
+            settings_file.write(new_settings)
 
     def _get_header_intervals(self, file):
 
