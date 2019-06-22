@@ -377,10 +377,10 @@ class TestSequence(TestCase):
 
         runner = CliRunner()
         result = runner.invoke(sequence, input="5\n1\n2\n3\n1\n1\n1\n1\n2")
-        #tb = result.exc_info[2]
-        #print(traceback.print_tb(tb))
-        #print(result.exc_info)
-        #print(result.output)
+        tb = result.exc_info[2]
+        print(traceback.print_tb(tb))
+        print(result.exc_info)
+        print(result.output)
         self.assertEqual(result.exit_code, 0)
         self.assertTrue(os.path.isdir("project/Gatsby/02-Part 2"))
         os.remove("settings.yml")

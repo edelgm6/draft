@@ -207,18 +207,21 @@ class Outliner():
         rename_dict = {}
 
         branches = [branch for branch in outline if os.path.isdir(branch)]
-        branches = [branch for branch in branches if len(os.listdir(branch)) > 0]
+        #branches = [branch for branch in branches if len(os.listdir(branch)) > 0]
+        print(branches)
 
+        rename_tuples = []
         for branch in branches:
             files = os.listdir(branch)
             files.sort()
             sequence_list = [file[:2] for file in files]
 
-            #duplicates = [file for file in files if file[:2] in sequence_list]
+            # Build dictionary of every existing sequence and a list of every file with that sequence
             file_dict = {}
             for sequence in sequence_list:
                 file_dict[sequence] = [file for file in files if file[:2] == sequence]
 
+            # For every sequence with more than one file, get back the correct order from the user
             for sequence, objs in file_dict.items():
                 if len(objs) > 1:
                     file_dict[sequence] = self._resolve_duplicates(objs)
@@ -229,7 +232,6 @@ class Outliner():
                     ordered_files.append(file)
 
             # Once all files are de-duped, re-base at 01 for each tree level and sequence
-            rename_dict = {}
             for file in ordered_files:
                 if file[-3:] == ".md":
                     levels = "file"
@@ -239,18 +241,23 @@ class Outliner():
                 level_sequence = sequences[levels]
                 if file[:2] != level_sequence:
                     new_file_name = level_sequence + file[2:]
-                    rename_dict[branch + "/" + file] = branch + "/" + new_file_name
+                    rename_tuples.append((branch + "/" + file, branch + "/" + new_file_name))
                 sequences[levels] = str(int(level_sequence) + 1).zfill(len(level_sequence))
 
-            for old, new in rename_dict.items():
-                if os.path.isfile(new) or os.path.isdir(new):
-                    click.secho("Duplicate file or directory names: \n" +
-                        "Want to change: " + old + " \n" +
-                        "to: " + new + "\n" +
-                        "but 'to' already exists.", fg="red")
-                    raise click.Abort()
-                else:
-                    os.rename(old, new)
+        self._rename_files(rename_tuples)
+
+    def _rename_files(self, rename_tuples):
+        for tuple in rename_tuples:
+            new = tuple[1]
+            old = tuple[0]
+            if os.path.isfile(new) or os.path.isdir(new):
+                click.secho("Duplicate file or directory names: \n" +
+                    "Want to change: " + old + " \n" +
+                    "to: " + new + "\n" +
+                    "but 'to' already exists.", fg="red")
+                raise click.Abort()
+            else:
+                os.rename(old, new)
 
     def _resolve_duplicates(self, duplicates):
         rename_list = []
