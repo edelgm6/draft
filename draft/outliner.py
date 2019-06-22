@@ -174,18 +174,14 @@ class Outliner():
         outline = self._get_file_tree()
 
         files = [branch for branch in outline if branch[-3:] == ".md"]
-        if len(files) > 99:
-            sequence_base = "001" # pragma: no cover
-        else:
-            sequence_base = "01"
 
         sequences = {
-            1: sequence_base,
-            2: sequence_base,
-            3: sequence_base,
-            4: sequence_base,
-            5: sequence_base,
-            "file": sequence_base
+            1: 1,
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1,
+            "file": 1
         }
 
         leveled_branches = []
@@ -207,8 +203,6 @@ class Outliner():
         rename_dict = {}
 
         branches = [branch for branch in outline if os.path.isdir(branch)]
-        #branches = [branch for branch in branches if len(os.listdir(branch)) > 0]
-        print(branches)
 
         rename_tuples = []
         for branch in branches:
@@ -240,24 +234,44 @@ class Outliner():
                     levels = len(split_branch)
                 level_sequence = sequences[levels]
                 if file[:2] != level_sequence:
-                    new_file_name = level_sequence + file[2:]
-                    rename_tuples.append((branch + "/" + file, branch + "/" + new_file_name))
-                sequences[levels] = str(int(level_sequence) + 1).zfill(len(level_sequence))
+                    rename_tuples.append((level_sequence, branch + "/" + file))
+                sequences[levels] += 1
 
         self._rename_files(rename_tuples)
 
     def _rename_files(self, rename_tuples):
+
+        indices = [tuple[0] for tuple in rename_tuples]
+        max_index = max(indices)
+        digits = len(str(max_index))
+
         for tuple in rename_tuples:
-            new = tuple[1]
-            old = tuple[0]
+            index = str(tuple[0]).zfill(digits)
+            path = tuple[1]
+
+            split_path = path.split("/")
+            terminal = split_path[-1]
+
+            try:
+                sequence_index = terminal.index("-")
+                sequence = terminal[:sequence_index]
+                sequence = int(sequence)
+            except ValueError:
+                sequence_index = -1
+
+            filename = index + "-" + terminal[sequence_index + 1:]
+
+            split_path[-1] = filename
+            new = "/".join(split_path)
+
             if os.path.isfile(new) or os.path.isdir(new):
                 click.secho("Duplicate file or directory names: \n" +
-                    "Want to change: " + old + " \n" +
+                    "Want to change: " + path + " \n" +
                     "to: " + new + "\n" +
                     "but 'to' already exists.", fg="red")
                 raise click.Abort()
             else:
-                os.rename(old, new)
+                os.rename(path, new)
 
     def _resolve_duplicates(self, duplicates):
         rename_list = []
@@ -325,7 +339,6 @@ class Outliner():
         if not title_path:
             raise StructureError("Must be a title (e.g., # The Great Gatsby) in the source file.")
         os.mkdir(title_path)
-
 
         with open(file, "r") as fp:
             text = fp.read()

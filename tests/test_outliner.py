@@ -6,6 +6,21 @@ import os
 import yaml
 from shutil import rmtree
 
+class TestRenameFiles(TestCase):
+
+    def test_rename_files_without_dash(self):
+
+        file = open("Whatever.md", "w")
+        file.close()
+
+        list = [(1, "Whatever.md")]
+
+        outliner = Outliner()
+        outliner._rename_files(list)
+
+        self.assertTrue(os.path.isfile("1-Whatever.md"))
+        os.remove("1-Whatever.md")
+
 class TestStatistics(TestCase):
     def tearDown(self):
         rmtree("project")
