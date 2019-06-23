@@ -176,12 +176,10 @@ class Outliner():
         files = [branch for branch in outline if branch[-3:] == ".md"]
 
         sequences = {
-            1: 1,
-            2: 1,
-            3: 1,
-            4: 1,
-            5: 1,
-            "file": 1
+            2: 0,
+            3: 0,
+            4: 0,
+            "file": 0
         }
 
         leveled_branches = []
@@ -200,20 +198,20 @@ class Outliner():
             level_list.sort()
             outline += level_list
 
-        rename_dict = {}
-
         branches = [branch for branch in outline if os.path.isdir(branch)]
 
+        rename_dict = {}
         rename_tuples = []
         for branch in branches:
             files = os.listdir(branch)
             files.sort()
-            sequence_list = [file[:2] for file in files]
+            #sequence_list = [file[:2] for file in files]
+            sequence_list = [self._get_sequence_index(file) for file in files]
 
             # Build dictionary of every existing sequence and a list of every file with that sequence
             file_dict = {}
             for sequence in sequence_list:
-                file_dict[sequence] = [file for file in files if file[:2] == sequence]
+                file_dict[sequence] = [file for file in files if self._get_sequence_index(file) == sequence]
 
             # For every sequence with more than one file, get back the correct order from the user
             for sequence, objs in file_dict.items():
@@ -227,26 +225,42 @@ class Outliner():
 
             # Once all files are de-duped, re-base at 01 for each tree level and sequence
             for file in ordered_files:
+
                 if file[-3:] == ".md":
                     levels = "file"
                 else:
                     split_branch = branch.split("/")
                     levels = len(split_branch)
-                level_sequence = sequences[levels]
+                level_sequence = sequences[levels] + 1
                 if file[:2] != level_sequence:
-                    rename_tuples.append((level_sequence, branch + "/" + file))
+                    rename_tuples.append((level_sequence, branch + "/" + file, levels))
                 sequences[levels] += 1
 
-        self._rename_files(rename_tuples)
+        self._rename_files(rename_tuples, sequences)
 
-    def _rename_files(self, rename_tuples):
+    def _get_sequence_index(self, path):
+        try:
+            sequence_index = path.index("-")
+            sequence = path[:sequence_index]
+            sequence_integer = int(sequence)
+        except ValueError:
+            sequence = None
+            sequence_index = -1
 
-        indices = [tuple[0] for tuple in rename_tuples]
-        max_index = max(indices)
-        digits = len(str(max_index))
+        return sequence, sequence_index
+
+    def _rename_files(self, rename_tuples, sequence_dict):
+
+        index_digits = {}
+        for key, _ in sequence_dict.items():
+            indices = [tuple[0] for tuple in rename_tuples if tuple[2] == key]
+            try:
+                index_digits[key] = len(str(max(indices)))
+            except ValueError:
+                pass
 
         for tuple in rename_tuples:
-            index = str(tuple[0]).zfill(digits)
+            index = str(tuple[0]).zfill(index_digits[tuple[2]])
             path = tuple[1]
 
             split_path = path.split("/")
@@ -254,13 +268,7 @@ class Outliner():
             split_path = [node for node in split_path if node]
             terminal = split_path[-1]
 
-            try:
-                sequence_index = terminal.index("-")
-                sequence = terminal[:sequence_index]
-                sequence_integer = int(sequence)
-            except ValueError:
-                sequence_index = -1
-                sequence = None
+            sequence, sequence_index = self._get_sequence_index(terminal)
 
             # If file/path already has the right index, skip
             if sequence == index:
@@ -284,7 +292,9 @@ class Outliner():
         counter = 1
         click.secho("There are " + str(len(duplicates)) + " files with a duplicate sequence:", fg="green")
         for duplicate in duplicates:
-            click.secho(str(counter) + ") " + duplicate[3:], fg="green")
+            sequence, _ = self._get_sequence_index(duplicate)
+            sequence_length = len(sequence) + 1
+            click.secho(str(counter) + ") " + duplicate[sequence_length:], fg="green")
             counter += 1
         click.echo("\n")
 
@@ -328,10 +338,12 @@ class Outliner():
         sub_chapter = "^#{4} "
         scene = "^#{5} "
 
-        section_count = 1
-        chapter_count = 1
-        sub_chapter_count = 1
-        scene_count = 1
+        sequences = {
+            "section": 1,
+            "chapter": 1,
+            "sub_chapter": 1,
+            "scene": 1
+        }
 
         title_path = ""
         for header in headers:
@@ -363,25 +375,25 @@ class Outliner():
                 chapter_path, sub_chapter_path, scene_path = section_path, section_path, section_path
 
                 os.mkdir(section_path)
-                rename_tuples.append((section_count,section_path))
+                rename_tuples.append((sequences["section"],section_path, "section"))
 
-                section_count += 1
+                sequences["section"] += 1
 
             elif re.match(chapter, header.group(0)):
                 chapter_path = section_path + name + "/"
                 sub_chapter_path, scene_path = chapter_path, chapter_path
                 os.mkdir(chapter_path)
-                rename_tuples.append((chapter_count,chapter_path))
+                rename_tuples.append((sequences["chapter"],chapter_path, "chapter"))
 
-                chapter_count += 1
+                sequences["chapter"] += 1
 
             elif re.match(sub_chapter, header.group(0)):
                 sub_chapter_path = chapter_path + name + "/"
                 scene_path = sub_chapter_path
                 os.mkdir(sub_chapter_path)
-                rename_tuples.append((sub_chapter_count,sub_chapter_path))
+                rename_tuples.append((sequences["sub_chapter"],sub_chapter_path, "sub_chapter"))
 
-                sub_chapter_count += 1
+                sequences["sub_chapter"] += 1
 
             elif re.match(scene, header.group(0)):
                 scene_path = sub_chapter_path + name + ".md"
@@ -395,9 +407,9 @@ class Outliner():
                 scene_text = text[start_scene:end_scene]
                 with open(scene_path, "w") as scene_file:
                     scene_file.write(scene_text)
-                rename_tuples.append((scene_count,scene_path))
+                rename_tuples.append((sequences["scene"],scene_path, "scene"))
 
-                scene_count += 1
+                sequences["scene"] += 1
 
         clean_tuples = []
         for tuple in rename_tuples:
@@ -407,11 +419,11 @@ class Outliner():
 
             path_length = len(path.split("/"))
 
-            clean_tuples.append((path_length, tuple[0], tuple[1]))
+            clean_tuples.append((path_length, tuple[0], tuple[1], tuple[2]))
 
         clean_tuples.sort(reverse=True)
-        clean_tuples = [(tuple[1], tuple[2]) for tuple in clean_tuples]
-        self._rename_files(clean_tuples)
+        clean_tuples = [(tuple[1], tuple[2], tuple[3]) for tuple in clean_tuples]
+        self._rename_files(clean_tuples, sequences)
 
         try:
             with open("settings.yml", "r") as settings_file:
