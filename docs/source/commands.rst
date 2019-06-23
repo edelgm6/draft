@@ -38,6 +38,10 @@ Maintain
 Maintain commands are used mostly as you are writing, organizing, and publishing your project.
 
 .. autofunction:: sequence()
+.. note::
+  The number of digits in each file/folder *sequence* is governed by the total number of items at that *level.*
+  For example, if you have 5 sections and 150 scenes, your sections will sequence 1, 2, 3, 4, 5 and your scenes will sequence 001, 002, 003, etc.
+
 .. autofunction:: stats()
 .. autofunction:: compile()
 .. autofunction:: outline()
