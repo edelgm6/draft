@@ -13,10 +13,10 @@ class TestRenameFiles(TestCase):
         file = open("Whatever.md", "w")
         file.close()
 
-        list = [(1, "Whatever.md")]
+        list = [(1, "Whatever.md", 1)]
 
         outliner = Outliner()
-        outliner._rename_files(list)
+        outliner._rename_files(list, {1: 1})
 
         self.assertTrue(os.path.isfile("1-Whatever.md"))
         os.remove("1-Whatever.md")
@@ -27,10 +27,10 @@ class TestRenameFiles(TestCase):
         os.mkdir("project/Gatsby/")
         os.mkdir("project/Gatsby/Whatever/")
 
-        list = [(1, "project/Gatsby/Whatever/")]
+        list = [(1, "project/Gatsby/Whatever/", 3)]
 
         outliner = Outliner()
-        outliner._rename_files(list)
+        outliner._rename_files(list, {3: 1})
 
         self.assertTrue(os.path.isdir("project/Gatsby/1-Whatever"))
         rmtree('project')
@@ -42,10 +42,10 @@ class TestRenameFiles(TestCase):
         os.mkdir("project/Gatsby/1-Whatever/")
         os.mkdir("project/Gatsby/4-Other/")
 
-        list = [(1, "project/Gatsby/1-Whatever/"), (2, "project/Gatsby/4-Other/")]
+        list = [(1, "project/Gatsby/1-Whatever/", 3), (2, "project/Gatsby/4-Other/", 3)]
 
         outliner = Outliner()
-        outliner._rename_files(list)
+        outliner._rename_files(list, {3: 2})
 
         self.assertTrue(os.path.isdir("project/Gatsby/1-Whatever"))
         self.assertTrue(os.path.isdir("project/Gatsby/2-Other"))
@@ -239,6 +239,7 @@ class TestFileTree(TestCase):
         os.mkdir("project/Gatsby")
 
     def tearDown(self):
+
         rmtree("project/")
         try:
             os.remove("legacy.txt")
@@ -271,7 +272,7 @@ class TestFileTree(TestCase):
         outliner.generate_file_tree("legacy.txt")
         os.remove('settings.yml')
 
-        self.assertTrue(os.path.isfile("project/Gatsby/001-Part 1 The Reckoning/001-Chapter 1 The Promise/001-New York 1942/001-The Bar0.md"))
+        self.assertTrue(os.path.isfile("project/Gatsby/1-Part 1 The Reckoning/1-Chapter 1 The Promise/1-New York 1942/001-The Bar0.md"))
 
 
     def test_existing_settings_not_overwritten(self):

@@ -67,10 +67,10 @@ From a WIP Project
     catcher-rye/
     └─project/
     │ └─Catcher In The Rye/
-    │   └─01-Meeting Holden
-    │     └─01-Leaving School
-    │       └─01-Roommates
-    │         └─01-We Meet Holden.md
+    │   └─1-Meeting Holden
+    │     └─1-Leaving School
+    │       └─1-Roommates
+    │         └─1-We Meet Holden.md
     └─myproject.md
     └─settings.yml
     └─.gitignore
