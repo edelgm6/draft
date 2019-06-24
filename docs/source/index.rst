@@ -1,4 +1,4 @@
-.. include:: ../images/README.rst
+.. include:: ../../README.rst
 
 **Source code:**
 
