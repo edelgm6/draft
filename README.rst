@@ -13,7 +13,11 @@ Draft: Write Like a Programmer
 ==============================
 Draft is a CLI-enabled *writing system* to keep your work modular, optimize your files for git for version control, and just make writing *fun* again.
 
-.. image:: ../images/demo.gif
+.. inclusion-marker-do-not-remove-above
+
+.. image:: docs/images/demo.gif
+
+.. inclusion-marker-do-not-remove-below
 
 Primary Features
 ----------------
