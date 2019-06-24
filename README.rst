@@ -1,1 +1,1 @@
-include /docs/images/README.rst
+.. include /docs/images/README.rst
