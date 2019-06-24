@@ -1,4 +1,8 @@
 .. include:: ../../README.rst
+  :end-before: inclusion-marker-do-not-remove-above
+.. include:: ../../README.rst
+  :start-after: inclusion-marker-do-not-remove-below
+
 
 **Source code:**
 
