@@ -1,4 +1,4 @@
-.. include:: /readme_link.rst
+.. include:: ../images/README.rst
 
 **Source code:**
 
