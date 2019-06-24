@@ -18,7 +18,7 @@ settings.yml
 
 The default file layout (i.e., the one added automatically with ``generate-project``) is below. Settings are split into three separate groups:
 
-::
+.. code-block:: yaml
 
   headers:
     section: true
@@ -54,7 +54,7 @@ overrides
 
 For example, if we use the ``parse`` command, the chapter name *Ahab's Leg* would be translated into a folder *Ahabs Leg* -- note the lack of an apostrophe. When using the ``compile`` command, we would want to add that apostrophe back in. To do so, the ``settings.yml`` might look like:
 
-::
+.. code-block:: yaml
 
   overrides:
     Ahabs Leg: Ahab's Leg
