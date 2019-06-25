@@ -11,7 +11,7 @@
 
 Draft: Write Like a Programmer
 ==============================
-Draft is a CLI-enabled *writing system* to keep your work modular, optimize your files for git for version control, and just make writing *fun* again.
+Draft is a CLI-enabled *writing system* to keep your work modular, optimize your project for git for version control, and just make writing more *fun*.
 
 .. inclusion-marker-do-not-remove-above
 
@@ -22,7 +22,7 @@ Draft is a CLI-enabled *writing system* to keep your work modular, optimize your
 Primary Features
 ----------------
 When you're writing something short, a Google Doc or Word file works great.
-But get beyond a few thousand words and you end up in scroll-hell (i.e., when just navigating the doc is a chore).
+But get beyond a few thousand words and you end up in scroll-hell (i.e., the 'thumb' of the scrollbar is tiny and just navigating the doc is a chore).
 
 Draft turns that half-finished novel into a clean, plaintext file tree perfect for git.
 
