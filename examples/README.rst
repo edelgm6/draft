@@ -8,7 +8,7 @@ Getting Started
 
 1. Create a new project: ``draft create-project 'New Project'``
 2. Navigate to the project's root directory: ``cd new-project``
-3. Download the ``examples/`` files into the ``new-project`` directory
+3. Download the ``examples/`` files into the ``new-project`` directory: ``svn checkout https://github.com/edelgm6/draft/trunk/examples``
 
 Trying the Commands
 -------------------
