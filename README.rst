@@ -15,8 +15,7 @@ Draft is a CLI-enabled *writing system* to keep your work modular, optimize your
 
 .. inclusion-marker-do-not-remove-above
 
-.. image:: docs/images/demo3.gif
-.. image:: docs/images/demo3.gif
+.. image:: docs/images/demo.gif
 
 .. inclusion-marker-do-not-remove-below
 
