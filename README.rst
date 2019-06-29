@@ -16,11 +16,11 @@ Draft is a CLI-enabled *writing system* to keep your work modular, optimize your
 .. inclusion-marker-do-not-remove-above
 
 .. image:: docs/images/demo.gif
-  :height: 50px
+  :height: 50 px
   :align: left
 
 .. image:: docs/images/sequence.gif
-  :height: 50px
+  :height: 50 px
   :align: right
 
 .. inclusion-marker-do-not-remove-below
