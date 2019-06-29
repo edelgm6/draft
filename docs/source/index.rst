@@ -19,4 +19,5 @@ Contents
    getting-started
    commands
    settings
+   examples
    about
