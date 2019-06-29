@@ -16,7 +16,7 @@ A few things to note before getting into the specifics:
 settings.yml
 ------------
 
-The default file layout (i.e., the one added automatically with ``generate-project``) is below. Settings are split into three separate groups:
+The default file layout (i.e., the one added automatically with ``generate-project``) is below. Settings are split into four groups:
 
 .. code-block:: yaml
 
