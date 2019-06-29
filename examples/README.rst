@@ -1,3 +1,4 @@
+========
 Examples
 ========
 The ``examples/`` directory contains Markdown files that demonstrate Draft commands.
@@ -13,6 +14,7 @@ Trying the Commands
 -------------------
 
 .. _parse:
+
 parse, stats, compile, and outline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
