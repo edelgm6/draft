@@ -19,7 +19,7 @@ Let's assume you wanted to create a project titled *Catcher In the Rye.*
 4. Install Draft: ``pip install draft-cli``
 5. Create project: ``draft create-project 'Catcher In The Rye'``
 
-You will now have the following file tree (note that Draft truncates your root directory to ``catcher-rye``):
+You will now have the following file tree (note that Draft truncates your root directory to ``catcher-rye/``):
 
 .. include:: start-file-tree.rst
 
@@ -28,7 +28,7 @@ From a WIP Project
 
 1. Follow the same steps as "Starting From Scratch."
 
-2. Take your current project in whatever format it is in, and paste it into a Markdown file and put in your project's root directory (e.g., if your current project is ``myproject.md``, you should put it in ``catcher-rye``, in the same folder as ``project``).
+2. Take your current project in whatever format it is in, and paste it into a Markdown file and put in your project's root directory (e.g., if your current project is ``myproject.md``, you should put it in ``catcher-rye/``, in the same folder as ``project/``).
 
 3. Edit your file's Headings to follow Markdown conventions. This will inform your file tree:
 
