@@ -24,7 +24,7 @@ A Draft project is made up of a simple file tree as shown below::
 
     whalebook/
     └─project/                                   Organization:
-    │ └──Moby Dick, Or The Whale/                [Title]
+    │ └──Moby Dick Or The Whale/                [Title]
     │    └──01-Nantucket/                        [Section 1]
     │    │  └──01-Meeting Ishmael/               [Chapt 1]
     │    │  │  └──01-Loomings/                   [Sub-Chapt 1]
@@ -43,7 +43,7 @@ A Draft project is made up of a simple file tree as shown below::
 
 You don't *need* to use every 'level' of the project -- i.e., you could just have the Title and a bunch of scenes, only use sections and scenes, have some scenes in sub-chapters and some scenes in chapters, etc.
 
-The only required elements are the `project/` folder, the `title/` folder, and scene `.md` files.
+The only required elements are the ```project/`` folder, the ``title/`` folder (here called ``Moby Dick Or The Whale/``), and scene ```.md`` files.
 
 Sequencing
 ~~~~~~~~~~
