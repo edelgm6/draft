@@ -42,7 +42,7 @@ outline
 
 4. Run ``draft outline``
 
-This creates ``outline.md`` which is a Markdown file showing the basic outline of your story.
+This creates ``outline.md`` which is a Markdown file showing the basic outline of your project.
 
 compile
 *******
@@ -67,7 +67,7 @@ If you've already tried the :ref:`parse` example, you can run ``draft split`` to
 sequence
 ~~~~~~~~
 
-``sequence/`` contains a project, ``Moby Dick or The Whale/`` that has out of sequence files:
+``sequence/`` contains a project with files that have a duplicate sequence:
 - ``Call Me Ishmael.md`` and ``Manhattoes.md`` both have the same sequence of ``1``
 - There is no ``2`` sequence
 

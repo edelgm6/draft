@@ -1,4 +1,4 @@
-# Moby Dick, or The Whale
+# Moby Dick
 
 ## On Land
 
