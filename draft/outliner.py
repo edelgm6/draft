@@ -78,14 +78,16 @@ class Outliner():
         text = text.strip()
         scene_detail = re.search(outline_tag, text)
         if scene_detail:
-            outline = scene_detail.group(0)
+            outline = scene_detail.group(0).strip()
             outline_span = scene_detail.span()
             text = text[outline_span[1] + 4:]
+        else:
+            outline = ""
 
         if draft:
             return text.strip()
         else:
-            return outline.strip()
+            return outline
 
     def compile_project(self, draft=False):
         outline = self._get_file_tree()
