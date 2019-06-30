@@ -15,12 +15,14 @@ class Outliner():
         root_files = os.listdir(".")
 
         duplicates = [file for file in root_files if filename in file]
+        if len(duplicates) == 0:
+            return filename
+        else:
+            sequence = str(len(duplicates))
+            while os.path.exists(sequence + "-" + filename):
+                sequence = str(int(sequence) + 1)
 
-        sequence = str(len(duplicates) + 1).zfill(2)
-        while os.path.exists(sequence + "-" + filename):
-            sequence = str(int(sequence) + 1).zfill(len(sequence))
-
-        return sequence + "-" + filename
+            return sequence + "-" + filename
 
     def _get_file_tree(self):
 
@@ -121,10 +123,11 @@ class Outliner():
                 split_branch = branch.split("/")
                 branch_end = split_branch[-1]
 
+                _, sequence_index = self._get_sequence_index(branch_end)
                 try:
-                    title = overrides[branch_end[3:]]
+                    title = overrides[branch_end[sequence_index + 1:]]
                 except (KeyError, TypeError):
-                    title = branch_end[3:]
+                    title = branch_end[sequence_index + 1:]
 
                 if len(split_branch) == 3:
                     if headers["section"] or not draft:
@@ -232,7 +235,7 @@ class Outliner():
                     split_branch = branch.split("/")
                     levels = len(split_branch)
                 level_sequence = sequences[levels] + 1
-                if file[:2] != level_sequence:
+                if self._get_sequence_index(file)[0] != level_sequence:
                     rename_tuples.append((level_sequence, branch + "/" + file, levels))
                 sequences[levels] += 1
 
