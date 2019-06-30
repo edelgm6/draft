@@ -102,40 +102,47 @@ class TestCompileProject(TestCase):
         os.mkdir("project/Gatsby/01-Part 2/01-Chapter 2")
 
         base = "project/Gatsby/01-Part 2/01-Chapter 1/01-SubChapter 1/"
-        for file in ["01-Scene 1.md","01-Scene 2.md"]:
-            fp = open(base + file, "w")
-            fp.write("***\n")
-            fp.write("This is an outline\n")
-            fp.write("***\n")
-            fp.write("**" + file + "**: the _world_ beckons!")
-            fp.close()
+        fp = open(base + "01-Scene 1.md", "w")
+        fp.write("***\n")
+        fp.write("This is an outline\n")
+        fp.write("***\n")
+        fp.write("**" + "01-Scene 1.md" + "**: the _world_ beckons!")
+        fp.close()
+
+        fp = open(base + "02-Scene 2.md", "w")
+        fp.write("**" + "02-Scene 2.md" + "**: the _world_ beckons!")
+        fp.close()
+
 
     def test_creates_outline(self):
         outliner = Outliner()
         outliner.compile_project(draft=False)
 
-        gatsby = open("01-outline.md", "r")
+        gatsby = open("outline.md", "r")
         text = gatsby.read()
         gatsby.close()
-        os.remove("01-outline.md")
+        os.remove("outline.md")
 
-        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**: This is an outline\n\n### Chapter 2\n\n")
+        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**\n\n### Chapter 2\n\n")
 
     def test_increments_outline_if_exists(self):
-        with open("02-outline.md", "w") as outline:
+        with open("outline.md", "w") as outline:
+            outline.write("whatever")
+        with open("2-outline.md", "w") as outline:
             outline.write("whatever")
 
         outliner = Outliner()
         outliner.compile_project(draft=False)
 
-        gatsby = open("03-outline.md", "r")
+        gatsby = open("3-outline.md", "r")
         text = gatsby.read()
         gatsby.close()
 
-        self.assertTrue(os.path.exists("03-outline.md"))
-        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**: This is an outline\n\n### Chapter 2\n\n")
-        os.remove("03-outline.md")
-        os.remove("02-outline.md")
+        self.assertTrue(os.path.exists("2-outline.md"))
+        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**\n\n### Chapter 2\n\n")
+        os.remove("2-outline.md")
+        os.remove("3-outline.md")
+        os.remove("outline.md")
 
     def test_outline_unaffected_by_header_settings(self):
         with open("settings.yml","w+") as settings_file:
@@ -151,13 +158,13 @@ class TestCompileProject(TestCase):
         outliner = Outliner()
         outliner.compile_project(draft=False)
 
-        gatsby = open("01-outline.md", "r")
+        gatsby = open("outline.md", "r")
         text = gatsby.read()
         gatsby.close()
-        os.remove("01-outline.md")
+        os.remove("outline.md")
         os.remove("settings.yml")
 
-        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**: This is an outline\n\n### Chapter 2\n\n")
+        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**\n\n### Chapter 2\n\n")
 
     def test_includes_author(self):
         with open("settings.yml","w+") as settings_file:
@@ -169,24 +176,24 @@ class TestCompileProject(TestCase):
         outliner = Outliner()
         outliner.compile_project(draft=True)
 
-        gatsby = open("01-Gatsby.md", "r")
+        gatsby = open("Gatsby.md", "r")
         text = gatsby.read()
         gatsby.close()
-        os.remove("01-Gatsby.md")
+        os.remove("Gatsby.md")
         os.remove("settings.yml")
 
-        self.assertEqual(text,"# Gatsby\n\n##### Garrett Edel\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
+        self.assertEqual(text,"# Gatsby\n\n##### Garrett Edel\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
 
     def test_compiles_project(self):
         outliner = Outliner()
         outliner.compile_project(draft=True)
 
-        gatsby = open("01-Gatsby.md", "r")
+        gatsby = open("Gatsby.md", "r")
         text = gatsby.read()
         gatsby.close()
-        os.remove("01-Gatsby.md")
+        os.remove("Gatsby.md")
 
-        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
+        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
 
     def test_headers_ignored_if_compiled_project(self):
         with open("settings.yml","w+") as settings_file:
@@ -202,12 +209,12 @@ class TestCompileProject(TestCase):
         outliner = Outliner()
         outliner.compile_project(draft=True)
 
-        gatsby = open("01-Gatsby.md", "r")
+        gatsby = open("Gatsby.md", "r")
         text = gatsby.read()
         gatsby.close()
-        os.remove("01-Gatsby.md")
+        os.remove("Gatsby.md")
 
-        self.assertEqual(text,"# Gatsby\n\n</br>\n\n</br>\n\n</br>\n\n</br>\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n</br>\n\n")
+        self.assertEqual(text,"# Gatsby\n\n</br>\n\n</br>\n\n</br>\n\n</br>\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n</br>\n\n")
 
         os.remove("settings.yml")
 
@@ -224,13 +231,13 @@ class TestCompileProject(TestCase):
         outliner = Outliner()
         outliner.compile_project(draft=True)
 
-        gatsby = open("01-Gatsby.md", "r")
+        gatsby = open("Gatsby.md", "r")
         text = gatsby.read()
         gatsby.close()
-        os.remove("01-Gatsby.md")
+        os.remove("Gatsby.md")
         os.remove("settings.yml")
 
-        self.assertEqual(text,"# The Great Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1: Word\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
+        self.assertEqual(text,"# The Great Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1: Word\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
 
 class TestFileTree(TestCase):
 

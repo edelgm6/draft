@@ -15,12 +15,14 @@ class Outliner():
         root_files = os.listdir(".")
 
         duplicates = [file for file in root_files if filename in file]
+        if len(duplicates) == 0:
+            return filename
+        else:
+            sequence = str(len(duplicates))
+            while os.path.exists(sequence + "-" + filename):
+                sequence = str(int(sequence) + 1)
 
-        sequence = str(len(duplicates) + 1).zfill(2)
-        while os.path.exists(sequence + "-" + filename):
-            sequence = str(int(sequence) + 1).zfill(len(sequence))
-
-        return sequence + "-" + filename
+            return sequence + "-" + filename
 
     def _get_file_tree(self):
 
@@ -76,14 +78,16 @@ class Outliner():
         text = text.strip()
         scene_detail = re.search(outline_tag, text)
         if scene_detail:
-            outline = scene_detail.group(0)
+            outline = scene_detail.group(0).strip()
             outline_span = scene_detail.span()
             text = text[outline_span[1] + 4:]
+        else:
+            outline = ""
 
         if draft:
             return text.strip()
         else:
-            return outline.strip()
+            return outline
 
     def compile_project(self, draft=False):
         outline = self._get_file_tree()
@@ -107,24 +111,30 @@ class Outliner():
                 with open(branch, "r") as sc:
                     text = sc.read().strip()
                     text = self._get_text_element(text, draft)
+
+                    # i.e., if we're making an outline and there is some outline text
+                    if text and not draft:
+                        text = ": " + text
                     if draft:
                         page = page + text.strip() + "\n\n</br>\n\n"
                     else:
                         split_branch = branch.split("/")
                         branch_end = split_branch[-1]
                         extension_index = branch_end.rindex(".")
-                        scene_name = "**" + branch_end[3:extension_index] + "**"
+                        _, sequence_index = self._get_sequence_index(branch_end)
+                        scene_name = "**" + branch_end[sequence_index + 1:extension_index] + "**"
 
-                        page = page + scene_name + ": " + text + "\n\n"
+                        page = page + scene_name + text + "\n\n"
 
             elif os.path.isdir(branch):
                 split_branch = branch.split("/")
                 branch_end = split_branch[-1]
 
+                _, sequence_index = self._get_sequence_index(branch_end)
                 try:
-                    title = overrides[branch_end[3:]]
+                    title = overrides[branch_end[sequence_index + 1:]]
                 except (KeyError, TypeError):
-                    title = branch_end[3:]
+                    title = branch_end[sequence_index + 1:]
 
                 if len(split_branch) == 3:
                     if headers["section"] or not draft:
@@ -232,7 +242,7 @@ class Outliner():
                     split_branch = branch.split("/")
                     levels = len(split_branch)
                 level_sequence = sequences[levels] + 1
-                if file[:2] != level_sequence:
+                if self._get_sequence_index(file)[0] != level_sequence:
                     rename_tuples.append((level_sequence, branch + "/" + file, levels))
                 sequences[levels] += 1
 

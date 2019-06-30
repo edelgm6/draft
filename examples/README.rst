@@ -8,7 +8,8 @@ Getting Started
 
 1. Create a new project: ``draft create-project 'New Project'``
 2. Navigate to the project's root directory: ``cd new-project``
-3. Download the ``examples/`` files into the ``new-project`` directory
+3. Download the ``examples/`` folder into the ``new-project/`` directory: ``svn checkout https://github.com/edelgm6/draft/trunk/examples``
+4. Copy all of the files in ``examples/`` into your ``new-project/`` root directory
 
 Trying the Commands
 -------------------
@@ -23,7 +24,7 @@ parse
 
 ``parse.md`` contains the first chapters of *Moby Dick* and can be used to build out a starter file tree.
 
-1. Ensure your terminal is navigated to the same folder containing ``parse.md``
+1. Ensure your terminal is navigated to ``new-project/`` root directory and that ``parse.md`` is in the same folder
 2. Run ``draft parse parse.md``
 
 
