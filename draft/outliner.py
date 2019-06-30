@@ -111,15 +111,20 @@ class Outliner():
                 with open(branch, "r") as sc:
                     text = sc.read().strip()
                     text = self._get_text_element(text, draft)
+
+                    # i.e., if we're making an outline and there is some outline text
+                    if text and not draft:
+                        text = ": " + text
                     if draft:
                         page = page + text.strip() + "\n\n</br>\n\n"
                     else:
                         split_branch = branch.split("/")
                         branch_end = split_branch[-1]
                         extension_index = branch_end.rindex(".")
-                        scene_name = "**" + branch_end[3:extension_index] + "**"
+                        _, sequence_index = self._get_sequence_index(branch_end)
+                        scene_name = "**" + branch_end[sequence_index + 1:extension_index] + "**"
 
-                        page = page + scene_name + ": " + text + "\n\n"
+                        page = page + scene_name + text + "\n\n"
 
             elif os.path.isdir(branch):
                 split_branch = branch.split("/")
