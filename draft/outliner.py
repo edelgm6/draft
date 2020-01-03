@@ -165,7 +165,7 @@ class Outliner():
             html_name = title + ".html"
         else:
             file_name = "outline.md"
-            html_name = title + "outline.html"
+            html_name = "outline.html"
 
         file_name = self._create_next_filename(file_name)
         with open(file_name, "w") as fp:
@@ -173,7 +173,10 @@ class Outliner():
             fp.write(page)
 
             with open(html_name, "w") as ht:
-                html = mistune.html(page)
+                renderer = mistune.Renderer(escape=True, hard_wrap=True)
+                # use this renderer instance
+                markdown = mistune.Markdown(renderer=renderer)
+                html = markdown(page)
                 ht.write(html)
 
         return file_name
