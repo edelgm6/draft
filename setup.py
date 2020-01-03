@@ -5,7 +5,7 @@ long_description = io.open('README.rst', encoding='utf-8').read()
 
 setup(
     name="draft-cli",
-    version="0.1.1",
+    version="0.1.2",
     author="Garrett Edel",
     author_email="edelgm6@gmail.com",
     description="CLI-enabled writing system to keep your work modular and optimize your files for git for version control.",

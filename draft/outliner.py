@@ -96,6 +96,7 @@ class Outliner():
         headers = settings["headers"]
         overrides = settings["overrides"]
         author = settings["author"]
+        SECTION_BREAK = "\n\n<br>\n\n"
 
         title = os.listdir("project")[0]
         try:
@@ -117,7 +118,7 @@ class Outliner():
                     if text and not draft:
                         text = ": " + text
                     if draft:
-                        page = page + text.strip() + "\n\n</br>\n\n"
+                        page = page + text.strip() + SECTION_BREAK
                     else:
                         split_branch = branch.split("/")
                         branch_end = split_branch[-1]
@@ -141,19 +142,19 @@ class Outliner():
                     if headers["section"] or not draft:
                         section = "## " + title + "\n\n"
                     else:
-                        section = "\n\n</br>\n\n"
+                        section = SECTION_BREAK
 
                 elif len(split_branch) == 4:
                     if headers["chapter"] or not draft:
                         section = "### " + title + "\n\n"
                     else:
-                        section = "\n\n</br>\n\n"
+                        section = SECTION_BREAK
 
                 elif len(split_branch) == 5:
                     if headers["sub_chapter"] or not draft:
                         section = "#### " + title + "\n\n"
                     else:
-                        section = "\n\n</br>\n\n"
+                        section = SECTION_BREAK
                 elif len(split_branch) == 2:
                     continue
 
@@ -173,7 +174,7 @@ class Outliner():
             fp.write(page)
 
             with open(html_name, "w") as ht:
-                renderer = mistune.Renderer(escape=True, hard_wrap=True)
+                renderer = mistune.Renderer(escape=False, hard_wrap=False)
                 # use this renderer instance
                 markdown = mistune.Markdown(renderer=renderer)
                 html = markdown(page)
