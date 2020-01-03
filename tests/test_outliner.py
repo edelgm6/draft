@@ -125,6 +125,11 @@ class TestCompileProject(TestCase):
 
         self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**\n\n### Chapter 2\n\n")
 
+        gatsby = open("outline.html", "r")
+        text = gatsby.read()
+        gatsby.close()
+        os.remove("outline.html")
+
     def test_increments_outline_if_exists(self):
         with open("outline.md", "w") as outline:
             outline.write("whatever")
@@ -143,6 +148,7 @@ class TestCompileProject(TestCase):
         os.remove("2-outline.md")
         os.remove("3-outline.md")
         os.remove("outline.md")
+        os.remove("outline.html")
 
     def test_outline_unaffected_by_header_settings(self):
         with open("settings.yml","w+") as settings_file:
@@ -162,6 +168,7 @@ class TestCompileProject(TestCase):
         text = gatsby.read()
         gatsby.close()
         os.remove("outline.md")
+        os.remove("outline.html")
         os.remove("settings.yml")
 
         self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**Scene 1**: This is an outline\n\n**Scene 2**\n\n### Chapter 2\n\n")
@@ -180,6 +187,7 @@ class TestCompileProject(TestCase):
         text = gatsby.read()
         gatsby.close()
         os.remove("Gatsby.md")
+        os.remove("Gatsby.html")
         os.remove("settings.yml")
 
         self.assertEqual(text,"# Gatsby\n\n##### Garrett Edel\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
@@ -192,6 +200,7 @@ class TestCompileProject(TestCase):
         text = gatsby.read()
         gatsby.close()
         os.remove("Gatsby.md")
+        os.remove("Gatsby.html")
 
         self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
 
@@ -213,6 +222,7 @@ class TestCompileProject(TestCase):
         text = gatsby.read()
         gatsby.close()
         os.remove("Gatsby.md")
+        os.remove("Gatsby.html")
 
         self.assertEqual(text,"# Gatsby\n\n</br>\n\n</br>\n\n</br>\n\n</br>\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n</br>\n\n")
 
@@ -235,6 +245,7 @@ class TestCompileProject(TestCase):
         text = gatsby.read()
         gatsby.close()
         os.remove("Gatsby.md")
+        os.remove("Gatsby.html")
         os.remove("settings.yml")
 
         self.assertEqual(text,"# The Great Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1: Word\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")

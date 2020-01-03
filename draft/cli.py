@@ -211,7 +211,7 @@ def outline():
 
 @main.command()
 def compile():
-    """Compiles the project into a final document.
+    """Compiles the project into markdown and HTML documents.
 
     Usage:
       >>> draft compile

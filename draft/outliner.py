@@ -3,6 +3,7 @@ import os
 import shutil
 import click
 import yaml
+import mistune
 from collections import Counter
 from draft.generator import Generator, StructureError
 from draft.helpers import clean_filename, get_settings
@@ -161,13 +162,22 @@ class Outliner():
         if draft:
             title = os.listdir("project")[0]
             file_name = title + ".md"
+            html_name = title + ".html"
         else:
             file_name = "outline.md"
+            html_name = "outline.html"
 
         file_name = self._create_next_filename(file_name)
         with open(file_name, "w") as fp:
             page = re.sub("\\n{3,}","\\n\\n", page)
             fp.write(page)
+
+            with open(html_name, "w") as ht:
+                renderer = mistune.Renderer(escape=True, hard_wrap=True)
+                # use this renderer instance
+                markdown = mistune.Markdown(renderer=renderer)
+                html = markdown(page)
+                ht.write(html)
 
         return file_name
 
