@@ -190,7 +190,7 @@ class TestCompileProject(TestCase):
         os.remove("Gatsby.html")
         os.remove("settings.yml")
 
-        self.assertEqual(text,"# Gatsby\n\n##### Garrett Edel\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
+        self.assertEqual(text,"# Gatsby\n\n##### Garrett Edel\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n<br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n<br>\n\n### Chapter 2\n\n")
 
     def test_compiles_project(self):
         outliner = Outliner()
@@ -202,7 +202,7 @@ class TestCompileProject(TestCase):
         os.remove("Gatsby.md")
         os.remove("Gatsby.html")
 
-        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
+        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n<br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n<br>\n\n### Chapter 2\n\n")
 
     def test_headers_ignored_if_compiled_project(self):
         with open("settings.yml","w+") as settings_file:
@@ -224,7 +224,7 @@ class TestCompileProject(TestCase):
         os.remove("Gatsby.md")
         os.remove("Gatsby.html")
 
-        self.assertEqual(text,"# Gatsby\n\n</br>\n\n</br>\n\n</br>\n\n</br>\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n</br>\n\n")
+        self.assertEqual(text,"# Gatsby\n\n<br>\n\n<br>\n\n<br>\n\n<br>\n\n**01-Scene 1.md**: the _world_ beckons!\n\n<br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n<br>\n\n<br>\n\n")
 
         os.remove("settings.yml")
 
@@ -248,7 +248,7 @@ class TestCompileProject(TestCase):
         os.remove("Gatsby.html")
         os.remove("settings.yml")
 
-        self.assertEqual(text,"# The Great Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1: Word\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
+        self.assertEqual(text,"# The Great Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1: Word\n\n#### SubChapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n<br>\n\n**02-Scene 2.md**: the _world_ beckons!\n\n<br>\n\n### Chapter 2\n\n")
 
 class TestFileTree(TestCase):
 

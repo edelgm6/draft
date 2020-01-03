@@ -94,7 +94,7 @@ class TestOutliners(TestCase):
         gatsby.close()
         os.remove("Gatsby.md")
 
-        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n</br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n</br>\n\n### Chapter 2\n\n")
+        self.assertEqual(text,"# Gatsby\n\n## Part 1\n\n## Part 2\n\n### Chapter 1\n\n**01-Scene 1.md**: the _world_ beckons!\n\n<br>\n\n**01-Scene 2.md**: the _world_ beckons!\n\n<br>\n\n### Chapter 2\n\n")
 
 class TestGenerateProject(TestCase):
 
